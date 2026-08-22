@@ -85,6 +85,13 @@ The economics reward a specific rhythm:
   fully briefed, cache rebuilt once at minimum size. Claude reads the annotated test answers
   and new ideas from the file and starts the next wave.
 
+**Keep lines narrow.** Users often park the editor beside their terminal on a split
+screen and bump the font size (⌘+) — long lines then wrap unpredictably or run off
+screen. Hard-wrap prose at roughly **60–70 characters** per line; narrower is better.
+The ONE exception: commands, paths and URLs stay on a single line however long, so a
+triple-click copies them whole. After the first document, ask the user once whether
+the width suits them (narrower? wider?) and remember the preference.
+
 **Open the handoff for the user automatically.** Right after writing it, open the file in a
 plain text editor so the user *sees* that the wave is done and the annotated test list is
 ready — on macOS: `open -a TextEdit <file>` (always name the editor explicitly; the system
