@@ -84,6 +84,20 @@ If the user mentions that double-clicking `.md` files opens the wrong app, offer
 default (macOS, via [duti](https://github.com/moretension/duti): `brew install duti && duti
 -s com.apple.TextEdit .md all`) — many users have fought and lost this battle manually.
 
+**Every user-facing document, not just handoffs.** Whenever Claude creates a document the
+user is meant to read or react to (a plan, a report, a checklist, a draft), open it in the
+text editor immediately — users rarely dig through folders for a path printed in the chat,
+and an editor window is the visible signal "this is ready for you". Put a short header at
+the top of each such document:
+
+```
+> Du kannst hier direkt Kommentare reinschreiben — markiere sie mit >>> am Zeilenanfang.
+> (You can comment directly in this file — mark your comments with >>> at line start.)
+```
+
+When Claude later re-reads any of these documents, it treats lines starting with `>>>` as
+the user's comments/answers and runs the unsaved-changes guard below first.
+
 **Unsaved-changes guard (macOS).** Claude reads files from disk, so unsaved editor changes
 are invisible — but on macOS, Claude can check for them. Before reading an annotated
 handoff, ask TextEdit whether the document is open with unsaved changes:
