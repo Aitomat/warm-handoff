@@ -66,11 +66,13 @@ The economics reward a specific rhythm:
   test item with an answer line**, ready to dictate into:
 
   ```
-  ## T3 — Tag/Nacht-Symbol umgedreht
-  <Testbeschreibung>
+  ## T3 — Dark/light toggle inverted
+  <test description>
 
-  >>>Userantwort:
+  >>>Answer:
   ```
+
+  (Use the user's language for the marker — e.g. `>>>Userantwort:` for a German user.)
 
   The user just places the cursor after the marker and speaks. An item whose answer line
   stays empty simply wasn't tested yet — that's information too, not an error.- **The user works in the handoff file with a plain text editor** (TextEdit or similar), not
@@ -100,13 +102,12 @@ and an editor window is the visible signal "this is ready for you". Put a short 
 the top of each such document:
 
 ```
-> Du kannst hier direkt Kommentare reinschreiben — beginne die Zeile mit >>> oder mit
-> deinem Namen + Zeitstempel, z. B. "Y. Akgün, 22.08.2026-14:40:".
-> (Comment directly in this file — start the line with >>> or with your name + timestamp.)
+> You can comment directly in this file — start the line with >>> or with your
+> name + timestamp, e.g. "J. Doe, 2026-08-22 14:40:".
 ```
 
-The marker is a convention, not a syntax: `>>>` is only the default. A name + timestamp
-prefix (`Y. Akgün, 22.08.2026-14:40:`) is even better — it says *who* answered *when*,
+(Write the header in the user's language.) The marker is a convention, not a syntax:
+`>>>` is only the default. A name + timestamp prefix is even better — it says *who* answered *when*,
 which matters once several annotation rounds pile up in one document. **Claude infers the
 user's marker from the document itself**: whatever consistent prefix appears on the
 answer lines is treated as the user's voice; don't force a format.
@@ -137,7 +138,7 @@ into a safety net — but still teach ⌘S as the habit, since the guard only se
 that are open in TextEdit.
 
 **Tip for lost handoffs** (tell the user once): if they closed the document and can't find
-the file, TextEdit ▸ **Ablage ▸ Benutzte Dokumente** (File ▸ Open Recent) brings back any
+the file, TextEdit ▸ **File ▸ Open Recent** brings back any
 recently closed handoff without hunting through Finder.
 
 When Claude finishes a handoff it should say so and explain the loop to the user once:
