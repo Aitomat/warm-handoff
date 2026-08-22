@@ -164,7 +164,11 @@ and the new handoff says so explicitly per item ("Your T1 answer from the previo
 taken into account: <one-line summary> — correct?"), so the user can veto a misreading.
 Unanswered items and items whose fix needs a re-test move into the new list unchanged
 (marked as carried over). The old handoff stays untouched as the record; only the newest
-one is the active working document.
+one is the active working document. **Close the old handoff's editor tab automatically**
+when opening the new one (macOS: `osascript -e 'tell application "TextEdit" to close
+(documents whose name is "<old file>")'`) — but ONLY if it has no unsaved changes and its
+answers were incorporated; otherwise leave it open and tell the user why. A stale handoff
+sitting next to the active one is how users end up answering the wrong document.
 
 When Claude finishes a handoff it should say so and explain the loop to the user once:
 *"Handoff written, your test list is at the bottom. Answer under the test points, add new
