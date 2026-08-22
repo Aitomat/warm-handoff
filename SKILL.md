@@ -101,6 +101,13 @@ ready — on macOS: `open -a TextEdit <file>` (always name the editor explicitly
 default for `.md` is often an IDE or preview app the user doesn't want). On Windows:
 `notepad <file>`; on Linux: `xdg-open <file>`.
 
+**Open as a tab, not a new window.** Users who live in this workflow accumulate many open
+documents; each new floating window adds clutter. macOS controls this globally: offer once
+to run `defaults write -g AppleWindowTabbingMode always` so new documents open as tabs in
+the existing TextEdit window (reversible with `defaults delete -g AppleWindowTabbingMode`,
+or per System Settings ▸ Desktop & Dock ▸ "Prefer tabs"). Mention that this is a
+system-wide setting — if the user dislikes it, they say so and Claude reverts it.
+
 If the user mentions that double-clicking `.md` files opens the wrong app, offer to fix the
 default (macOS, via [duti](https://github.com/moretension/duti): `brew install duti && duti
 -s com.apple.TextEdit .md all`) — many users have fought and lost this battle manually.
@@ -150,6 +157,14 @@ that are open in TextEdit.
 **Tip for lost handoffs** (tell the user once): if they closed the document and can't find
 the file, TextEdit ▸ **File ▸ Open Recent** brings back any
 recently closed handoff without hunting through Finder.
+
+**Carry the old test list forward.** When writing a NEW handoff while an older one exists:
+read the old handoff first and check its answer lines. Answered items get incorporated —
+and the new handoff says so explicitly per item ("Your T1 answer from the previous list is
+taken into account: <one-line summary> — correct?"), so the user can veto a misreading.
+Unanswered items and items whose fix needs a re-test move into the new list unchanged
+(marked as carried over). The old handoff stays untouched as the record; only the newest
+one is the active working document.
 
 When Claude finishes a handoff it should say so and explain the loop to the user once:
 *"Handoff written, your test list is at the bottom. Answer under the test points, add new
