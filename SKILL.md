@@ -88,6 +88,19 @@ ideas, ⌘S — and give the file to a fresh session (or to me, if you're still 
 | Pause > 1 h (cache gone anyway) | Never rebuild the giant context: handoff + fresh session |
 | Mid-session model/effort change wanted | Warn: full cache rebuild; suggest doing it at the next fresh session instead |
 
+## Writing the handoff well (rules adopted from Matt Pocock's /handoff)
+
+- **Reference, don't copy.** Specs, plans, commits, diffs and issues that are already written
+  down get linked by path or URL — never pasted into the handoff. Keeps the file small and
+  the settled detail in ONE place instead of two that drift.
+- **Redact secrets** (keys, tokens, passwords) before writing the file.
+- **Name suggested skills** for the next session — what the fresh agent should reach for.
+- One deliberate difference: Pocock writes handoffs to the temp directory (transit document)
+  and recommends `/compact` for same-directory continuation. This skill writes them **into
+  the project** (dated, part of the working rhythm, the user annotates them) and prefers
+  handoff + fresh session over `/compact` past the context threshold — on subscription
+  plans, `/compact` keeps the huge expensive prefix alive; a fresh ~20k session does not.
+
 ## Honesty rules
 
 - There is no background timer: Claude only acts when a request arrives. That is exactly why

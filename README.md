@@ -71,6 +71,21 @@ write a document when you ask. warm-handoff treats the handoff as the exit move 
 economy — it tells you when continuing is cheap, when a restart is cheaper, and produces the
 document at exactly that moment, test list included.
 
+## Credits & prior art
+
+- [Matt Pocock's /handoff skill](https://www.aihero.dev/skills-handoff)
+  ([mattpocock/skills](https://github.com/mattpocock/skills)) — the clearest thinking on
+  *how* to write a handoff document. We adopt his rules (reference settled docs instead of
+  copying them, redact secrets, suggest skills for the next agent) and deliberately differ
+  on two points: our handoffs live *in the project* as dated, user-annotated working
+  documents, and past the context threshold we prefer handoff + fresh session over
+  `/compact` — on subscription plans a fresh small session beats keeping a huge cached
+  prefix alive.
+- Further handoff implementations: [392fyc](https://github.com/392fyc/claude-handoff),
+  [REMvisual](https://github.com/REMvisual/claude-handoff),
+  [willseltzer](https://github.com/willseltzer/claude-handoff),
+  [ykdojo](https://github.com/ykdojo/claude-code-tips/blob/main/skills/handoff/SKILL.md).
+
 ## License
 
 MIT
