@@ -62,8 +62,18 @@ The economics reward a specific rhythm:
   — small side-topics are *encouraged* while the main work runs.
 - **After each wave, Claude writes a handoff document**: a dated Markdown file
   (`_handoff-YYYY-MM-DD.md`) containing what was delivered, running state, open items,
-  project constraints — **and the current test checklist at the bottom**, with an empty
-  answer line (`>>`) under every test item.
+  project constraints — **and the current test checklist at the bottom**. **Pre-seed every
+  test item with an answer line**, ready to dictate into:
+
+  ```
+  ## T3 — Tag/Nacht-Symbol umgedreht
+  <Testbeschreibung>
+
+  >>>Userantwort:
+  ```
+
+  The user just places the cursor after the marker and speaks. An item whose answer line
+  stays empty simply wasn't tested yet — that's information too, not an error.
 - **The user works in the handoff file with a plain text editor** (TextEdit or similar), not
   in the chat box: they answer each test point directly beneath it, and collect new ideas and
   findings in the same file — even across a long pause. Why an editor and not the terminal:
