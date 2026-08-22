@@ -36,7 +36,14 @@ session continue seamlessly.
    sliding. Answering the question itself resets the timer.
 3. **Warn before cache-destroying actions** — a mid-session `/model` or `/effort` change, a
    flaky MCP server in the config — *before* the user pays for it.
-4. **Recommend a fresh session past the threshold.** Default: at ~**400k tokens of context**,
+4. **Measure the context size at every wave end — don't wait to be asked.** The skill has
+   no background process; the threshold rule only works if Claude actually checks. So:
+   at every handoff/wave end (and whenever finishing a large batch of subagent work,
+   which grows context fast), read the current context size from the status line or a
+   monitor and state it in the reply. A threshold that nobody measures is decoration —
+   this exact failure happened once: the user crossed 400k unnoticed while Claude was
+   busy orchestrating, and had to point it out himself.
+5. **Recommend a fresh session past the threshold.** Default: at ~**400k tokens of context**,
    say so proactively. Above that, a handoff + fresh start is many times cheaper than another
    full cache write, and past ~500–600k answer quality degrades from sheer information load
    even while the cache is warm. Under ~150k, keeping the cache warm on request is fine.
