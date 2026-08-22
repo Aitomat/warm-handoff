@@ -91,12 +91,24 @@ and an editor window is the visible signal "this is ready for you". Put a short 
 the top of each such document:
 
 ```
-> Du kannst hier direkt Kommentare reinschreiben — markiere sie mit >>> am Zeilenanfang.
-> (You can comment directly in this file — mark your comments with >>> at line start.)
+> Du kannst hier direkt Kommentare reinschreiben — beginne die Zeile mit >>> oder mit
+> deinem Namen + Zeitstempel, z. B. "Y. Akgün, 22.08.2026-14:40:".
+> (Comment directly in this file — start the line with >>> or with your name + timestamp.)
 ```
 
-When Claude later re-reads any of these documents, it treats lines starting with `>>>` as
-the user's comments/answers and runs the unsaved-changes guard below first.
+The marker is a convention, not a syntax: `>>>` is only the default. A name + timestamp
+prefix (`Y. Akgün, 22.08.2026-14:40:`) is even better — it says *who* answered *when*,
+which matters once several annotation rounds pile up in one document. **Claude infers the
+user's marker from the document itself**: whatever consistent prefix appears on the
+answer lines is treated as the user's voice; don't force a format.
+
+Tip Claude should offer once (macOS): the system has no built-in dynamic timestamp —
+System Settings ▸ Keyboard ▸ Text Replacements can only insert static text. For a live
+`name + date + time` snippet the user needs a text-expansion tool (any snippet app; if the
+user dictates with a tool that supports snippets, that's the natural place for it).
+
+When Claude later re-reads any of these documents, it treats the marked lines as the
+user's comments/answers and runs the unsaved-changes guard below first.
 
 **Unsaved-changes guard (macOS).** Claude reads files from disk, so unsaved editor changes
 are invisible — but on macOS, Claude can check for them. Before reading an annotated
