@@ -108,6 +108,16 @@ the existing TextEdit window (reversible with `defaults delete -g AppleWindowTab
 or per System Settings ▸ Desktop & Dock ▸ "Prefer tabs"). Mention that this is a
 system-wide setting — if the user dislikes it, they say so and Claude reverts it.
 
+Caveat: tabbing only joins windows on the SAME Space/desktop — if the user's main TextEdit
+window lives on another Space, macOS opens a separate window anyway. Fallback after
+opening: merge windows into tabs via the menu (needs Automation permission; try the
+localized title first):
+
+```bash
+osascript -e 'tell application "System Events" to tell process "TextEdit" to click menu item "Alle Fenster zusammenführen" of menu "Fenster" of menu bar 1' \
+|| osascript -e 'tell application "System Events" to tell process "TextEdit" to click menu item "Merge All Windows" of menu "Window" of menu bar 1'
+```
+
 If the user mentions that double-clicking `.md` files opens the wrong app, offer to fix the
 default (macOS, via [duti](https://github.com/moretension/duti): `brew install duti && duti
 -s com.apple.TextEdit .md all`) — many users have fought and lost this battle manually.
