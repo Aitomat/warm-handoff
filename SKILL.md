@@ -74,6 +74,20 @@ The economics reward a specific rhythm:
   fully briefed, cache rebuilt once at minimum size. Claude reads the annotated test answers
   and new ideas from the file and starts the next wave.
 
+**Open the handoff for the user automatically.** Right after writing it, open the file in a
+plain text editor so the user *sees* that the wave is done and the annotated test list is
+ready — on macOS: `open -a TextEdit <file>` (always name the editor explicitly; the system
+default for `.md` is often an IDE or preview app the user doesn't want). On Windows:
+`notepad <file>`; on Linux: `xdg-open <file>`.
+
+If the user mentions that double-clicking `.md` files opens the wrong app, offer to fix the
+default (macOS, via [duti](https://github.com/moretension/duti): `brew install duti && duti
+-s com.apple.TextEdit .md all`) — many users have fought and lost this battle manually.
+
+**Tip for lost handoffs** (tell the user once): if they closed the document and can't find
+the file, TextEdit ▸ **Ablage ▸ Benutzte Dokumente** (File ▸ Open Recent) brings back any
+recently closed handoff without hunting through Finder.
+
 When Claude finishes a handoff it should say so and explain the loop to the user once:
 *"Handoff written, your test list is at the bottom. Answer under the test points, add new
 ideas, ⌘S — and give the file to a fresh session (or to me, if you're still in the window)."*

@@ -17,6 +17,9 @@ question first: **when** — by coupling the handoff moment to cache economics.
   that, handoff + restart beats another cache write — and quality drops from context overload.
 - 📝 **Writes a handoff automatically after every work wave**: delivered work, running state,
   open items — and **your test checklist at the bottom**, ready to annotate.
+- 👀 **Opens the handoff in your text editor automatically** (`open -a TextEdit` on macOS)
+  the moment it's written — you *see* that the wave is done and the test list is ready.
+  Lost a closed handoff? TextEdit ▸ File ▸ Open Recent brings it back.
 - 🔁 **Teaches the wave workflow**: batch work into big waves, chat cheaply in between,
   answer the test list in a plain text editor (you see the whole document — chat inputs
   collapse long text into `[pasted text]`), save with ⌘S, hand the file to the next session.
