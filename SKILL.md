@@ -73,16 +73,7 @@ The economics reward a specific rhythm:
   ```
 
   The user just places the cursor after the marker and speaks. An item whose answer line
-  stays empty simply wasn't tested yet — that's information too, not an error.
-
-- **Optional click mode:** plain-text editors can't do real checkboxes, so for test rounds
-  Claude may ALSO generate the checklist as a single self-contained HTML file (opened in
-  the browser, fully offline): one clickable ✅ checkbox per item ("works, nothing to say")
-  plus a free-text field for dictated remarks, and a "Save results" button that writes a
-  results file into ~/Downloads which Claude then reads back. One click replaces saying
-  "passt" out loud; speaking is only needed when something is wrong. The Markdown handoff
-  stays the primary document — free text and new ideas live better there.
-- **The user works in the handoff file with a plain text editor** (TextEdit or similar), not
+  stays empty simply wasn't tested yet — that's information too, not an error.- **The user works in the handoff file with a plain text editor** (TextEdit or similar), not
   in the chat box: they answer each test point directly beneath it, and collect new ideas and
   findings in the same file — even across a long pause. Why an editor and not the terminal:
   chat inputs collapse long pastes into `[pasted text]`, so the user loses overview; in the
