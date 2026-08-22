@@ -39,6 +39,19 @@ session continue seamlessly.
    even while the cache is warm. Under ~150k, keeping the cache warm on request is fine.
 5. **Write the handoff automatically after every big work wave** — do not wait to be asked.
 
+## What a cache rebuild looks like (and doesn't)
+
+- **You cannot see a rebuild in the context counter.** Context size is the same before and
+  after — it's the same content, just frozen again. The counter measures size, not cost.
+- **Where you DO see it: your 5-hour and weekly usage quota.** A rebuild re-writes the whole
+  prefix at cache-write rates, so the quota drops noticeably faster. A lost cache doesn't
+  make your context bigger — it makes it more expensive.
+- **Short messages inside a warm cache are essentially free — send them freely.** Each
+  message re-reads the cached prefix at ~1/10 of normal price and pays full price only for
+  the few new tokens. Quick questions and small side-topics between waves are encouraged:
+  they cost almost nothing AND they reset the 1-hour timer. Batching is only for big work
+  packages (so they run as one wave) — never for chat.
+
 ## The wave workflow (the heart of this skill)
 
 The economics reward a specific rhythm:

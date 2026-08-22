@@ -41,6 +41,18 @@ session without typing anything, add one line to your global `~/.claude/CLAUDE.m
 At the start of every session, invoke the warm-handoff skill.
 ```
 
+## What a cache rebuild costs (and where you see it)
+
+You **cannot** see a rebuild in the context counter — the context is the same size before and
+after; only the price changed. Where you *do* see it: your **5-hour and weekly usage quota**,
+which drops noticeably faster whenever a big prefix gets re-written. That's the whole game:
+a lost cache doesn't make your session bigger, it makes it more expensive.
+
+Corollary: **short messages inside a warm cache are essentially free.** The cached prefix is
+re-read at ~1/10 of normal price; you pay full price only for the few new tokens — and every
+message resets the 1-hour timer. So chat freely between waves; batch only the big work
+packages, never the conversation.
+
 ## The facts it is built on
 
 | Rule | Value |
