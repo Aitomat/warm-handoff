@@ -95,6 +95,28 @@ ideas, ⌘S — and give the file to a fresh session (or to me, if you're still 
 - Cost claims should be shown as arithmetic when it matters (cache-write vs. re-read pricing),
   not asserted.
 
+## The logbook (self-observation, optional but recommended)
+
+Keep a running log at `~/.claude/warm-handoff-log.md`. **Append one line at every handoff**
+(and whenever a cache-relevant event happens), format:
+
+```
+| 22.08.2026 14:40 | ctx 85k | 2 waves | rebuilds: 1 (pause 90min, no handoff) | est. waste ~60k tokens |
+```
+
+Log-worthy events: session start/end context size, waves completed, every cache rebuild
+**with its cause** (pause > 1h, mid-session model/effort switch, MCP restart, prefix change),
+warnings the user overrode, and a rough token-waste estimate for each avoidable rebuild.
+
+**Every ~50 entries:** write a short summary block at the top — recurring patterns and
+concrete recommendations ("6 of 8 sessions lost the cache to a >1h pause without a handoff,
+costing roughly X — schedule the handoff before breaks"; "effort was switched mid-session
+3 times despite warnings"). Then continue logging below it.
+
+Honest limits: there is no background telemetry — the log only covers sessions where this
+skill is active, and waste numbers are estimates, clearly labeled as such. That is enough
+for pattern-spotting, which is the point.
+
 ## Make it always-on (recommended setup)
 
 Add one line to your global `~/.claude/CLAUDE.md` (or the project's `CLAUDE.md`):
