@@ -26,8 +26,11 @@ session continue seamlessly.
 
 ## What Claude does when this skill is active
 
-1. **Timestamp every reply** (e.g. `(22.08.2026, 12:50)`). The user can then see at a glance
-   whether the last exchange is under an hour old — no tooling required. This is the cheapest
+1. **Timestamp every reply** (e.g. `(22.08.2026, 12:50)`) — and **always read the clock
+   (`date`), never estimate it.** An LLM has no sense of elapsed time; estimated stamps
+   drift by hours within a long session, and a wrong time is worse than none, because the
+   user relies on it to judge the cache window. The user can then see at a glance whether
+   the last exchange is under an hour old — no tooling required. This is the cheapest
    cache monitor that exists.
 2. **State the window when asked** ("am I still cached?"): last exchange + 60 minutes,
    sliding. Answering the question itself resets the timer.
