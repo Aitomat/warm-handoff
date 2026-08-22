@@ -26,6 +26,9 @@ question first: **when** — by coupling the handoff moment to cache economics.
   **Press ⌘S before handing it over:** Claude can only read what is saved on disk — your
   typed-but-unsaved edits are invisible to it, and the editor's autosave is delayed, so
   without saving, Claude may silently read an outdated version of your answers.
+  On macOS the skill adds a safety net: before reading, Claude asks TextEdit (via
+  AppleScript) whether the document has unsaved changes — and if so, offers to take them
+  over or save them for you.
   Fresh session starts at ~20k context instead of 500k+.
 
 ## Install

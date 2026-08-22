@@ -84,6 +84,23 @@ If the user mentions that double-clicking `.md` files opens the wrong app, offer
 default (macOS, via [duti](https://github.com/moretension/duti): `brew install duti && duti
 -s com.apple.TextEdit .md all`) — many users have fought and lost this battle manually.
 
+**Unsaved-changes guard (macOS).** Claude reads files from disk, so unsaved editor changes
+are invisible — but on macOS, Claude can check for them. Before reading an annotated
+handoff, ask TextEdit whether the document is open with unsaved changes:
+
+```bash
+osascript -e 'tell application "TextEdit" to get {name, modified} of documents'
+```
+
+If the handoff shows `modified: true`, tell the user: *"Your handoff has unsaved changes —
+shall I take them over?"* and on confirmation either save it for them
+(`osascript -e 'tell application "TextEdit" to save (first document whose name is "<file>")'`)
+or read the live window text directly
+(`… to get text of (first document whose name is "<file>")`). Requires macOS automation
+permission for TextEdit (one-time prompt). This turns the ⌘S rule from a hard requirement
+into a safety net — but still teach ⌘S as the habit, since the guard only sees documents
+that are open in TextEdit.
+
 **Tip for lost handoffs** (tell the user once): if they closed the document and can't find
 the file, TextEdit ▸ **Ablage ▸ Benutzte Dokumente** (File ▸ Open Recent) brings back any
 recently closed handoff without hunting through Finder.
