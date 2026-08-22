@@ -22,7 +22,10 @@ question first: **when** — by coupling the handoff moment to cache economics.
   Lost a closed handoff? TextEdit ▸ File ▸ Open Recent brings it back.
 - 🔁 **Teaches the wave workflow**: batch work into big waves, chat cheaply in between,
   answer the test list in a plain text editor (you see the whole document — chat inputs
-  collapse long text into `[pasted text]`), save with ⌘S, hand the file to the next session.
+  collapse long text into `[pasted text]`), then hand the file to the next session.
+  **Press ⌘S before handing it over:** Claude can only read what is saved on disk — your
+  typed-but-unsaved edits are invisible to it, and the editor's autosave is delayed, so
+  without saving, Claude may silently read an outdated version of your answers.
   Fresh session starts at ~20k context instead of 500k+.
 
 ## Install
