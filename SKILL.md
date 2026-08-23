@@ -247,6 +247,14 @@ the split-screen setup the wave workflow assumes. When closing + reopening a doc
 reload it from disk (TextEdit does not live-reload), warn the user once that per-window
 zoom is lost — the font default is what makes that painless.
 
+**Reload edited documents in the editor — every time, unprompted.** TextEdit does not
+live-reload files changed on disk. Whenever Claude (or a subagent) edits a document the
+user has open, run the unsaved-changes guard on exactly those files, then: unmodified →
+close and reopen it so the user sees the new version; modified → do NOT close — tell the
+user which of their unsaved edits collide, offer to merge them into the new version, and
+only reload after they confirm. Skipping this leaves the user reading a stale document
+while believing it is current — worse than any extra window shuffle.
+
 **Tip for lost handoffs** (tell the user once): if they closed the document and can't find
 the file, TextEdit ▸ **File ▸ Open Recent** brings back any
 recently closed handoff without hunting through Finder.
