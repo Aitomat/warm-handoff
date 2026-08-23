@@ -43,10 +43,12 @@ session continue seamlessly.
    monitor and state it in the reply. A threshold that nobody measures is decoration —
    this exact failure happened once: the user crossed 400k unnoticed while Claude was
    busy orchestrating, and had to point it out himself.
-5. **Recommend a fresh session past the threshold.** Default: at ~**400k tokens of context**,
-   say so proactively. Above that, a handoff + fresh start is many times cheaper than another
-   full cache write, and past ~500–600k answer quality degrades from sheer information load
-   even while the cache is warm. Under ~150k, keeping the cache warm on request is fine.
+5. **Recommend a fresh session at the sweetspot.** Default: around ~**200k tokens of
+   context** — once the wave is done and the handoff is written, say so proactively;
+   ~**400k** is the hard ceiling, never ride past it. Rationale: every further work-step
+   re-reads the whole prefix at 1/10, so a big wave on a fat context costs multiples of
+   the same wave in a fresh ~30k session, and past ~500–600k answer quality degrades from
+   sheer information load even while the cache is warm. Under ~150k, staying is fine.
 5. **Write the handoff automatically after every big work wave** — do not wait to be asked.
 
 ## What a cache rebuild looks like (and doesn't)
