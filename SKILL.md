@@ -80,6 +80,28 @@ emits when a background subagent finishes. Consequences worth telling the user:
   contexts (5-min TTL, cached separately), so the main context stays lean while the
   completion notifications double as free cache refreshes.
 
+## Pacing: parallel for speed, sequential for warmth
+
+Subagents are not just a context-saver — their SCHEDULING is a cache instrument. Two modes,
+chosen by what the user needs right now (ask, or react to cues like "Zeitdruck" /
+"ich gehe ins Bett"):
+
+- **User is present and wants speed** → run subagents IN PARALLEL. Everything lands fast;
+  the user answers between waves and the timer never gets close to expiring.
+- **User steps away (lunch, evening, night)** → run subagents SEQUENTIALLY. Each completion
+  wakes Claude, produces a report — a new request that resets the 1-hour timer. The user
+  returns hours later to a still-warm cache and a finished handoff, having typed nothing.
+  Claude's goal while the user is away: always produce SOME output within each hour, work
+  chained through the queue, handoff at the end.
+- Honest limit: sequential mode keeps the cache warm only while real work remains. For an
+  8-hour absence, first build a work queue big enough to span it (backlog items, review
+  rounds, doc sweeps) — plan it WITH the user before they leave. Never invent busywork
+  just to touch the cache; if the queue runs dry, write the handoff and let the cache go.
+- Model economics: the orchestrator holds the big cached context — subagents don't. Run
+  subagents on a strong model with LOW reasoning effort for mechanical work and reserve
+  high effort for hard review/design steps; set the session's model+effort once at start
+  (mid-session switches kill the cache).
+
 ## The window as a friendly coach (frame it this way)
 
 Present the 1-hour window, the handoff ritual and the test list as POSITIVE motivators,

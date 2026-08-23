@@ -81,6 +81,15 @@ if the final handoff message lands at 16:30, answering before ~17:30 stays warm.
 costs nothing; only replying is a new request. While subagents run, Claude's interim
 reports keep the cache warm for free.
 
+## Pacing: parallel for speed, sequential for warmth
+
+Subagent scheduling is a cache instrument: run them **in parallel** when you're present
+and want speed; run them **sequentially** when you step away — each completion report is
+a new request that resets the 1-hour timer, so you come back hours later to a warm cache
+and a finished handoff. Tell Claude which mode you need ("Zeitdruck" vs. "ich gehe ins
+Bett — hier ist die Warteschlange"). Honest limit: warmth needs real queued work; Claude
+must never invent busywork just to touch the cache.
+
 ## The window as a friendly coach
 
 The 1-hour window is meant as a POSITIVE motivator, not cost-anxiety: "answer within the
