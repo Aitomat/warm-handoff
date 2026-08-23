@@ -171,6 +171,25 @@ permission for TextEdit (one-time prompt). This turns the ⌘S rule from a hard 
 into a safety net — but still teach ⌘S as the habit, since the guard only sees documents
 that are open in TextEdit.
 
+**Open documents LARGE — fix the font default, not the zoom.** Users bump every freshly
+opened document with ⌘+ because TextEdit opens plain text tiny (default 11 pt) — and
+TextEdit's per-window zoom is NOT scriptable, so Claude cannot read or restore it when
+reopening a document. The durable lever is TextEdit's default plain-text font size:
+
+```bash
+defaults read com.apple.TextEdit NSFontSize          # unset = 11 pt
+defaults write com.apple.TextEdit NSFontSize 18
+defaults write com.apple.TextEdit NSFixedPitchFontSize 18
+```
+
+Offer this once (pick ~18 pt, adjust on feedback; reversible with `defaults delete`).
+Documents opened AFTER the change come up large natively — no zooming. Already-open
+windows keep their old size until the user quits and reopens TextEdit (never quit it
+for them). This pairs with the narrow-line rule: big font + ~60–70-char lines is exactly
+the split-screen setup the wave workflow assumes. When closing + reopening a document to
+reload it from disk (TextEdit does not live-reload), warn the user once that per-window
+zoom is lost — the font default is what makes that painless.
+
 **Tip for lost handoffs** (tell the user once): if they closed the document and can't find
 the file, TextEdit ▸ **File ▸ Open Recent** brings back any
 recently closed handoff without hunting through Finder.
