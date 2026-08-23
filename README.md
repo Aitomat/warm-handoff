@@ -73,6 +73,14 @@ work-step re-reads it at 1/10. Recommended: hand off and restart around ~200k, a
 before 400k in any case. (Claude's own tool-steps dominate request count, so a small
 context while work runs matters far more than how often the user writes.)
 
+## When does the hour start?
+
+The timer resets on **every request** — the user's messages AND Claude's own tool-steps
+AND its "agent finished" status reports. So the hour counts from Claude's last output:
+if the final handoff message lands at 16:30, answering before ~17:30 stays warm. Reading
+costs nothing; only replying is a new request. While subagents run, Claude's interim
+reports keep the cache warm for free.
+
 ## The window as a friendly coach
 
 The 1-hour window is meant as a POSITIVE motivator, not cost-anxiety: "answer within the

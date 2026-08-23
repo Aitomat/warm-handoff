@@ -65,6 +65,21 @@ session continue seamlessly.
   handoff to handoff, answers collected under the test items; short questions only when
   they can't wait.
 
+## When does the hour actually start? (users always ask this)
+
+The 1-hour timer resets on **every request in the session** — not just the user's
+messages. That includes each of Claude's own tool-steps, and each status message Claude
+emits when a background subagent finishes. Consequences worth telling the user:
+
+- The hour counts from **Claude's last output**, whichever side produced the last
+  activity. "Agent Y finished, here's the handoff" at 16:30 → the user has until ~17:30
+  to answer warmly. Reading costs the user nothing; only their reply is a new request.
+- While Claude waits on subagents, its own "agent X done" interim reports keep the cache
+  warm automatically — no dedicated keep-alive needed during active waves.
+- Work through subagents by default for heavy lifting: they run in their own small
+  contexts (5-min TTL, cached separately), so the main context stays lean while the
+  completion notifications double as free cache refreshes.
+
 ## The window as a friendly coach (frame it this way)
 
 Present the 1-hour window, the handoff ritual and the test list as POSITIVE motivators,
