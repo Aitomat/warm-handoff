@@ -56,11 +56,12 @@ session continue seamlessly.
 - **Where you DO see it: your 5-hour and weekly usage quota.** A rebuild re-writes the whole
   prefix at cache-write rates, so the quota drops noticeably faster. A lost cache doesn't
   make your context bigger — it makes it more expensive.
-- **Short messages inside a warm cache are essentially free — send them freely.** Each
-  message re-reads the cached prefix at ~1/10 of normal price and pays full price only for
-  the few new tokens. Quick questions and small side-topics between waves are encouraged:
-  they cost almost nothing AND they reset the 1-hour timer. Batching is only for big work
-  packages (so they run as one wave) — never for chat.
+- **A short message costs ~1/10 of the WHOLE context — cheap when small, real when fat.**
+  At 30k context, chat freely (near-free, and it resets the 1-hour timer). At 200k+, each
+  exchange is ~20k full-price equivalents and ten quick back-and-forths equal one full
+  context read: batch conversation too — ideally ONE long structured message per wave,
+  handoff to handoff, answers collected under the test items; short questions only when
+  they can't wait.
 
 ## The wave workflow (the heart of this skill)
 
@@ -226,9 +227,9 @@ ideas, ⌘S — and give the file to a fresh session (or to me, if you're still 
   handoff, it is running a big wave on top of a fat context.
 - Rule of thumb that follows: hand off BEFORE each big new wave once context has grown
   past ~150–250k — not at a fixed percentage, and not after every wave regardless of
-  size. Between waves, short questions and quick back-and-forth remain encouraged:
-  they cost near-nothing in absolute terms and reset the 1-hour timer. Batch WORK,
-  not conversation.
+  size. **Sweetspot: hand off around ~200k, hard ceiling well before 400k.** Below ~50k,
+  short questions are near-free — chat freely; past ~150k, batch conversation too
+  (one structured message per wave). Every message resets the 1-hour timer either way.
 
 ## When to stay vs. when to hand off
 

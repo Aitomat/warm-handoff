@@ -13,7 +13,7 @@ question first: **when** — by coupling the handoff moment to cache economics.
   1-hour window — the cheapest cache monitor there is.
 - ⚠️ **Warns before cache-killing actions**: mid-session model/effort switches, flaky MCP
   servers, prefix changes.
-- 📏 **Recommends a fresh session past ~400k context** (configurable judgment call): beyond
+- 📏 **Recommends a fresh session around ~200k context (hard ceiling before 400k)** (configurable judgment call): beyond
   that, handoff + restart beats another cache write — and quality drops from context overload.
 - 📝 **Writes a handoff automatically after every work wave**: delivered work, running state,
   open items — and **your test checklist at the bottom**, ready to annotate.
@@ -60,10 +60,18 @@ after; only the price changed. Where you *do* see it: your **5-hour and weekly u
 which drops noticeably faster whenever a big prefix gets re-written. That's the whole game:
 a lost cache doesn't make your session bigger, it makes it more expensive.
 
-Corollary: **short messages inside a warm cache are essentially free.** The cached prefix is
-re-read at ~1/10 of normal price; you pay full price only for the few new tokens — and every
-message resets the 1-hour timer. So chat freely between waves; batch only the big work
-packages, never the conversation.
+Corollary, with honest arithmetic: **a short message costs ~1/10 of your WHOLE context.**
+At 30k context that is pocket change — chat freely. At 200k+ it is ~20k full-price token
+equivalents per exchange, and ten quick back-and-forths equal one full context read. So:
+the bigger the context, the more you should batch — ideally one long, structured message
+per wave (handoff to handoff, answers collected under the test items), short questions
+only when they truly can't wait. Every message still resets the 1-hour timer.
+
+**Sweetspot for a fresh session: ~200k context.** Once the wave is done and the handoff
+is written, don't ride a fat context onward "because the cache is warm" — every further
+work-step re-reads it at 1/10. Recommended: hand off and restart around ~200k, and well
+before 400k in any case. (Claude's own tool-steps dominate request count, so a small
+context while work runs matters far more than how often the user writes.)
 
 ## The facts it is built on
 
