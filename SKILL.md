@@ -210,6 +210,26 @@ When Claude finishes a handoff it should say so and explain the loop to the user
 *"Handoff written, your test list is at the bottom. Answer under the test points, add new
 ideas, ⌘S — and give the file to a fresh session (or to me, if you're still in the window)."*
 
+## The economics, honestly (teach this to the user once)
+
+- Every request inside a warm cache re-reads the WHOLE prefix at ~1/10 price. At 220k
+  context a short question costs ~22k full-price token equivalents; ten such exchanges
+  ≈ one full context read. The user's instinct "batch my messages" is directionally right —
+- — BUT the user's messages are a rounding error. Claude's own tool loop dominates:
+  every file read, every command is a request that re-reads the prefix. A working day
+  can be 500+ requests, of which the user sent ~20. The lever is therefore NOT fewer
+  user messages; it is a SMALL context while the many work-steps run. (This is also why
+  subagents pay off: the heavy lifting happens in their separate small contexts.)
+- Concrete arithmetic for the sweetspot: a 300-step wave at 220k context ≈ 300 × 22k
+  ≈ 6.6M equivalents; the same wave in a fresh ~30k session ≈ 0.9M. A fresh session's
+  rebuild is cheap because the new prefix is small — the expensive thing is never the
+  handoff, it is running a big wave on top of a fat context.
+- Rule of thumb that follows: hand off BEFORE each big new wave once context has grown
+  past ~150–250k — not at a fixed percentage, and not after every wave regardless of
+  size. Between waves, short questions and quick back-and-forth remain encouraged:
+  they cost near-nothing in absolute terms and reset the 1-hour timer. Batch WORK,
+  not conversation.
+
 ## When to stay vs. when to hand off
 
 | Situation | Recommendation |
