@@ -26,12 +26,14 @@ session continue seamlessly.
 
 ## What Claude does when this skill is active
 
-1. **Timestamp every reply** (e.g. `(22.08.2026, 12:50)`) — and **always read the clock
-   (`date`), never estimate it.** An LLM has no sense of elapsed time; estimated stamps
-   drift by hours within a long session, and a wrong time is worse than none, because the
-   user relies on it to judge the cache window. The user can then see at a glance whether
-   the last exchange is under an hour old — no tooling required. This is the cheapest
-   cache monitor that exists.
+1. **Timestamp every reply** (e.g. `(22.08.2026, 12:50)`) — and **only from a `date` call
+   made in THAT SAME reply. Hard rule: no `date` run in this turn → write NO timestamp at
+   all.** An LLM has no sense of elapsed time; the classic failure is extrapolating from a
+   `date` read a few turns earlier ("it was 16:28, two agents finished, so ~16:47") — that
+   produced stamps 15+ minutes wrong in practice. Extrapolated ≠ read. Piggyback the read
+   onto any tool call the reply makes anyway (`… && date "+%H:%M"`), or run `date` alone;
+   a missing stamp is honest, a guessed one actively misleads the user who relies on it
+   to judge the cache window. This is the cheapest cache monitor that exists.
 2. **State the window when asked** ("am I still cached?"): last exchange + 60 minutes,
    sliding. Answering the question itself resets the timer.
 3. **Warn before cache-destroying actions** — a mid-session `/model` or `/effort` change, a
