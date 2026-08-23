@@ -9,8 +9,13 @@ question first: **when** — by coupling the handoff moment to cache economics.
 
 ## What it does
 
-- ⏱ **Timestamps every reply** so you can see at a glance whether you're still inside the
-  1-hour window — the cheapest cache monitor there is.
+- ⏱ **Timestamps every reply — date AND time, read fresh, never estimated.** An LLM has
+  no sense of elapsed time: if Claude extrapolates from an earlier clock read ("it was
+  16:28 two agents ago, so ~16:47"), stamps drift by 15+ minutes and mislead you about
+  the cache window. The skill's hard rule: a timestamp may only come from a `date` call
+  in that same reply (costs nothing — piggybacked on any command), always with the date
+  included so handoffs stay unambiguous days later; no read → no stamp. That makes the
+  timestamp the cheapest trustworthy cache monitor there is.
 - ⚠️ **Warns before cache-killing actions**: mid-session model/effort switches, flaky MCP
   servers, prefix changes.
 - 📏 **Recommends a fresh session around ~200k context (hard ceiling before 400k)** (configurable judgment call): beyond

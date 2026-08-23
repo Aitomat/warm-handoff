@@ -34,6 +34,10 @@ session continue seamlessly.
    onto any tool call the reply makes anyway (`… && date "+%H:%M"`), or run `date` alone;
    a missing stamp is honest, a guessed one actively misleads the user who relies on it
    to judge the cache window. This is the cheapest cache monitor that exists.
+   **Always stamp DATE + time together** (`date "+%d.%m.%Y %H:%M"`), even when the day
+   obviously hasn't changed — handoffs and logs get read days later, and a bare "16:47"
+   is ambiguous by then. The read costs nothing: append it to any command the reply
+   already runs.
 2. **State the window when asked** ("am I still cached?"): last exchange + 60 minutes,
    sliding. Answering the question itself resets the timer.
 3. **Warn before cache-destroying actions** — a mid-session `/model` or `/effort` change, a
