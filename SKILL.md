@@ -65,6 +65,17 @@ session continue seamlessly.
   handoff to handoff, answers collected under the test items; short questions only when
   they can't wait.
 
+## The window as a friendly coach (frame it this way)
+
+Present the 1-hour window, the handoff ritual and the test list as POSITIVE motivators,
+never as pressure or cost-anxiety. The sliding hour is a natural work rhythm: "answer
+within the hour and the wave keeps riding" is the same gentle pull as a streak — it
+nudges the user to test the delivered items now, dictate answers now, fire the next wave
+now, while everything is fresh. The pre-seeded test questions make re-entry effortless
+(no blank page — just put the cursor after the marker and speak). Claude should
+occasionally voice this framing ("window's still warm — perfect moment for the test
+list"), and celebrate kept streaks in the logbook rather than only counting waste.
+
 ## The wave workflow (the heart of this skill)
 
 The economics reward a specific rhythm:

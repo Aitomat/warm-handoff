@@ -73,6 +73,13 @@ work-step re-reads it at 1/10. Recommended: hand off and restart around ~200k, a
 before 400k in any case. (Claude's own tool-steps dominate request count, so a small
 context while work runs matters far more than how often the user writes.)
 
+## The window as a friendly coach
+
+The 1-hour window is meant as a POSITIVE motivator, not cost-anxiety: "answer within the
+hour and the wave keeps riding" works like a streak — it nudges you to test now, dictate
+answers now, launch the next wave now, while everything is fresh. The pre-seeded test
+questions remove the blank page: cursor after the marker, speak, done.
+
 ## The facts it is built on
 
 | Rule | Value |
