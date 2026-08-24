@@ -38,6 +38,13 @@ session continue seamlessly.
    obviously hasn't changed — handoffs and logs get read days later, and a bare "16:47"
    is ambiguous by then. The read costs nothing: append it to any command the reply
    already runs.
+   **The #1 trap: replies to background-agent notifications.** When a subagent
+   finishes and Claude writes a short status update, that reply usually makes NO
+   tool call — so there is nothing to piggyback on, and the temptation is to
+   extrapolate ("last read 18:34, three agents done, so ~19:40"). A tilde does
+   NOT make a guess honest — `~19:40` is still a fabricated stamp (real time was
+   20:02 in practice, 24.08.2026). Rule: agent-status replies either run `date`
+   as their one tool call, or carry NO time at all. Never `~`-stamps.
 2. **State the window when asked** ("am I still cached?"): last exchange + 60 minutes,
    sliding. Answering the question itself resets the timer.
 3. **Warn before cache-destroying actions** — a mid-session `/model` or `/effort` change, a
