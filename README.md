@@ -141,6 +141,32 @@ Three numbers make that concrete:
 Expensive work, cheap receipt. In the measured session six agents together burned more than
 a million tokens and nothing of it reached the main context except assignments and reports.
 
+**What that is worth — two statements, deliberately kept apart.** They are usually mashed
+into one comparison (147 steps on one side, 600 on the other), which puts a different amount
+of work on each side and makes delegation look like it saves nothing. It does save.
+
+*One: the same work, merely delegated.*
+
+```
+All in the main context:  147 steps × 151k × 0.1              = 2,217k
+Delegated:                 14 main requests × 345k × 0.1 =  483k
+                          147 agent steps  ×  30k × 0.1 =  441k
+                                                   total =  924k
+```
+
+**2.4× less for exactly the same work** — because every step is priced against the agent's
+small context instead of your fat one, roughly a fifth per work-step.
+
+*Two, separately:* pocket that saving and you're done. Reinvest it and you get a multiple of
+the work for the same quota — an agent works more thoroughly than you would in passing, so
+147 steps quickly become 600. At 600 agent steps (1,800k) plus the 483k of main requests the
+bill is level with where you started — but **four times as much has been done**. That is the
+point of "token maximisation": more work for the same quota, not less spending.
+
+So: **cheaper for the same work, and far more work for the same price** — whichever of the
+two you want. What subagent tokens are not is *free*: they draw on the same weekly quota.
+What they don't load is your main context, which is the whole trick.
+
 The skill is equally clear about when a subagent does *not* pay: below ~3–5 tool steps, for
 strictly sequential work, or when a lot of shared context would have to be shipped across
 first — its own startup is roughly 1–3 requests plus briefing plus report.
@@ -237,6 +263,39 @@ The four lines under the table are the real yield: which wave was expensive, how
 one sentence sets off, what your own chatter costs, and whether the cache was warm at all.
 The skill puts the table into every handoff, right before the closing context line — it
 doesn't replace that single number, it explains it.
+
+## The cost line under every answer
+
+*"Could you say with every message what cost how much? Just that token figure, additionally,
+under your answers."* So Claude appends one plain line — read, written, output, each with its
+factor, plus the session total. It costs nothing extra because the measurement is piggybacked
+onto the `date` call the timestamp needs anyway; measured on its own it would be a thermometer
+that heats the room.
+
+```
+Last measured request: 366k read (×0.1) + 0.4k written (×2) + 2.9k output (×5) ≈ 52k ·
+session so far: 265 requests, 9,520k
+```
+
+**Note the label — it says "last measured request", not "this round", and that matters.** All
+three numbers come from the last *completed* request, not from the answer they sit under; the
+cost of the running answer isn't settled until it is finished. With read and written you never
+notice (the context moves by a few per cent per step). With output you do: a short answer can
+sit under the output figure of a long one. Claude may estimate the running answer's output
+from its word count (words × ~1.4), but then it has to mark it as an estimate standing next to
+two measurements.
+
+**The line has a second job: it speaks up when a round was unusually expensive.** Not at a
+fixed threshold, but when a round costs more than about twice this session's own running
+average — measured from the session file. The tone is deliberately friendly rather than
+scolding, and it always names the cause plus a cheaper route: *"that round was expensive
+(≈120k) because I read three large files in full — next time a targeted search does it"*, or
+*"those five short messages cost ≈180k together at a 350k context; collected into one they'd
+have been ≈37k"*. The responsibility is almost always Claude's, not yours — whole-file reads,
+unfiltered command output, over-long answers, per-agent chatter — and the skill says so, so
+the feature doesn't turn into user re-education. At most once per wave. And it works the other
+way too: a wave that went well gets named as well ("the whole wave ran through subagents — 40k
+in the main context for six work packages").
 
 ## What it does
 

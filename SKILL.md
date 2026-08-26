@@ -298,6 +298,45 @@ Expensive work, cheap receipt — that asymmetry is the largest single lever in 
 skill. In the measured session six agents together burned over a million tokens, and none of
 it landed in the main context except assignments and reports.
 
+**The honest arithmetic, as TWO separate statements.** They get mashed into one comparison
+all the time — 147 steps on one side against 600 on the other — and then the sums look like
+delegation saves nothing. That comparison is unfair: it puts a different amount of work on
+each side. Kept apart, both statements are true, and the first one is the important one.
+
+*One: the same work, merely delegated — this genuinely gets cheaper.*
+
+```
+All in the main context:  147 steps × 151k × 0.1              = 2,217k
+Delegated:                 14 main requests × 345k × 0.1 =  483k
+                          147 agent steps  ×  30k × 0.1 =  441k
+                                                   total =  924k
+```
+
+**2.4× less for exactly the same work.** Nothing clever behind it: every step is priced
+against the agent's small context instead of the session's fat one — roughly **a fifth** per
+work-step.
+
+*Two, and this is a SEPARATE thought:* whoever does not pocket the saving but reinvests it
+gets a multiple of the work for the same quota. An agent works more thoroughly than you
+would in passing, so 147 steps quickly become 600:
+
+```
+ 14 main requests × 345k × 0.1 =   483k
+600 agent steps   ×  30k × 0.1 = 1,800k
+                          total = 2,283k
+```
+
+Now the bill is roughly level again — but **four times as much has been done.** That is what
+"token maximisation" means here: more work for the same quota, not less spending.
+
+> **Subagents do both: the same work markedly cheaper (factor ~2.4) — and, if you spend the
+> saving again, a multiple of the work at the same price.**
+
+And the honesty that belongs with it: **subagent tokens are not free.** They draw on the very
+same weekly quota. What they do not load is the MAIN CONTEXT — the session stays small, fast
+and responsive, and that is their real value. Anyone who thinks agents run "on the side" will
+be surprised by their quota later.
+
 **When a subagent does NOT pay off** (honesty matters here too): below roughly 3–5 tool
 steps, for strictly sequential work, or when a lot of shared context would have to be
 transferred first. Its startup cost is roughly 1–3 requests plus briefing plus report.
@@ -703,6 +742,84 @@ concrete reason behind it:
   is full. Then a fresh session, document in, off you go.
 
 Claude says this to the user ONCE per setup — not on every long message.
+
+## The cost line under EVERY answer (26.08.2026, 18:06)
+
+Yasin's wish: *"Could you say with every message you put out what cost how much — ten per
+cent, two hundred per cent? Just that token figure, additionally, under your answers."* And
+the counter-question right behind it: *"Or does that blow the skill apart?"*
+
+It does not — it is the skill's core: make cost visible instead of talking about it. But it
+has a trap you hit immediately when building it.
+
+**The trap:** a measurement needs a tool call, and a tool call IS a request — at 350k context
+that is 35k equivalents. Build the cost display naively and you pay more for measuring than
+the display will ever save. That would be a thermometer that heats the room.
+
+**The fix:** `~/.claude/ctx.sh` is NEVER called on its own, but appended to a command that
+runs anyway — usually the same `date` that supplies the timestamp:
+
+```bash
+date "+%d.%m.%Y %H:%M" && ~/.claude/ctx.sh
+```
+
+Output (a real line):
+
+```
+COST | context 366k · last request: 366k read ×0.1 + 0.4k written ×2
+       + 2.9k output ×5 = 52k | session: 265 requests, 9520k
+```
+
+Under the answer that becomes one line in plain language:
+
+> *Last measured request: 366k read (×0.1) + 0.4k written (×2) + 2.9k output (×5) ≈ 52k ·
+> session so far: 265 requests, 9,520k*
+
+**The two honesty rules for it** — the same as for the clock and the context size:
+
+1. **All three numbers come from the LAST COMPLETED request** — not from the answer the line
+   sits under. The cost of the running answer is only settled once it is finished; nobody can
+   know it in the meantime. Yasin asked exactly the right question (26.08.2026): *"Those 2,600
+   output tokens — were they really this answer's?"* No. With read and written you barely
+   notice, because the context grows by a few per cent per step. With OUTPUT you very much do:
+   a short answer then sits under the output figure of a long one, and vice versa. That is why
+   the line is labelled **"last measured request"** and no longer "this round".
+   The alternative: you COULD estimate the running answer's output from its word count
+   (words × ~1.4). Allowed — but that is an estimate standing next to two measurements, so
+   whoever writes it marks it as one ("≈2.6k estimated").
+2. **No measurement this turn, no number** — or an extrapolation of the last state explicitly
+   marked with `~`. Never an invented one.
+
+**The line's second job: speak up when a round was unusually expensive** (26.08.2026, 18:17).
+Yasin's wording: *"That's the most brilliant part, that at the end you say exactly what I
+wanted to see — then the user sees what he has just burned. And if he has burned a lot, you
+can point it out: hey, that was silly of you. In some form, quite nicely."*
+
+- **When at all:** only when a round sits well above the average of THIS session — roughly:
+  more than twice the running average cost per request. No fixed threshold; the average is in
+  the session file, so it is measured, not guessed.
+- **The tone is the whole point, and it is explicitly NOT a telling-off** — the user himself
+  said "quite nicely". Never "that was silly", but name the cause and offer a concrete cheaper
+  route:
+
+  > "That round was expensive (≈120k) because I read three large files in full — next time a
+  > targeted search does the job."
+
+  > "Those five short messages cost ≈180k together, because the context is 350k by now.
+  > Collected into one they'd have been ≈37k."
+- **The responsibility is almost always the AGENT's, not the user's.** This has to be said
+  outright, otherwise the feature turns into user re-education. The usual causes of expensive
+  rounds are: reading whole files instead of grepping, unfiltered command output, over-long
+  answers of one's own, per-subagent status notes — all things the agent stops doing, not the
+  user.
+- **At most ONCE per wave**, not again at every expensive round, or the hint becomes nagging.
+- **The other direction belongs with it.** If a round was unusually cheap or a wave went well,
+  say so just as plainly: "the whole wave ran through subagents — 40k in the main context for
+  six work packages." This skill motivates, it does not admonish.
+
+**When the line is left out:** in pure interjections and one-liners. A cost line under a
+three-word sentence is noise. It belongs at the end of every substantial answer, at wave end,
+and in the handoff.
 
 ## The per-session cost table (26.08.2026, 17:51)
 
