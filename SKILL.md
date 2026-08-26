@@ -190,19 +190,138 @@ the main context instead of 147**, total cost from 4,380k down to 1,350–2,050k
 
 (The effects overlap and must not be added up.)
 
+### How few requests are realistic? (the honest answer)
+
+Yasin asked the obvious follow-up (26.08.2026): *"So we're trying to get the 147 requests
+down to 14, say — can you put it like that?"*
+
+Yes for the MAIN context. No for the work itself. The work does not disappear — it moves
+into the subagents, and that distinction is the whole point:
+
+- 100 work-steps in the main context at 220k → 100 × 22k = **2,200k equivalents**.
+- The same 100 steps inside a subagent carrying ~30k → 100 × 3k = **300k**.
+- **Factor ~7** — and not one of those 100 steps appears as a request in the main session.
+
+The realistic floor for a pure orchestration wave, counted item by item:
+
+| Requests | What for |
+|---|---|
+| 1 | reading the handoff |
+| 1–2 | launching the whole fleet in ONE bundled reply |
+| 1 per agent | its closing report — unavoidable, that is how the result arrives |
+| 2–3 | build, test, commit, each through ONE script |
+| 1 | writing the handoff |
+| 1 | the closing message |
+
+That lands at roughly **13–20 requests instead of 147** for the same delivered work.
+Conversation with the user comes on top — and it is wanted, not waste. The number to shrink
+is the machine's own chatter, never the user's thinking.
+
+### Messages DURING the work are almost free (26.08.2026, 17:26)
+
+Yasin asked this three times, because the answer changes how you use the tool: *"Does this
+message cost nothing right now because you happen to be working? Or do you mean because
+they're short messages?"*
+
+It is not the brevity. It is the **timing** — and the gap between the two cases is enormous.
+His own description of the mechanism is exactly right: *"While the AI has just been given a
+new request and hasn't answered yet, you can slip further requests in. But if it answers in
+between and then picks up the new request, it costs ten per cent of the current context
+again."*
+
+- **Claude is mid-loop** (tools running, files being read). The message is appended to the
+  turn already in flight and rides along with the next request, which would have happened
+  anyway. **No additional request comes into being.** You pay for the message text alone,
+  written into the cache once: 50 words ≈ 70 tokens × 2 ≈ **140 equivalents**.
+- **Claude is idle** (it has answered, nothing is running). Now the message TRIGGERS a
+  request that would not otherwise exist: **the whole context × 0.1**. At 220k that is
+  **22,000 equivalents** — roughly 150 times as much.
+
+**Precision, because "while something is running" means two different things** (Yasin asked
+straight back, 26.08.2026, 17:37 — rightly). What matters is not whether something somewhere
+is computing, but whether Claude's OWN tool loop is turning:
+
+| Situation | A message from the user | Cost |
+|---|---|---|
+| Claude's own tool loop is running (reading a file, running a command, launching an agent) | is appended, rides along | **near zero** |
+| **Subagents are computing, Claude is waiting** | triggers a new request | **the full 10 %** |
+| After Claude's answer, idle | triggers a new request | **the full 10 %** |
+
+The middle row is the surprising one and must be said out loud: while subagents work, the
+MAIN AGENT IS NOT WORKING — it is waiting for their reports. A message sent then costs
+exactly as much as one sent into a completely idle session.
+
+One consolation that is also true: **several messages in quick succession are bundled into
+ONE request** as long as they arrive before the answer starts. Two thoughts back to back
+cost once, not twice.
+
+**The catch that gets overlooked:** the question is cheap — the ANSWER is not. Output costs
+×5, so a 300-word reply is ~2,000 equivalents, fourteen times the question that prompted it.
+Hence the rule for interjections during a running wave: **answer short, detail goes into the
+handoff.** Don't throttle the question, throttle your own rambling.
+
+What the user takes away — and it belongs said to them ONCE:
+
+> As long as you can see me rattling away, write whenever you like. When only the subagents
+> are running, or when I'm waiting on you, collect instead and send it in one go — best of
+> all into the collection area of the handoff, where it costs nothing at all.
+
+Which is exactly why that collection area matters: collecting there costs precisely zero,
+because no request comes into being.
+
 ### Subagents are the default route, not the exception
 
 The goal, as Yasin put it (26.08.2026): *"work with a strong model that acts as the boss, sends the
 subagents out, uses few tokens, says everything in one bundle and makes few requests."*
 
-Why that adds up: a subagent starts at ~10–20k instead of the full main context. Its 100
-work-steps therefore read 100 × ~15k instead of 100 × ~220k. In the measured session six
-agents together burned over a million tokens — none of which landed in the main context
-except the assignments and the closing reports.
+**Why the startup cost is the decisive difference.** Yasin put the mechanism better than
+any documentation does (26.08.2026): *"When you send a subagent out, it doesn't start like a
+new session at 80,000 tokens times two, but at, say, 10,000 times two. Internally it burns a
+lot, some of it cheap, some expensive — but it gives back LITTLE, because it only returns
+the result. And that keeps the current session small and cheap."*
+
+The same thing, item by item:
+
+1. **Start context.** A fresh session in a real project measured **82k** before a single
+   line of work — skills, tool schemas and project rules load before anyone does anything —
+   and the rebuild costs that × 2. A subagent starts with its assignment plus its own tool
+   schemas, on the order of **10–20k**; × 2 that is ~20–40k, once.
+2. **What happens inside.** The agent reads, searches, edits, runs tests — dozens of steps,
+   each re-reading only ITS small context at ×0.1. Some of those steps are cheap, some (long
+   file reads, test output) are not, but every one of them is priced against ~15k instead of
+   against your 220k. That is why 100 steps cost ~300k there and ~2,200k here.
+3. **What flows back into the main context.** Exactly two things: the assignment you wrote
+   and the closing report you capped at 300 words. The chronicle, the logs, the dead ends
+   stay in the agent's context and die with it.
+
+Expensive work, cheap receipt — that asymmetry is the largest single lever in this whole
+skill. In the measured session six agents together burned over a million tokens, and none of
+it landed in the main context except assignments and reports.
 
 **When a subagent does NOT pay off** (honesty matters here too): below roughly 3–5 tool
 steps, for strictly sequential work, or when a lot of shared context would have to be
 transferred first. Its startup cost is roughly 1–3 requests plus briefing plus report.
+
+**Model and reasoning effort belong in the DISPLAYED name (26.08.2026, 17:35).** Yasin's
+objection: *"When you send subagents out — can you show down there which kind is working
+right now? GPT-5.6 high, extra high, or Opus 5? You set the effort as well. Right now I
+never see which agent it is."*
+
+He is right, and the fix is trivial: the host displays the agent's SHORT DESCRIPTION, so the
+model belongs inside it, not just the task.
+
+```
+bad:   "history performance, round 2"
+good:  "Opus5/high · history performance"
+good:  "Fable/low · rename test files"
+good:  "GPT5.6 · timing tests"            (Codex run)
+```
+
+Then the user sees at a glance whether an expensive or a cheap model is running, and can
+intervene before the tokens are gone. If no model is set the agent inherits the session
+model — label that too ("inherited") instead of leaving it unsaid. The same rule applies to
+the chat announcement: when a fleet starts, the ONE start message says who runs on which
+model at which effort.
 
 **The subagent contract**, which belongs in every assignment:
 
@@ -329,6 +448,13 @@ emits when a background subagent finishes. Consequences worth telling the user:
   no dedicated keep-alive is needed during active waves.
 - Work through subagents by default for heavy lifting: they run in their own small
   contexts (5-min TTL, cached separately), so the main context stays lean.
+- **The other half of the truth: EVERY ANSWER costs too.** A request is a request no matter
+  who triggers it — Claude's own reply re-reads the whole context at 10 % (at 220k that is
+  ~22k equivalents) and pays for its own output tokens on top, at **five times** the price.
+  A 300-word answer is ~2,000 equivalents extra. So there is no such thing as keeping the
+  clock warm for free: every timer reset is a paid request. That is not an argument against
+  answering — it is an argument against rambling, and the reason empty interim notes were
+  cut.
 
 ## Pacing: parallel for speed, sequential for warmth
 
@@ -578,6 +704,102 @@ concrete reason behind it:
 
 Claude says this to the user ONCE per setup — not on every long message.
 
+## The per-session cost table (26.08.2026, 17:51)
+
+Yasin's wish: *"Couldn't you just make a table where we have everything per session at a
+glance — so you can see what cost how many tokens and when? That would be brilliant."*
+
+Built as `~/.claude/session-costs.sh`. The unit of the table is deliberately the **stretch
+between two user messages** — that is what a human experiences ("I said something, then
+something happened"), not the individual model request, which nobody sees.
+
+```bash
+~/.claude/session-costs.sh              # current project, newest session
+~/.claude/session-costs.sh --markdown   # just the table, ready for the handoff
+```
+
+Example output (a real session):
+
+```
+| # | Time  | What it was about              | Req. | Context | read   | written | output | equiv. |
+| 1 | 14:05 | Handoff answered …             |  147 | 223k    | 22171k | 562k    | 208k   | 4380k  |
+| 6 | 17:22 | So the thing I mentioned …     |   25 | 319k    |  7346k | 108k    |  69k   | 1297k  |
+| Σ |       | 10 stretches                   |  246 | 345k    | 49906k | 811k    | 396k   | 8594k  |
+
+Most expensive stretch:  #1 at 14:05 (4380k equivalents, 147 requests)
+Requests per message:    24.6 on average
+Share of own output:     23 % of total cost
+Cache hit rate:          1.6 % written (under 10 % = warm)
+```
+
+### How to read this table (Yasin did not understand it at first sight — rightly so)
+
+His questions, verbatim: *"22,171k — is that 22 million tokens read? What was read there? Why
+does line 2 say 241k as context? I don't get this table at all."* Entirely fair: without the
+picture below, not a single number in it makes sense. So this explanation goes with the table
+whenever it is shown to anyone.
+
+**First the banal thing, because that is exactly where understanding stalls: "k" means
+thousand.** So 22,171k is 22,171,000 tokens — yes, twenty-two million, in one session.
+
+**And now the picture that makes it click: the conversation is a book.** The model has NO
+memory between two requests. Before every single answer it reads the WHOLE book again from
+the start — every earlier message, every file it read, every tool result. With 147 requests
+and a book averaging roughly 151,000 tokens ("pages"), that is 147 × 151k = **22,171k pages
+read**. That is why the read column is a multiple of the context column. It is not a bug in
+the table — it IS the mechanism.
+
+**The arithmetic works out exactly**, which is what makes it convincing:
+
+```
+147 requests × ~151k average context = 22,171k read     × 0.1 = 2,217k
+                                          562k written    × 2   = 1,125k
+                                          208k own output × 5   = 1,038k
+                                                            total = 4,380k
+```
+
+4,380k — precisely the figure in the equivalent column.
+
+**What each column means:**
+
+| Column | Meaning |
+|---|---|
+| **#** | number of the stretch (one stretch = from one user message to the next) |
+| **Time** | when the stretch began, in your local time |
+| **What it was about** | the first words of your message, so you recognise the row |
+| **Req.** | how many model requests that one sentence of yours set off |
+| **Context** | how thick the book was at the END of the stretch — **not a cost column** |
+| **read** | requests × book thickness; the largest item, priced ×0.1 |
+| **written** | what was newly written into the cache, priced ×2 |
+| **output** | what Claude itself wrote, priced ×5 |
+| **equiv.** | the three items converted to one price and added up |
+
+**The most important sentence about the context column: it does NOT add up.** "241k" in line
+2 does not mean that stretch cost 241k — it means the book was 241,000 tokens thick at the
+end of it. It is there to EXPLAIN the read column: the thicker the book, the more expensive
+every further request. That is why it grows steadily across the session while the cost
+columns fluctuate per stretch.
+
+**And a row with 0 requests is not an error.** It means the message arrived while work was
+already running, got appended to the turn in flight, and triggered no request of its own —
+exactly the case from the table in "Messages DURING the work are almost free". A zero there
+is the cheapest row that exists.
+
+The four lines under the table are the actual yield — each answers a question that otherwise
+stays open: *Which wave was expensive? How many steps does one message set off? What is my
+own chatter costing? Was the cache warm at all?*
+
+**Rule: this table belongs in EVERY handoff**, directly before the closing line with the
+context state. It does not replace the single number ("context of this session: 220k"), it
+explains it. And it is more honest than any memory: it also shows the stretches where a lot
+was burned for very little result.
+
+**Two things the script does deliberately — and that are easy to get wrong when rebuilding
+it:** the session file stores UTC while the user thinks in local time (convert, or the whole
+table looks wrong). And not every line of type "user" is a message from the human — tool
+results, agent completion notices and skill loads carry the same type. Without a filter the
+table disintegrates into system rows and becomes unreadable.
+
 ## Make the paid quota visible — and use it up
 
 Yasin's wish, verbatim (26.08.2026, 14:03): *"Can you even see whether I still have enough limit in
@@ -769,6 +991,24 @@ conserved. The suggestion is the actual point: when a lot is free, Claude names 
 open items from the roadmap that could be cleared with it (big analyses, long-running
 tests, second opinions, migrations) — not "you could use more", but "with that we could do
 X and Y".
+
+**When a lot is free, PROPOSE something big — that is what this block is for.** Unused quota
+expires. It does not roll into next week, it is simply gone; the loss is the window closing
+on it, never the spending. So whenever the 5-hour or weekly window still has real room,
+Claude says so *and* names something worth doing with it. Yasin's own framing: *"Go on, check
+everything through, see whether it's any good."* Good candidates, precisely because they are
+expensive and never urgent:
+
+- a full pass over the whole project at HIGH reasoning effort ("ultrathink") — architecture,
+  dead code, inconsistencies, the things nobody schedules;
+- a quality check of an entire area against its acceptance criteria, not just the last diff;
+- a large second-opinion analysis on a different model (Codex/GPT) — a different
+  architecture sees different mistakes than a re-read by the same one;
+- a long test run nobody wants to sit through: startup times, endurance runs, a full matrix.
+
+Phrase it as an invitation with the number attached: *"90 % of the week is still free — this
+is the moment for the big review, it'll never be cheaper than on quota you've already paid
+for."* Never: "you should use your quota more."
 
 And: if a quota is nearly exhausted (> ~85 %), that belongs in the same block just as much,
 with the reset time next to it — then the message is "until tomorrow morning, better stick
