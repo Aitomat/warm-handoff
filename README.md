@@ -3,6 +3,10 @@
 **A cache-aware session pacer for Claude Code — it counts your requests, measures your
 context, watches your paid quota, and writes the handoff at the right moment.**
 
+*By [Yasin Akgün](https://github.com/Aitomat) — built and refined during daily work on the
+macOS app [Aitomat](https://aitomat.ai), where every rule below was paid for in real
+sessions and then checked against measured numbers.*
+
 In one measured working session, **147 requests went to the model — only 13 of them came
 from the user.** The other 134 were the agent's own tool-steps and status notes. If you
 don't know that, you optimise the wrong dial: you write shorter messages while the actual
@@ -79,9 +83,9 @@ direction is not in doubt, and the skill states the arithmetic every time it mak
 - 📉 **Measurable cache hit rate, not assertions.** Every session line carries
   `cache_creation_input_tokens` next to `cache_read_input_tokens` — their ratio *is* the hit
   rate. In the measured session: 22,171k read against 562k written = **2.5 %**, with only 6
-  of 147 requests doing a noteworthy write. That finally settles the most common question
-  users ask: *"147 requests — did you rebuild the cache 147 times?"* No. And now that is
-  evidence, not a claim.
+  of 147 requests doing a noteworthy write. That finally settles the question Yasin asked
+  twice: *"147 requests — did you rebuild the cache 147 times?"* No. And now that answer
+  is evidence, not a claim.
 - 🔋 **Shows the paid quota you already bought — and suggests what to spend it on.** Claude
   sees neither its own quota percentages nor Codex's. The skill ships a script that reads
   Codex's `rate_limits` block out of its session files, plus a status-line snippet that
@@ -157,10 +161,12 @@ the bigger the context, the more you should batch — ideally one long, structur
 per wave (handoff to handoff, answers collected under the test items), short questions
 only when they truly can't wait. Every message still resets the 1-hour timer.
 
-**And count the startup cost of a fresh session.** This README used to promise "~20k". A
-measurement taken right after session start, before a single line of work, came back at
-**82k** — skills, tool schemas and project rules are loaded before you do anything. So the
-skill measures your floor per project instead of quoting a number:
+**And count the startup cost of a fresh session.** This README used to promise "~20k".
+Yasin caught the gap: *"you're not accounting for the fact that a new session starts at
+70,000 tokens for me, and that gets multiplied by two because the cache is rebuilt."* He
+was right — a measurement taken right after session start, before a single line of work,
+came back at **82k**: skills, tool schemas and project rules are loaded before you do
+anything. So the skill measures your floor per project instead of quoting a number:
 
 ```
 Rebuild, ONE-TIME       = start context × 2      (1-h TTL; × 1.25 only on 5-min TTL)
@@ -228,7 +234,7 @@ Source: [How Claude Code uses prompt caching](https://code.claude.com/docs/en/pr
 Credibility matters more here than a bigger headline number, so:
 
 - **The measurements come from real working sessions on a subscription plan with the
-  1-hour cache**, one project, one user's rhythm. Your ratios will differ — which is the
+  1-hour cache** — one project (Aitomat), one developer's rhythm. Your ratios will differ — which is the
   point of shipping the measuring scripts rather than just the results.
 - **The technique effects are estimates**, produced by a second model reasoning over the
   same session data. They overlap and must not be summed.
@@ -272,6 +278,16 @@ when the data says so.
   project name required in every handoff file name.
 - **22.08.2026** — First public release: cache facts, wave workflow, handoff ritual,
   editor integration, logbook.
+
+## Author
+
+Built and maintained by **Yasin Akgün** — [github.com/Aitomat](https://github.com/Aitomat).
+The skill grew out of building [Aitomat](https://aitomat.ai), a macOS app, with Claude Code
+every day: every rule in here started as a session that went wrong or a bill that looked
+odd, and stayed only after the numbers backed it up. That is also why rules get **revoked**
+here when a later measurement contradicts them.
+
+Issues, measurements from your own sessions, and pull requests are welcome.
 
 ## Credits & prior art
 

@@ -5,6 +5,11 @@ description: Use at the START of every working session and before any long pause
 
 # warm-handoff — ride the cache wave, hand off before it breaks 🏄
 
+*By Yasin Akgün ([github.com/Aitomat](https://github.com/Aitomat)) — grown out of daily
+work on the macOS app [Aitomat](https://aitomat.ai) and sharpened continuously against
+measured numbers, not invented at a desk. The dated quotes throughout are his, from the
+sessions that produced each rule.*
+
 Claude Code caches your conversation prefix. Working *inside* that cache is fast and cheap;
 rebuilding it is slow and expensive. This skill makes the cache window visible, keeps you
 inside it, keeps the number of requests small — and, when leaving is the better deal,
@@ -66,7 +71,7 @@ on will make better calls than one who is merely told to "be efficient".
    practice: the user crossed 400k unnoticed while Claude was busy orchestrating, and
    had to point it out himself.
 
-   **NEVER guess the context number — same rule as the clock (from practice, 25.08.2026).**
+   **NEVER guess the context number — same rule as the clock (Yasin, 25.08.2026).**
    Claude cannot feel how full its context is. A sentence like "cache is fresh (~20k)"
    written without looking is a fabrication, and it is worse than saying nothing: the
    user reads it as a measurement and plans the wave around it. The real number at that
@@ -75,7 +80,7 @@ on will make better calls than one who is merely told to "be efficient".
    - the **status line** the user's terminal renders (`ctx 15% used (85% left)`) — if the
      user pastes or screenshots it, use exactly that number;
    - a monitor/tool call made in THIS turn that reports it;
-   - **your own measurement — and this is the best of the three.** A user pushed back on
+   - **your own measurement — and this is the best of the three.** Yasin pushed back on
      this: *"it's odd that you can't see your own total context size — surely there must
      be a way."* He was right. Claude Code writes every request, `usage` block included,
      into the session file at
@@ -187,7 +192,7 @@ the main context instead of 147**, total cost from 4,380k down to 1,350–2,050k
 
 ### Subagents are the default route, not the exception
 
-The goal, as one user put it: *"work with a strong model that acts as the boss, sends the
+The goal, as Yasin put it (26.08.2026): *"work with a strong model that acts as the boss, sends the
 subagents out, uses few tokens, says everything in one bundle and makes few requests."*
 
 Why that adds up: a subagent starts at ~10–20k instead of the full main context. Its 100
@@ -221,7 +226,7 @@ practice:
 
 ### This skill should TEACH, not just keep time
 
-An explicit request from practice: *"the skill should also teach. People should understand
+Yasin's explicit request (26.08.2026, 16:53): *"the skill should also teach. People should understand
 how this actually works — what happens to me happens to a lot of people."*
 
 So for every cost statement made to the user:
@@ -250,7 +255,7 @@ So for every cost statement made to the user:
 
 ## Spotting a cache rebuild — and saying so (25./26.08.2026)
 
-The wish behind this: *"when the cache rebuilds, do you notice — and can you tell the user
+Yasin's wish behind this: *"when the cache rebuilds, do you notice — and can you tell the user
 that it just happened, and why?"*
 
 **There IS a signal, and it is a hard one.** An earlier version of this skill claimed there
@@ -273,8 +278,8 @@ Reading it: **below ~10 % written/read = the cache was warm.** Individual lines 
 large write are almost always APPENDS (the conversation grows, the new part gets written
 once), not rebuilds. A real rebuild looks different: lots of writing with almost no reading.
 
-**Why this matters — it settles the most common misunderstanding.** Users ask: "269
-requests — does that mean you rebuilt the cache 269 times?" No. And without this
+**Why this matters — it settles the most common misunderstanding.** Yasin asked on 25.08.
+and again on 26.08.: "269 requests — does that mean you rebuilt the cache 269 times?" No. And without this
 measurement the answer was a mere assertion. With it, it is evidence: in the measured
 session, 22,171k read against 562k written — **2.5 %**, and of 147 requests only 6 had a
 noteworthy write.
@@ -386,8 +391,7 @@ The user watches a status line and a task list, not Claude's reasoning. So:
 
 **REVOKED on 26.08.2026 — no more per-agent status notes.** This section used to say
 "announce each subagent when it starts AND when it lands, those lines double as
-cache-refreshing requests". That was expensive and pointless. The objection, verbatim from
-a user: *"You don't need to give me feedback when one has stopped. Then it stopped — until
+cache-refreshing requests". That was expensive and pointless. Yasin's objection, verbatim: *"You don't need to give me feedback when one has stopped. Then it stopped — until
 they're all done, or until nearly an hour has passed so you keep the cache warm. I can see
 in my terminal window that subagents are working."*
 
@@ -428,7 +432,7 @@ different agent CLI entirely. Everything in this skill must survive that:
 
 ## CALCULATE the sweetspot and announce it
 
-The wish, verbatim from practice (25.08.2026): *"Could we calculate the sweetspot and then
+Yasin's wish, verbatim (25.08.2026): *"Could we calculate the sweetspot and then
 say: hey, you've reached your sweetspot, that's why I wrote a handoff, the wave just
 finished too, better start a new session — that would be the most elegant thing."*
 
@@ -456,7 +460,7 @@ That turns into an announcement the user can actually use — not "your context 
   "that was the last wave for this session, the handoff is written, start fresh tomorrow";
 - whenever the user asks where things stand.
 
-**Tone (an explicit request):** short, casual, motivating — never admonishing. "Room for
+**Tone (Yasin's explicit request):** short, casual, motivating — never admonishing. "Room for
 about 2 more waves" is a streak counter, not an invoice. And when the budget gets tight,
 the practical hint is welcome too: "from here on, better to collect longer messages instead
 of many short ones" — the same thought from the user's side.
@@ -467,11 +471,12 @@ and always put the measured context number next to it.
 
 ### COUNT the startup cost of a fresh session
 
-The objection, verbatim (25.08.2026): *"You're not accounting for the fact that a new
+Yasin's objection, verbatim (25.08.2026): *"You're not accounting for the fact that a new
 session starts at 70,000 tokens for me, and that gets multiplied by two because the cache
 is rebuilt. So the calculation in our skill isn't perfect yet."*
 
-He was right, and the evidence was in the same session: the measurement taken right after
+He was right, and the evidence was in the same session (the Aitomat project): the
+measurement taken right after
 session start, before a single line of work, was **82k** — not the "~20k" this skill
 assumed in several places. Skills, tool schemas, system prompts and project rules are
 already there before the user does anything. The 20k figure was too optimistic and must be
@@ -505,7 +510,7 @@ and the question "what comes next?" — without both, the recommendation is a gu
 
 ### COUNT the steps, don't estimate them
 
-The follow-up request: *"We need to look at how many steps that really is — the skill
+Yasin's follow-up assignment (25.08.2026): *"We need to look at how many steps that really is — the skill
 should calculate it, know it, and show it to the user."*
 
 Doable, and exactly: every request to the model stands as a line with `usage` in the
@@ -575,7 +580,7 @@ Claude says this to the user ONCE per setup — not on every long message.
 
 ## Make the paid quota visible — and use it up
 
-The wish, verbatim (26.08.2026): *"Can you even see whether I still have enough limit in
+Yasin's wish, verbatim (26.08.2026, 14:03): *"Can you even see whether I still have enough limit in
 Codex? Could that be made visible — and could you point it out now and then? If I have an
 account I pay for monthly, then the tokens should get used if there are any left. The skill
 could say: hey, we've got time now, we still have plenty of tokens left in Codex or in your
@@ -812,8 +817,8 @@ The economics reward a specific rhythm:
   unsaved editor changes are invisible on disk.
 - **Next session starts with only the handoff** — a fresh, small context instead of 500k+,
   fully briefed, cache rebuilt once at minimum size. **Do not promise "~20k": measure it.**
-  Skills, tool schemas and project rules are loaded before the user does anything — in one
-  real project that floor was 82k (see "COUNT the startup cost of a fresh session"). Claude
+  Skills, tool schemas and project rules are loaded before the user does anything — in the
+  Aitomat project that floor was 82k (see "COUNT the startup cost of a fresh session"). Claude
   reads the annotated test answers and new ideas from the file and starts the next wave.
 
 **The PATH of the handoff goes RIGHT AT THE TOP of the document — first, before anything
@@ -887,7 +892,7 @@ this order:
    >>>
    ```
 
-   The reason, verbatim: *"Once I've handed you a handoff, new things occur to me while
+   Yasin's reason, verbatim: *"Once I've handed you a handoff, new things occur to me while
    you're working and I want to collect them … otherwise I have to open a new TextEdit
    document, collect there, and then copy-paste."*
 
@@ -902,7 +907,8 @@ this order:
    point in it is answered or absorbed into the roadmap, so it is visible that nothing fell
    through.
 
-   **And open the SECOND-TO-LAST handoff again too.** The wish: *"Before the new handoff,
+   **And open the SECOND-TO-LAST handoff again too.** Yasin's wish (25.08.2026, 14:14):
+   *"Before the new handoff,
    check whether anything was added to the old handoff, and mention only those changes in
    the new one."* The reason is practical: the user keeps collecting AFTER handing the
    handoff over — those lines only come into being while Claude is already working on the
@@ -1036,13 +1042,13 @@ one is the active working document.
 
 This rule went through two rounds, and both were paid for with real data loss.
 
-Round one (25.08.2026): *"Earlier I had already written something new into the old handoff
+Round one (Yasin, 25.08.2026, 14:21): *"Earlier I had already written something new into the old handoff
 list that you closed automatically … and now it's gone, because you closed it."* Exactly
 so: the unsaved-changes guard had run minutes earlier, the close came later, and in between
 he had kept writing. **A check that does not stand immediately before the action is
 worthless.**
 
-Round two (26.08.2026) went further: *"If I write something at the bottom and haven't saved
+Round two (Yasin, 26.08.2026, 14:07) went further: *"If I write something at the bottom and haven't saved
 it yet, and you then close the old handoff after you've finished working — you can't close
 it at all if I still have unsaved changes in there. So I'd almost say: don't close the old
 handoff at all, leave it open, let the user close it."*
@@ -1135,7 +1141,8 @@ ideas, ⌘S — and give the file to a fresh session (or to me, if you're still 
   Rules: only list documents that REALLY exist (check first), mark outdated ones explicitly
   as outdated instead of quietly dragging them along, and never copy the content in — the
   path is the whole point ("reference, don't copy").
-- **The lower part is a narrative thread, not a keyword list.** The wish: *"down there I
+- **The lower part is a narrative thread, not a keyword list.** Yasin's wish
+  (25.08.2026): *"down there I
   don't just want the questions and tests, but a thread you can see, roadmap-like — what
   the next wave is, what the one after that is, short, with a couple of details, so you
   remember and feel motivated to add something."*
