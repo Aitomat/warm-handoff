@@ -1131,6 +1131,75 @@ And: if a quota is nearly exhausted (> ~85 %), that belongs in the same block ju
 with the reset time next to it — then the message is "until tomorrow morning, better stick
 to the small stuff", which is the same information from the other side.
 
+### Wake-up ping for the Codex readout (27.08.2026)
+
+His request, after `codex-limit.sh` came back with nothing but `{"primary": null,
+"secondary": null, "plan": "plus", "age_minutes": 107}` on an otherwise quiet day: *"Yes,
+please build that in. Into the skill too. Into the GitHub warm-handoff too."*
+
+**The problem:** `codex-limit.sh` doesn't read quotas live — it reads them out of the LAST
+Codex session file. So the number is only as fresh as the last Codex run: if that was hours
+ago, the script shows either a stale state or, as above, none at all. **`null` here does not
+mean "0 % used"** — it means "no fresh `rate_limits` block has arrived since the last run,
+the value is unknown." Printing a zero for that would be a fabrication, the same trap as
+guessing the clock or the context size.
+
+**The fix:** fire one tiny Codex call per session so the server sends back a fresh
+`rate_limits` block:
+
+```bash
+codex exec --skip-git-repo-check "Reply with just: ready"
+```
+
+- **When:** once per session, at the start — piggybacked onto a call that would run anyway
+  (e.g. the session's first real Codex task), NEVER as its own separate call made purely for
+  the measurement.
+- **Cost, stated honestly:** this burns a few Codex tokens — negligible against a paid
+  weekly quota, but not zero. Hence: hang it off a call that's due anyway rather than
+  starting one just for this.
+- **If Codex isn't installed or isn't logged in:** proceed silently, no error — the ping is a
+  bonus for the readout, not a required step of the session.
+- After that, `codex-limit.sh` shows the fresh state, and the "X h ago" in the handoff block
+  above matches reality again.
+
+### Thinking of Codex, Gemini and OpenRouter together (27.08.2026)
+
+His instruction once the wake-up ping was in place: *"No, that's great, do it."* Meaning: see
+all THREE quotas as ONE picture, not just Codex.
+
+**The shared core: on all three, what goes unused simply expires.** Codex on a paid plan runs
+out on a weekly window regardless of use. Gemini hands out free requests that expire on the
+same kind of window. OpenRouter offers free models too (Yasin uses "Ox Alpha" there as a
+second reviewer, among others) — there as well, an unused request is not credit toward next
+time, it is simply gone. Same stance as with the Claude quota above: don't conserve it, USE
+IT UP while the window runs.
+
+**Assignment — which work suits which provider:**
+
+| Work | Provider | Why |
+|---|---|---|
+| Large read/analysis/review passes, sweeping a whole project | Codex or OpenRouter | A different architecture sees different mistakes; expensive and rarely urgent — exactly what expiring quota is for |
+| Second opinion on Claude's own code or answer | Codex or OpenRouter (e.g. Ox Alpha) | The no-self-review rule — Claude must not grade its own homework |
+| Changes IN the code | Claude | Stays in the driver's seat, knows the history and the decisions |
+| Research, very long contexts | Gemini | Built for exactly that — a large context window |
+
+**How to see the state — and where honestly nothing gets measured:**
+
+- **Codex:** `~/.claude/codex-limit.sh` (above), fresh after the wake-up ping. Shows percent
+  of the 7-day window plus the reset time.
+- **Gemini and OpenRouter:** no script and no reliable reading exists here — no balance gets
+  invented. Say so plainly: *"For Gemini/OpenRouter I can't read the quota state, only show
+  the usage hint in each provider's own interface."* A `~` or an estimated percentage here
+  would be the same fabrication as with the clock or context size above — left out on
+  purpose rather than guessed.
+
+**Tone:** inviting, with the number attached, never admonishing — same as the Codex block
+above. When Codex has plenty free, name it AND propose a fitting candidate right away ("90 %
+of the week still free — that would be the moment for the big second-opinion pass with Ox
+Alpha or Codex"). For Gemini/OpenRouter it stays an invitation without a number: "if there is
+quota open there, now would be the moment for the research pass or the second reviewer" —
+without claiming to know exactly how much that is.
+
 ## The window as a friendly coach (frame it this way)
 
 Present the 1-hour window, the handoff ritual and the test list as POSITIVE motivators,

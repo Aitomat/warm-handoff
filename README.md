@@ -367,13 +367,25 @@ in the main context for six work packages").
 
 ## Install
 
+The skill itself goes to `~/.claude/skills/warm-handoff/`. The three helper scripts it calls
+(`ctx.sh`, `codex-limit.sh`, `session-costs.sh`) are referenced by path as `~/.claude/*.sh`
+throughout the skill, so they belong one level up, directly in `~/.claude/` — not inside the
+skill folder.
+
 ```bash
 mkdir -p ~/.claude/skills/warm-handoff
 curl -fsSL https://raw.githubusercontent.com/Aitomat/warm-handoff/main/SKILL.md \
   -o ~/.claude/skills/warm-handoff/SKILL.md
+
+for f in ctx.sh codex-limit.sh session-costs.sh; do
+  curl -fsSL "https://raw.githubusercontent.com/Aitomat/warm-handoff/main/scripts/$f" \
+    -o ~/.claude/"$f"
+  chmod +x ~/.claude/"$f"
+done
 ```
 
-(or clone this repo and symlink/copy the folder into `~/.claude/skills/`)
+(or clone this repo — `SKILL.md` goes to `~/.claude/skills/warm-handoff/SKILL.md`, everything
+in `scripts/` goes to `~/.claude/`, keeping the filenames as they are)
 
 ### Make it always-on
 
