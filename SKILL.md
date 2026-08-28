@@ -9,8 +9,10 @@ Claude Code caches your conversation prefix. Working *inside* that cache is fast
 rebuilding it is slow and expensive. This skill makes the cache window visible, keeps you
 inside it, and — when leaving it is the better deal — writes the handoff that lets a fresh
 session continue seamlessly.
+> Primary language: English. Dated German passages record the sessions each rule came from — sie bleiben bewusst erhalten. Deutsche README: README.de.md im Repo.
 
-## Thematischer Wegweiser (table of contents by topic)
+
+## Table of contents by topic (Thematischer Wegweiser)
 
 This file grew session by session — dated headings mark when a rule was added and why.
 To find things by TOPIC rather than by date, use this map:
@@ -1576,14 +1578,14 @@ Vorwurf — der Nutzer hat eine Pause gemacht, das ist sein gutes Recht. Der Sat
 Erklärung („warum ging da gerade Kontingent weg"), nicht der Erziehung. In den Logbuch-
 Eintrag gehört derselbe Befund als Zeile mit Ursache und geschätzter Verschwendung.
 
-## Lange Agentenläufe, der Nutzer als Engpass, Fable low (Yasin 28.08.2026)
+## Long agent runs, the user as bottleneck, Fable low (Yasin 28.08.2026)
 
 Drei Regeln, die aus der Welle vom 27./28.08.2026 stammen. Alle drei haben
 denselben Kern: **Die teuerste Ressource ist nicht das Modell, sondern der
 Mensch, der auf es wartet — und jede Anfrage, die nur stattfindet, weil jemand
 „fertig" melden will.**
 
-### a) Agenten, die länger als eine Stunde brauchen, liefern in eine DATEI
+### a) Agents running longer than an hour deliver into a FILE
 
 Ein Subagent, dessen Arbeit voraussichtlich **länger als eine Stunde** dauert
 (Recherche, Review mit vielen Quellen, große Umbauten), meldet sein Ergebnis
@@ -1624,7 +1626,7 @@ die Folgesitzung — als Teil der ersten Anfrage statt als zwei zusätzliche
 Fertigmeldungen in eine 220k-Session (2 × 22k Äquivalente gespart, plus
 kein Neuaufbau nach der Nachtpause).
 
-### b) Der Nutzer ist der Engpass — Wellen so schneiden, dass sie durchlaufen
+### b) The user is the bottleneck — cut waves so they run through
 
 Yasin, 28.08.2026: Der Mensch kann nicht dauernd am Terminal sitzen; jede
 Rückfrage, die eine Welle anhält, kostet Stunden Echtzeit, nicht Sekunden.
@@ -1651,7 +1653,7 @@ Deshalb:
   ist, wohin es geht, wie lang der Bericht sein darf, und ausdrücklich
   „keine Rückfragen — entscheide selbst und dokumentiere die Annahme".
 
-### c) Fable 5 als Agentenmodell: IMMER Effort low
+### c) Fable 5 as agent model: ALWAYS effort low
 
 Nutzerregel (Yasin): Wird Fable 5 als Subagenten-Modell eingesetzt, dann
 **ausschließlich mit Effort low**. Grund: Fable low ist schnell und billig

@@ -1,324 +1,308 @@
 # warm-handoff 🏄
 
-> **English in one paragraph.** `warm-handoff` is a skill for Claude Code that makes the
-> hidden economics of a session visible and teaches a working rhythm that fits them. Claude
-> Code caches your conversation prefix for one hour (Pro/Max); every model request re-reads
-> that prefix at a tenth of the price, every token Claude writes costs five times as much,
-> and a cold cache costs double. The skill timestamps every reply, measures the real context
-> size from the session file, prints a cost line under substantial answers, keeps the number
-> of requests down by delegating to subagents, and ends every work "wave" with a **handoff
-> document** you answer in a plain text editor — so the next session starts small, cheap and
-> fully briefed. In one measured project the same amount of work went from **147 requests
-> to 14** in the main context, and the cost of a work stretch dropped by roughly **70 %**.
-> The rest of this README is in German; `SKILL.md` is bilingual and the scripts are
-> commented in German. Contributions in either language are welcome.
+> **Primary language: English · Deutsche Fassung: [README.de.md](README.de.md)**
 
-**Ein Claude-Code-Skill, der die Sitzung um das Prompt-Cache-Fenster herum taktet: Er
-misst, wo man steht, hält die Zahl der Anfragen klein und schreibt im richtigen Moment
-ein Übergabedokument.**
+**A Claude Code skill that paces your session around the prompt-cache window: it measures
+where you stand, keeps the number of requests down, and writes a handoff document at the
+right moment.**
 
-Autor: **Yasin Akgün** ([github.com/Aitomat](https://github.com/Aitomat)). Entstanden beim
-täglichen Bauen von [Aitomat](https://aitomat.ai) mit Claude Code — jede Regel im Skill war
-zuerst eine Sitzung, die schiefging, oder eine Rechnung, die seltsam aussah.
+Author: **Yasin Akgün** ([github.com/Aitomat](https://github.com/Aitomat)). The skill grew
+out of building [Aitomat](https://aitomat.ai), a macOS app, with Claude Code every day —
+every rule in it started as a session that went wrong or a bill that looked odd.
 
 ---
 
-## Inhalt
+## Contents
 
-1. [Das Problem in drei Minuten](#1-das-problem-in-drei-minuten)
-2. [Die Kosten-Arithmetik mit echten Zahlen](#2-die-kosten-arithmetik-mit-echten-zahlen)
-3. [Der Wellen-Workflow](#3-der-wellen-workflow)
-4. [Subagenten-Ökonomie](#4-subagenten-ökonomie)
-5. [Was der Skill sichtbar macht: Kostenzeile, Kostentabelle, Kontingent](#5-was-der-skill-sichtbar-macht)
-6. [Installation](#6-installation)
-7. [Die Skripte](#7-die-skripte)
-8. [Ehrliche Grenzen](#8-ehrliche-grenzen)
-9. [Die Fakten, auf denen alles steht](#9-die-fakten-auf-denen-alles-steht)
-10. [Danksagung, Vorarbeiten, Lizenz](#10-danksagung-vorarbeiten-lizenz)
+1. [The problem in three minutes](#1-the-problem-in-three-minutes)
+2. [The cost arithmetic, with real numbers](#2-the-cost-arithmetic-with-real-numbers)
+3. [The wave workflow](#3-the-wave-workflow)
+4. [Subagent economics](#4-subagent-economics)
+5. [What the skill makes visible: cost line, cost table, quota](#5-what-the-skill-makes-visible)
+6. [Install](#6-install)
+7. [The scripts](#7-the-scripts)
+8. [Honest limits](#8-honest-limits)
+9. [The facts everything rests on](#9-the-facts-everything-rests-on)
+10. [Credits, prior art, license](#10-credits-prior-art-license)
 
 ---
 
-## 1. Das Problem in drei Minuten
+## 1. The problem in three minutes
 
-Wer Claude Code benutzt, sieht eine Chat-Oberfläche. Was er nicht sieht:
+If you use Claude Code, you see a chat interface. What you don't see:
 
-- **Jede Nachricht ist nicht eine Anfrage, sondern viele.** Claude liest eine Datei, sucht,
-  ändert, führt einen Befehl aus, liest das Ergebnis — jeder dieser Schritte ist eine
-  eigene Anfrage an das Modell, und **jede** dieser Anfragen schickt den gesamten bisherigen
-  Gesprächsverlauf mit. Eine harmlose Bitte wie „bau das bitte ein und teste es" kann 30
-  bis 150 Anfragen auslösen.
-- **Der Verlauf wächst und wird jedes Mal mitgeschickt.** Nach zwei Stunden Arbeit ist das
-  Gespräch 200.000–500.000 Token groß. Jeder der 150 Schritte trägt diesen Rucksack.
-- **Es gibt einen Cache, der das erträglich macht — aber nur im Zeitfenster.** Claude Code
-  legt den Gesprächsanfang (Prefix) in einen Prompt-Cache. Lesen aus dem Cache kostet ein
-  Zehntel. Auf Pro/Max hält dieser Cache **eine Stunde, gleitend** — jede Anfrage setzt die
-  Uhr zurück. Wer eine Stunde Pause macht, das Modell wechselt, den Effort verstellt oder
-  die CLAUDE.md editiert, baut den Cache neu auf: der gesamte Verlauf wird einmal zum
-  **doppelten** Preis geschrieben.
-- **Nichts davon steht irgendwo.** Kein Zähler zeigt die Kontextgröße, keiner die Zahl der
-  Anfragen, keiner, ob die letzte Runde teuer oder billig war. Also optimieren die Leute das
-  Falsche — sie tippen kürzere Nachrichten — während die eigentlichen Kosten in einer
-  Arbeitsschleife aus Dateizugriffen stecken, die sie nie sehen.
+- **Every message is not one request but many.** Claude reads a file, greps, edits, runs a
+  command, reads the result — each of those steps is its own model request, and **every
+  single one** sends the entire conversation so far along with it. A harmless "please
+  implement this and test it" can trigger 30 to 150 requests.
+- **The transcript grows and is re-sent every time.** After two hours of work the
+  conversation is 200,000–500,000 tokens. Each of those 150 steps carries that backpack.
+- **There is a cache that makes this bearable — but only inside its window.** Claude Code
+  puts the conversation prefix into a prompt cache. Reading from the cache costs a tenth.
+  On Pro/Max that cache lives for **one hour, sliding** — every request resets the clock.
+  Take an hour-long break, switch the model, change the effort, or edit CLAUDE.md, and the
+  cache is rebuilt: the whole prefix gets written once at **double** price.
+- **None of this is shown anywhere.** No counter shows the context size, none the request
+  count, none whether the last round was cheap or expensive. So people optimise the wrong
+  thing — they type shorter messages — while the real cost sits in a work loop of file
+  reads they never see.
 
-Die Messung, die diesen Skill ausgelöst hat: Ein Abschnitt einer echten Sitzung — „Handoff
-beantwortet, bitte umsetzen" — kostete **147 Anfragen** bei 223k Kontext, umgerechnet
-**4.380k Token-Äquivalente**. Derselbe Arbeitsumfang, in Subagenten delegiert und gebündelt,
-braucht im Hauptkontext **14 Anfragen**. Das ist der Hebel, um den es hier geht: nicht
-kürzer schreiben, sondern **weniger Anfragen im fetten Kontext**.
+The measurement that started this skill: one stretch of a real session — "I answered the
+handoff, please implement" — cost **147 requests** at 223k context, **4,380k
+token-equivalents**. The same amount of work, delegated to subagents and batched, takes
+**14 requests** in the main context. That is the lever this skill is about: not writing
+shorter, but **fewer requests inside the fat context**.
 
-## 2. Die Kosten-Arithmetik mit echten Zahlen
+## 2. The cost arithmetic, with real numbers
 
-Alle Zahlen in diesem Skill sind auf „frische Eingabe = 1" normiert (Anthropic-Listenpreise,
-Opus-Verhältnis). Auf einem Abo zahlt niemand diese Summe in Dollar — sie misst, **was das
-Kontingent belastet**, und das ist auf Pro/Max die Währung, die knapp wird.
+All numbers in this skill are normalised to "fresh input = 1" (Anthropic list-price
+ratios, Opus tier). On a subscription nobody pays this sum in dollars — it measures **what
+loads the quota**, and on Pro/Max the quota is the currency that runs out.
 
-| Posten | Faktor | Was das praktisch heißt |
+| Item | Factor | What it means in practice |
 |---|---:|---|
-| Cache **lesen** | **×0,1** | Der warme Verlauf wird bei jeder Anfrage zum Zehntelpreis mitgelesen |
-| Cache **schreiben** (1-h-TTL) | **×2** | Neuer Text kommt einmal zum doppelten Preis in den Cache; ein Neuaufbau schreibt ALLES neu |
-| Eigene **Ausgabe** | **×5** | Jedes Wort, das Claude tippt, kostet fünffach — Erklärungen im Chat sind der teuerste Posten, den Claude allein zu verantworten hat |
-| Frische Eingabe | ×1 | Die Bezugsgröße |
+| Cache **read** | **×0.1** | The warm prefix is re-read at a tenth of the price on every request |
+| Cache **write** (1-h TTL) | **×2** | New text enters the cache once at double price; a rebuild rewrites EVERYTHING |
+| Model **output** | **×5** | Every word Claude types costs fivefold — chat explanations are the biggest item Claude alone is responsible for |
+| Fresh input | ×1 | The reference unit |
 
-### Warum die Anzahl der Anfragen alles dominiert
+### Why the request count dominates everything
 
-Eine Anfrage bei 220k Kontext kostet **220k × 0,1 = 22.000 Äquivalente** — nur fürs Lesen,
-bevor irgendetwas passiert. Bei 30k Kontext (ein frischer Subagent) sind es **3.000**.
+One request at 220k context costs **220k × 0.1 = 22,000 equivalents** — just for reading,
+before anything happens. At 30k (a fresh subagent) it's **3,000**.
 
 ```
-Alles im Hauptkontext:   147 Schritte × 151k × 0,1              = 2.217k
-Delegiert:                14 Hauptanfragen × 345k × 0,1  =  483k
-                         147 Agentenschritte ×  30k × 0,1 =  441k
-                                                    Summe =  924k
+Everything in the main context:  147 steps × 151k × 0.1              = 2,217k
+Delegated:                        14 main requests × 345k × 0.1  =  483k
+                                 147 agent steps   ×  30k × 0.1  =  441k
+                                                          total  =  924k
 ```
 
-**2,4× billiger für exakt dieselbe Arbeit** — nur weil jeder Schritt gegen den kleinen
-Kontext des Agenten rechnet statt gegen den fetten der Sitzung. Rechnet man die anderen
-Techniken dazu (Fertigmeldungen deckeln, nicht erzählen, was man gerade tut, Erklärungen
-ins Handoff statt in den Chat), lag der gemessene Abschnitt statt bei 4.380k bei
-**1.350–2.050k — rund 55–70 % Ersparnis**.
+**2.4× cheaper for exactly the same work** — only because each step runs against the
+agent's small context instead of the session's fat one. Adding the other techniques
+(capping completion reports, not narrating tool steps, explanations into the handoff
+instead of the chat), the measured stretch drops from 4,380k to **1,350–2,050k — roughly
+55–70 % saved**.
 
-### Timing, nicht Kürze: wann eine Nachricht fast nichts kostet
+### Timing, not brevity: when a message costs almost nothing
 
-Die Frage, die jeder stellt: „Kostet meine Zwischenfrage jetzt auch?" Die Antwort hängt
-nicht von der Länge ab, sondern **vom Zeitpunkt**:
+The question everyone asks: "Does my interjection cost anything right now?" The answer
+depends not on length but on **timing**:
 
-| Lage | Was mit der Nachricht passiert | Kosten |
+| Situation | What happens to the message | Cost |
 |---|---|---|
-| Claudes eigener Werkzeug-Ablauf läuft (Datei lesen, Befehl, Agent starten) | wird an die nächste ohnehin fällige Anfrage angehängt | **fast null** (~140 Äquivalente für 50 Wörter) |
-| Subagenten rechnen, Claude selbst wartet | löst eine neue Anfrage aus | **volle 10 %** des Kontexts (22k bei 220k) |
-| Ruhezustand nach der Antwort | löst eine neue Anfrage aus | **volle 10 %** |
+| Claude's own tool loop is running (reading, executing, launching an agent) | attached to the next request that was due anyway | **almost zero** (~140 equivalents for 50 words) |
+| Subagents are computing, Claude itself is waiting | triggers a new request | **the full 10 %** of the context (22k at 220k) |
+| Idle after Claude's reply | triggers a new request | **the full 10 %** |
 
-Der Haken: Die Frage ist billig, **die Antwort nicht** — 300 Wörter Antwort sind ~2.000
-Äquivalente (×5). Deshalb hält der Skill Antworten auf Zwischenfragen kurz und schiebt
-Details ins Handoff, wo sie einfach statt fünffach kosten.
+The catch: the question is cheap, **the answer is not** — a 300-word reply is ~2,000
+equivalents (×5). That's why the skill keeps answers to mid-wave questions short and
+pushes details into the handoff, where they cost single instead of fivefold.
 
-### Was ein Neuaufbau kostet — und woran man ihn erkennt
+### What a rebuild costs — and how it's recognised
 
-Eine Sitzung mit 287k Kontext, Start war 82k: Ein Modell- oder Effort-Wechsel mitten drin
-schreibt ~287k × 2 neu, **~574k Äquivalente** — für nichts. Deshalb warnt der Skill vor
-`/model`, `/effort`, CLAUDE.md-Änderungen und MCP-Neustarts, und er meldet einen Neuaufbau
-nur, wenn er die Ursache benennen kann (>1 h Pause, Wechsel, Prefix-Änderung) — sonst
-schweigt er, statt zu raten.
+A session at 287k context that started at 82k: a mid-session model or effort switch
+rewrites ~287k × 2, **~574k equivalents** — for nothing. That's why the skill warns before
+`/model`, `/effort`, CLAUDE.md edits and MCP restarts, and reports a rebuild only when it
+can name the cause (>1 h pause, a switch, a prefix change) — otherwise it stays silent
+rather than guessing.
 
-Wichtiges Missverständnis, das der Skill aktiv ausräumt: **„147 Anfragen ≠ 147
-Neuaufbauten."** Innerhalb des Fensters laufen alle 147 gegen den warmen Cache. Die
-gemessene Cache-Trefferquote in den Sitzungen lag bei 1,6–3,3 % geschrieben — durchgehend
-warm.
+An important misconception it actively clears up: **"147 requests ≠ 147 rebuilds."**
+Inside the window all 147 run against the warm cache. Measured cache-write rates in these
+sessions were 1.6–3.3 % — warm throughout.
 
-## 3. Der Wellen-Workflow
+## 3. The wave workflow
 
-Die Arithmetik belohnt einen bestimmten Rhythmus. Der Skill nennt ihn **Wellen**:
+The arithmetic rewards a specific rhythm. The skill calls it **waves**:
 
 ```
 ┌──────────────────────────────────────────────────────────────────────┐
-│  1. Nutzer schickt EINE gebündelte Nachricht (oder ein beantwortetes │
-│     Handoff): alles für die nächste Arbeitsstrecke                   │
+│  1. The user sends ONE bundled message (or an answered handoff):     │
+│     everything for the next stretch of work                          │
 │                                                                      │
-│  2. Claude arbeitet die Welle ab — Subagenten für alles mit mehr     │
-│     als einer Handvoll Schritten; Zwischenfragen sind erlaubt        │
-│     und billig, solange Claude selbst gerade rattert                 │
+│  2. Claude works the wave — subagents for anything with more than    │
+│     a handful of steps; interjections are welcome and cheap while    │
+│     Claude itself is visibly churning                                │
 │                                                                      │
-│  3. Am Ende schreibt Claude ein HANDOFF-DOKUMENT statt im Chat       │
-│     auszulaufen: Geliefertes, offene Punkte, Fahrplan, Kostentabelle,│
-│     Kontingent-Stand, Fragen — und die Testliste mit Antwortzeilen   │
+│  3. At the end Claude writes a HANDOFF DOCUMENT instead of trailing  │
+│     off in chat: delivered work, open items, roadmap, cost table,    │
+│     quota status, questions — and the test list with answer lines    │
 │                                                                      │
-│  4. Nutzer öffnet das Handoff im Texteditor, beantwortet die Tests,  │
-│     sammelt neue Ideen im Sammelbereich — in seinem Tempo, auch      │
-│     über eine lange Pause hinweg. Kostet exakt null Anfragen.        │
+│  4. The user opens the handoff in a text editor, answers the tests,  │
+│     collects new ideas in the collection area — at their own pace,   │
+│     even across a long pause. Costs exactly zero requests.           │
 │                                                                      │
-│  5. Nächste Session startet NUR mit dem Handoff: kleiner Kontext,    │
-│     Cache einmal minimal aufgebaut, voll gebrieft                    │
+│  5. The next session starts from ONLY the handoff: small context,    │
+│     cache rebuilt once at minimum size, fully briefed                │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
-### Warum ein Editor und nicht das Chatfenster
+### Why an editor and not the chat box
 
-Das Terminal klappt lange Eingaben zu `[pasted text]` zusammen — man verliert den
-Überblick. Im Editor (TextEdit, VS Code, egal) sieht man das ganze Dokument, kann zwischen
-Testpunkten springen, Notizen ergänzen, das Dokument zwei Tage liegen lassen. Und es
-kostet **keine Anfrage**, solange man sammelt. Regel: **⌘S, bevor man Claude bittet, die
-Datei zu lesen** — ungespeicherte Änderungen sind auf der Platte unsichtbar.
+The terminal collapses long input into `[pasted text]` — you lose the overview. In an
+editor (TextEdit, VS Code, anything) you see the whole document, jump between test items,
+add notes, let the file sit for two days. And it costs **zero requests** while you
+collect. Rule: **⌘S before asking Claude to read the file** — unsaved editor changes are
+invisible on disk.
 
-### Wie ein Handoff aussieht
+### What a handoff looks like
 
 ```markdown
-> **Für die nächste Session — diese Zeile kopieren und einfügen:**
-> `Ich habe das Handoff beantwortet: /Users/…/projekt/_handoff-projekt-2026-08-27-b.md`
+> **For the next session — copy and paste this line:**
+> `I answered the handoff: /Users/…/project/_handoff-project-2026-08-27-b.md`
 
-# Handoff Projekt — 27.08.2026, 18:21
+# Handoff Project — 27.08.2026, 18:21
 
-## Kontingent
-Claude Code: 5-h-Fenster 34 % · Woche 61 % (reset Mo 09:00) · Codex: 10 %/7d (Messung 2 h alt)
+## Quota
+Claude Code: 5-h window 34 % · week 61 % (resets Mon 09:00) · Codex: 10 %/7d (reading 2 h old)
 
-## Geliefert in dieser Welle
+## Delivered in this wave
 - …
 
-## Erwartete Agenten-Ergebnisse
-- [ ] docs/reviews/2026-08-27-tageszeit-und-kontingente.md (Recherche-Agent, 17:02)
+## Expected agent results
+- [ ] docs/reviews/2026-08-27-tageszeit-und-kontingente.md (research agent, started 17:02)
 
-## Offene Punkte / Fahrplan
-- Welle 19: …
+## Open items / roadmap
+- Wave 19: …
 
-## Fragen an dich
-1. Soll der Papierkorb-Weg auch für Ordner gelten?
->>>Antwort:
+## Questions for you
+1. Should the trash-can route also apply to folders?
+>>>Answer:
 
-## Testliste v70
-## T1 — Tagfilter ohne Beachball
-Filter auf „Rechnung" setzen, 2.000 Einträge, darf nicht hängen.
->>>Antwort:
+## Test list v70
+## T1 — Tag filter without beachball
+Set the filter to "invoice", 2,000 entries, must not hang.
+>>>Answer:
 
-## T2 — Hyperlink-Editor
+## T2 — Hyperlink editor
 …
->>>Antwort:
+>>>Answer:
 
-# Die Kostentabelle dieser Sitzung
-| # | Zeit | Worum es ging | Anfr. | Kontext | gelesen | geschr. | Ausgabe | Äquiv. |
+# This session's cost table
+| # | Time | What it was about | Req. | Context | read | written | output | equiv. |
 …
 
-## Sammlung für das nächste Handoff
+## Collection for the next handoff
 >>>
 ```
 
-Die Einzelheiten — Pfad ganz oben zum Kopieren, Projektname im Dateinamen, vorbereitete
-Antwortzeilen, was ins Handoff gehört und was nicht (Regeln übernommen von Matt Pococks
-`/handoff`) — stehen in `SKILL.md`, Abschnitt „The wave workflow".
+The details — the path at the very top ready to copy, the project name in the file name,
+pre-seeded answer lines, what belongs in a handoff and what doesn't (rules adopted from
+Matt Pocock's `/handoff`) — are in `SKILL.md`, section "The wave workflow".
 
-### Der Nutzer ist der Engpass
+### The user is the bottleneck
 
-Die neueste Regel im Skill (28.08.2026): Der Mensch kann nicht dauernd am Terminal sitzen.
-Jede Rückfrage, die eine Welle anhält, kostet Stunden Echtzeit. Deshalb werden Wellen so
-geschnitten, dass sie **ohne Rückfrage durchlaufen**: Vertretbare Annahmen werden getroffen
-und im Handoff markiert, Fragen **gesammelt** ins Handoff geschrieben statt einzeln in den
-Chat, Agenten bekommen **mehrere Aufgaben gebündelt** und melden sich erst, wenn alles
-fertig ist. Agenten, die länger als eine Stunde brauchen, schreiben ihr Ergebnis in eine
-Datei (`docs/reviews/<datum>-<thema>.md`); das Handoff nennt die erwartete Datei, und die
-**nächste** Session prüft beim Lesen des Handoffs, ob sie da ist — das Fertigwerden kostet
-so keine eigene Anfrage und keinen Neuaufbau nach der Nachtpause.
+The newest rule in the skill (28.08.2026): a human cannot sit at the terminal all day.
+Every clarifying question that halts a wave costs hours of wall-clock time. So waves are
+cut to **run through without questions**: defensible assumptions are made and flagged in
+the handoff, questions are **collected** into the handoff instead of asked one by one in
+chat, and agents get **several tasks bundled** and report only when everything is done.
+Agents expected to run longer than an hour write their result to a file
+(`docs/reviews/<date>-<topic>.md`); the handoff lists the expected file, and the **next**
+session checks for it while reading the handoff — so the agent finishing costs no request
+of its own and no rebuild after the overnight pause.
 
-## 4. Subagenten-Ökonomie
+## 4. Subagent economics
 
-Subagenten sind im Skill **der Standardweg, nicht die Ausnahme** — alles mit mehr als einer
-Handvoll Schritten geht in einen Agenten. Die Gründe, in Zahlen:
+In this skill subagents are **the default route, not the exception** — anything with more
+than a handful of steps goes to an agent. The reasons, in numbers:
 
-| | Hauptkontext (220k) | Subagent (~30k) |
+| | Main context (220k) | Subagent (~30k) |
 |---|---:|---:|
-| Kosten je Arbeitsschritt (×0,1) | 22.000 | 3.000 |
-| Cache-TTL | 1 h gleitend | 5 min (immer, auch auf Max) |
-| Startkosten | — | 1–3 Anfragen + Auftragstext |
-| Bericht zurück in den Hauptkontext | — | wird zum ×2-Cache-Schreiben — **deckeln!** |
+| Cost per work step (×0.1) | 22,000 | 3,000 |
+| Cache TTL | 1 h sliding | 5 min (always, even on Max) |
+| Startup cost | — | 1–3 requests + the task text |
+| Report back into main context | — | becomes a ×2 cache write — **cap it!** |
 
-Drei Dinge, die man dabei wissen muss:
+Three things to know:
 
-1. **Subagenten-Tokens sind nicht gratis.** Sie belasten dasselbe Wochenkontingent. Was sie
-   NICHT belasten, ist der Hauptkontext — der bleibt klein, schnell und antwortfähig.
-2. **Die Ersparnis lässt sich reinvestieren.** Ein Agent arbeitet gründlicher, als man es
-   nebenbei täte: aus 147 Schritten werden 600. Dann ist die Rechnung wieder ausgeglichen —
-   aber es ist **viermal so viel erledigt**. Das ist „Token-Maximierung": mehr Arbeit fürs
-   gleiche Kontingent, nicht weniger Ausgabe.
-3. **Der Bericht ist die versteckte Kostenstelle.** Jeder Agentenbericht wird in den
-   Hauptkontext geschrieben (×2) und danach bei jeder Anfrage mitgelesen (×0,1). Deshalb
-   bekommt jeder Agent eine Berichtsgrenze („≤ 250 Wörter, keine Diffs") und lange
-   Ergebnisse gehen in Dateien.
+1. **Subagent tokens are not free.** They load the same weekly quota. What they do NOT
+   load is the main context — which stays small, fast and responsive.
+2. **The savings can be reinvested.** An agent works more thoroughly than you would on the
+   side: 147 steps become 600. Then the bill is roughly even again — but **four times as
+   much got done**. That is "token maximisation": more work for the same quota, not less
+   output.
+3. **The report is the hidden cost centre.** Every agent report is written into the main
+   context (×2) and then re-read on every later request (×0.1). So every agent gets a
+   report cap ("≤ 250 words, no diffs") and long results go into files.
 
-Modellwahl (aus der Tabelle im Skill): Dateien finden, Umbenennen, Log-Sichtung, Tests nach
-Muster → **schnell/billig, Effort low** (bei Fable 5 als Agent: immer low). Design-
-entscheidungen, Sicherheits-Review → starkes Modell, hoher Effort, oder ein anderes Modell
-(Codex/GPT) als Zweitmeinung. Modell und Effort stehen sichtbar in der Agentenbeschreibung
-(`"Fable/low · Testdateien umbenennen"`), damit der Nutzer im Terminal sieht, wer arbeitet.
+Model choice (from the table in the skill): finding files, renames, log sifting, tests to
+an existing pattern → **fast/cheap, effort low** (with Fable 5 as agent model: always
+low). Design decisions, security review → strong model, high effort, or a different model
+(Codex/GPT) as a second opinion. Model and effort are visible in the agent description
+(`"Fable/low · rename test files"`) so the user sees in the terminal who is working.
 
-Parallel vs. sequenziell: **parallel für Tempo, sequenziell für Wärme** — Agenten cachen
-separat mit 5 Minuten; wer fünf Agenten gleichzeitig startet, hat fünf kalte Caches.
+Parallel vs. sequential: **parallel for speed, sequential for warmth** — agents cache
+separately at 5 minutes; launch five at once and you have five cold caches.
 
-## 5. Was der Skill sichtbar macht
+## 5. What the skill makes visible
 
-### Der Zeitstempel
+### The timestamp
 
-Unter jeder Antwort steht Datum und Uhrzeit — frisch aus `date`, nie aus einer früheren
-Antwort hochgerechnet. So sieht der Nutzer selbst, wie lange die letzte Anfrage her ist
-und ob das Fenster noch offen ist.
+Under every reply: date and time, read fresh from `date`, never extrapolated from an
+earlier turn. The user sees for themselves how long ago the last request was and whether
+the window is still open.
 
-### Die Kostenzeile
+### The cost line
 
-Unter substanziellen Antworten (`ctx.sh`, ans ohnehin laufende `date` angehängt, damit die
-Messung selbst keine Anfrage kostet):
+Under substantial replies (`ctx.sh`, appended to the `date` call that runs anyway, so the
+measurement itself costs no request):
 
 ```
-Letzte gemessene Anfrage: 366k gelesen (×0,1) + 0,4k geschrieben (×2) + 2,9k Ausgabe (×5) ≈ 52k ·
-Sitzung bisher: 265 Anfragen, 9.520k
+Last measured request: 366k read (×0.1) + 0.4k written (×2) + 2.9k output (×5) ≈ 52k ·
+session so far: 265 requests, 9,520k
 ```
 
-Und ein Hinweis, wenn etwas teuer war: „Das waren 12 Anfragen, weil ich drei Agenten
-gestartet und ihre Berichte gelesen habe — 4.600k."
+Plus a note when something was expensive: "That was 12 requests because I launched three
+agents and read their reports — 4,600k."
 
-### Die Kostentabelle je Sitzung
+### The per-session cost table
 
-Am Ende jeder Welle im Handoff (`session-costs.sh --markdown`). Die Zeile ist bewusst der
-**Abschnitt zwischen zwei Nutzernachrichten** — die Einheit, die ein Mensch erlebt („ich
-habe was gesagt, dann ist etwas passiert"), nicht die einzelne Modellanfrage.
+At the end of each wave, in the handoff (`session-costs.sh --markdown`). The row unit is
+deliberately the **stretch between two user messages** — the unit a human experiences ("I
+said something, then something happened"), not the individual model request nobody sees.
 
-| # | Zeit | Worum es ging | Anfr. | Kontext | gelesen | geschr. | Ausgabe | Äquiv. |
+| # | Time | What it was about | Req. | Context | read | written | output | equiv. |
 |---:|---|---|---:|---:|---:|---:|---:|---:|
-| 1 | 17:00 | Handoff gelesen, neun Agenten gestartet | 36 | 148k | 4130k | 282k | 110k | 1529k |
-| 2 | 17:35 | *(gebündelt)* | 0 | — | 0 | 0 | 0 | **0** |
-| 3 | 17:35 | Deine Kostenfragen | 6 | 156k | 906k | 11k | 19k | 208k |
-| 4 | 17:38 | `/context all` ausgewertet | 10 | 180k | 1706k | 43k | 8k | 298k |
-| 5 | 17:48 | Timing und Bündeln erklärt | 5 | 188k | 907k | 11k | 9k | 159k |
-| 6 | 18:15 | *(gebündelt — sechs Fragen)* | 0 | — | 0 | 0 | 0 | **0** |
-| 7 | 18:21 | Restarbeit, Bauen, Handoff | 20 | 220k | 4080k | 59k | 41k | 729k |
-| **Σ** | | **7 Abschnitte** | **82** | **220k** | **12671k** | **416k** | **200k** | **3102k** |
+| 1 | 17:00 | Handoff read, nine agents launched | 36 | 148k | 4130k | 282k | 110k | 1529k |
+| 2 | 17:35 | *(batched)* | 0 | — | 0 | 0 | 0 | **0** |
+| 3 | 17:35 | Your cost questions | 6 | 156k | 906k | 11k | 19k | 208k |
+| 4 | 17:38 | `/context all` evaluated | 10 | 180k | 1706k | 43k | 8k | 298k |
+| 5 | 17:48 | Timing and batching explained | 5 | 188k | 907k | 11k | 9k | 159k |
+| 6 | 18:15 | *(batched — six questions)* | 0 | — | 0 | 0 | 0 | **0** |
+| 7 | 18:21 | Remaining work, build, handoff | 20 | 220k | 4080k | 59k | 41k | 729k |
+| **Σ** | | **7 stretches** | **82** | **220k** | **12671k** | **416k** | **200k** | **3102k** |
 
-Wie man sie liest:
+How to read it:
 
-- **Äquiv.** = gelesen × 0,1 + geschrieben × 2 + Ausgabe × 5 — alle drei Posten auf einen
-  Preis gebracht und addiert. Zeile 1: 4130 × 0,1 + 282 × 2 + 110 × 5 = 413 + 564 + 550 ≈ 1529k.
-- **Kontext addiert sich NICHT.** „180k" in Zeile 4 heißt: So dick war das Gespräch am Ende
-  dieses Abschnitts — nicht, dass der Abschnitt 180k gekostet hätte.
-- **Zwei Zeilen stehen bei null.** Das ist kein Rundungsfehler: Die Nachrichten kamen an,
-  während Claude arbeitete, und wurden in die laufende Runde gebündelt.
-- **Ausgabe 200k × 5 = 1.000k — ein Drittel der Gesamtkosten.** Der einzige Posten, den
-  Claude allein zu verantworten hat. Lehre: weniger reden, mehr ins Dokument schreiben.
-- **82 Anfragen im Hauptkontext für neun Arbeitspakete** — die über 500 Arbeitsschritte
-  liefen in den Agenten. Im Hauptkontext hätten sie ~7.500k statt 3.102k gekostet.
+- **equiv.** = read × 0.1 + written × 2 + output × 5 — all three items on one price and
+  summed. Row 1: 4130 × 0.1 + 282 × 2 + 110 × 5 = 413 + 564 + 550 ≈ 1529k.
+- **Context does NOT add up.** "180k" in row 4 means: that's how fat the conversation was
+  at the end of that stretch — not that the stretch cost 180k.
+- **Two rows sit at zero.** Not a rounding error: those messages arrived while Claude was
+  mid-loop and got batched into the running round.
+- **Output 200k × 5 = 1,000k — a third of the total.** The one item Claude alone is
+  responsible for. Lesson: talk less, write more into the document.
+- **82 main-context requests for nine work packages** — the 500+ work steps ran inside the
+  agents. In the main context they would have cost ~7,500k instead of 3,102k.
 
-### Der Kontingent-Block
+### The quota block
 
-Ganz oben im Handoff steht, was vom bezahlten Kontingent noch da ist — Claude Codes
-eigenes 5-Stunden- und Wochenfenster (aus der Statuszeile in eine Datei geparkt, weil
-Claude seine Prozentzahlen sonst nicht sehen kann) und Codex/GPT (`codex-limit.sh`,
-aus dem `rate_limits`-Block der letzten Codex-Session, mit Alter der Messung). Der Sinn:
-Wer monatlich bezahlt, sollte das Kontingent **ausnutzen** — der Skill schlägt vor, was
-man mit dem Rest noch machen könnte („Woche zu 61 %, Reset Montag: reicht für die
-Codex-Zweitmeinung zu Welle 19"). Mehr dazu in `SKILL.md`, „Was noch im Tank ist".
+At the top of the handoff: what's left of the paid quota — Claude Code's own 5-hour and
+weekly windows (parked from the status line into a file, because Claude cannot otherwise
+see its own percentages) and Codex/GPT (`codex-limit.sh`, parsed from the `rate_limits`
+block of the last Codex session, with the age of the reading). The point: if you pay
+monthly, **use the quota up** — the skill suggests what the remainder could still buy
+("week at 61 %, resets Monday: enough for the Codex second opinion on wave 19"). More in
+`SKILL.md`, "Was noch im Tank ist".
 
-Nebenbefund aus einem Review vom 27.08.2026 (`docs/reviews` im Aitomat-Projekt): Die
-frühere „Peak-Hours"-Kürzung des Kontingents bei Claude Code Pro/Max wurde am 06.05.2026
-abgeschafft; Tageszeit spielt für Preis und Kontingent heute keine Rolle mehr — nur für
-529-Überlastfehler. Und die Skill-Liste selbst ist auf ~2.000 Token gedeckelt; ein
-405k-Sitzungsstart kommt nicht von 89 installierten Skills, sondern aus etwas anderem
-(`/context all` verrät, woraus).
+Side findings from a 27.08.2026 review (in the Aitomat project's `docs/reviews`): the old
+"peak hours" quota reduction for Claude Code Pro/Max was removed on 06.05.2026 — time of
+day no longer affects price or quota, only 529 overload errors. And the skill listing in
+the context is capped at ~2,000 tokens; a 405k session start does not come from 89
+installed skills but from something else (`/context all` tells you what).
 
-## 6. Installation
+## 6. Install
 
 ```bash
 mkdir -p ~/.claude/skills/warm-handoff
@@ -332,83 +316,80 @@ for f in ctx.sh codex-limit.sh session-costs.sh; do
 done
 ```
 
-Oder das Repo klonen: `SKILL.md` nach `~/.claude/skills/warm-handoff/SKILL.md`, alles aus
-`scripts/` nach `~/.claude/`, Dateinamen beibehalten.
+Or clone the repo: `SKILL.md` goes to `~/.claude/skills/warm-handoff/SKILL.md`, everything
+in `scripts/` goes to `~/.claude/`, keeping the file names.
 
-**Damit der Skill in jeder Session ohne Zutun anspringt**, eine Zeile in die globale
+**To have it fire in every session without typing anything**, one line in your global
 `~/.claude/CLAUDE.md`:
 
 ```
-Zu Beginn jeder Session den Skill `warm-handoff` aufrufen. Uhrzeit in jede Antwort schreiben.
+At the start of every session, invoke the warm-handoff skill. Put the time in every reply.
 ```
 
-Manuell: `/warm-handoff` oder einfach „Cache", „Handoff", „Welle fertig", „frische
-Session" sagen.
+Manually: `/warm-handoff`, or just say "cache", "handoff", "wave done", "fresh session".
 
-Voraussetzungen: macOS oder Linux, `bash`, `python3` (für die Kostenskripte), `jq`
-optional. Die Skripte lesen nur die lokalen Session-Dateien unter `~/.claude/projects/`
-und `~/.codex/sessions/` — nichts geht nach außen.
+Requirements: macOS or Linux, `bash`, `python3` (for the cost scripts), `jq` optional. The
+scripts only read the local session files under `~/.claude/projects/` and
+`~/.codex/sessions/` — nothing leaves the machine.
 
-## 7. Die Skripte
+## 7. The scripts
 
-| Skript | Was es tut | Aufruf |
+| Script | What it does | Usage |
 |---|---|---|
-| `scripts/ctx.sh` | Was seit der letzten Nutzernachricht verbraucht wurde und **wofür**: Anzahl Anfragen, was darin passiert ist (Agentenberichte, Dateizugriffe, Befehle, eigene Antworten), Verteilung auf Lesen/Schreiben/Ausgabe. Liefert die Kostenzeile. | `date "+%d.%m.%Y %H:%M" && ~/.claude/ctx.sh` — immer an einen ohnehin laufenden Befehl anhängen, damit die Messung nichts kostet |
-| `scripts/session-costs.sh` | Die Kostentabelle je Sitzung, Welle für Welle, aus der `.jsonl` der Session. Nennt teuersten Abschnitt und Cache-Trefferquote. | `session-costs.sh` (aktuelles Projekt, neueste Sitzung) · `session-costs.sh <sitzung.jsonl>` · `session-costs.sh --markdown` (fertig fürs Handoff) |
-| `scripts/codex-limit.sh` | Wie viel vom Codex/GPT-Kontingent verbraucht ist. Die Codex-CLI hat keinen Usage-Befehl; das Skript liest den `rate_limits`-Block aus der letzten Session-Datei und druckt das Alter der Messung dazu. | `codex-limit.sh` · `--kurz` (Statuszeile: `codex 10%/7d`) · `--json` |
+| `scripts/ctx.sh` | What was spent since the last user message and **on what**: request count, what happened inside them (agent reports, file access, commands, own replies), split into read/write/output. Produces the cost line. | `date "+%d.%m.%Y %H:%M" && ~/.claude/ctx.sh` — always appended to a command that runs anyway, so the measurement costs nothing |
+| `scripts/session-costs.sh` | The per-session cost table, wave by wave, from the session's `.jsonl`. Names the most expensive stretch and the cache hit rate. | `session-costs.sh` (current project, newest session) · `session-costs.sh <session.jsonl>` · `session-costs.sh --markdown` (ready for the handoff) |
+| `scripts/codex-limit.sh` | How much of the Codex/GPT quota is used. The Codex CLI has no usage command; the script reads the `rate_limits` block from the last session file and prints the age of the reading. | `codex-limit.sh` · `--kurz` (status line: `codex 10%/7d`) · `--json` |
 
-Dazu im Skill beschrieben: ein kleines Statuszeilen-Skript, das die Claude-Code-Prozente
-aus dem stdin-JSON in eine Datei parkt, damit der Skill sie im Handoff zitieren kann, und
-ein „Aufwach-Ping" für die Codex-Anzeige (ein Mini-Aufruf, damit die Messung frisch ist).
+Also described in the skill: a small status-line script that parks Claude Code's own
+percentages from the stdin JSON into a file so the skill can quote them in the handoff,
+and a "wake-up ping" for the Codex readout (one mini call so the reading is fresh).
 
-## 8. Ehrliche Grenzen
+## 8. Honest limits
 
-- Die Messungen stammen aus echten Sitzungen eines Entwicklers auf einem Abo mit
-  1-Stunden-Cache, in einem Projekt (Swift/macOS). Andere Projekte, andere Verhältnisse —
-  deshalb liegen die Skripte bei, nicht nur die Ergebnisse.
-- Die Ersparnis je Technik ist eine Schätzung, die ein zweites Modell (Codex/GPT) über
-  dieselben Sitzungsdaten gerechnet hat. Die Posten überlappen und dürfen nicht addiert
-  werden.
-- Die „Äquivalente" sind Listenpreis-Verhältnisse. Auf Pro/Max zahlt niemand diese Summe;
-  sie misst die Belastung des Kontingents, und die Umrechnung des Kontingents in Tokens ist
-  von Anthropic nicht dokumentiert.
-- Ein Neuaufbau wird nur gemeldet, wenn eine Ursache herleitbar ist. Ohne Ursache sagt der
-  Skill lieber nichts.
-- Der Skill schult ausdrücklich: „Erst die Zahl, dann die Regel." Wenn eine frühere
-  Erklärung im Skill falsch war (das kam vor — „fast die Hälfte gespart" waren nachgerechnet
-  ein Drittel), wird sie korrigiert und die Korrektur bleibt lesbar.
+- The measurements come from real sessions of one developer on a subscription plan with
+  the 1-hour cache, in one project (Swift/macOS). Other projects, other ratios — which is
+  why the scripts ship, not just the results.
+- The per-technique savings are estimates a second model (Codex/GPT) computed over the
+  same session data. The items overlap and must not be summed.
+- The "equivalents" are list-price ratios. On Pro/Max nobody pays that sum; it measures
+  quota load, and Anthropic does not document the quota-to-token conversion.
+- A rebuild is reported only when a cause can be derived. Without one, the skill prefers
+  silence.
+- The skill explicitly teaches: "first the number, then the rule." When an earlier
+  explanation in the skill was wrong (it happened — "almost half saved" turned out to be
+  about a third), it gets corrected and the correction stays readable.
 
-## 9. Die Fakten, auf denen alles steht
+## 9. The facts everything rests on
 
-| Regel | Wert |
+| Rule | Value |
 |---|---|
-| Pro/Max Cache-TTL | 1 Stunde, **gleitend** — jede Anfrage setzt sie zurück |
-| Über Plan-Limit (bezahlte Credits) | fällt automatisch auf 5 Minuten |
-| Subagenten | immer 5 Minuten, auch auf Max |
-| Cache lesen / schreiben / eigene Ausgabe | ×0,1 / ×2 (1-h-TTL) / ×5 |
-| Umgebungsvariablen | `ENABLE_PROMPT_CACHING_1H=1`, `FORCE_PROMPT_CACHING_5M=1` |
-| Skill-Liste im Kontext | gedeckelt (`skillListingBudgetFraction`, ~2.000 Token) |
+| Pro/Max cache TTL | 1 hour, **sliding** — every request resets it |
+| Over plan limits (paid credits) | drops to 5 minutes automatically |
+| Subagents | always 5 minutes, even on Max |
+| Cache read / write / model output | ×0.1 / ×2 (1-h TTL) / ×5 |
+| Env overrides | `ENABLE_PROMPT_CACHING_1H=1`, `FORCE_PROMPT_CACHING_5M=1` |
+| Skill listing in context | capped (`skillListingBudgetFraction`, ~2,000 tokens) |
 
-Quellen: [How Claude Code uses prompt caching](https://code.claude.com/docs/en/prompt-caching),
+Sources: [How Claude Code uses prompt caching](https://code.claude.com/docs/en/prompt-caching),
 [Usage limit best practices](https://support.claude.com/en/articles/9797557-usage-limit-best-practices),
-[Extend Claude with skills](https://docs.claude.com/en/docs/claude-code/skills). Stand 27.08.2026.
+[Extend Claude with skills](https://docs.claude.com/en/docs/claude-code/skills). As of 27.08.2026.
 
-## 10. Danksagung, Vorarbeiten, Lizenz
+## 10. Credits, prior art, license
 
-- [Matt Pococks /handoff-Skill](https://www.aihero.dev/skills-handoff)
-  ([mattpocock/skills](https://github.com/mattpocock/skills)) — das klarste Denken darüber,
-  *wie* man ein Handoff schreibt. Übernommen: auf abgeschlossene Dokumente verweisen statt
-  sie zu kopieren, Geheimnisse schwärzen, Skills für den nächsten Agenten vorschlagen.
-  Bewusst anders: Unsere Handoffs leben *im Projekt* als datierte, vom Nutzer annotierte
-  Arbeitsdokumente, und jenseits der Kontextschwelle ziehen wir Handoff + frische Session
-  dem `/compact` vor.
-- Weitere Handoff-Implementierungen: [392fyc](https://github.com/392fyc/claude-handoff),
+- [Matt Pocock's /handoff skill](https://www.aihero.dev/skills-handoff)
+  ([mattpocock/skills](https://github.com/mattpocock/skills)) — the clearest thinking on
+  *how* to write a handoff. Adopted: reference settled docs instead of copying them, redact
+  secrets, suggest skills for the next agent. Deliberately different: our handoffs live *in
+  the project* as dated, user-annotated working documents, and past the context threshold
+  we prefer handoff + fresh session over `/compact`.
+- Further handoff implementations: [392fyc](https://github.com/392fyc/claude-handoff),
   [REMvisual](https://github.com/REMvisual/claude-handoff),
   [willseltzer](https://github.com/willseltzer/claude-handoff),
   [ykdojo](https://github.com/ykdojo/claude-code-tips/blob/main/skills/handoff/SKILL.md).
-- Zweitmeinungen zu den Rechnungen: Codex/GPT-5.6 und Ox Alpha (OpenRouter).
+- Second opinions on the arithmetic: Codex/GPT-5.6 and Ox Alpha (OpenRouter).
 
-Issues, Messungen aus eigenen Sitzungen und Pull Requests sind willkommen — auf Deutsch
-oder Englisch.
+Issues, measurements from your own sessions, and pull requests are welcome — in English or
+German. `SKILL.md` mixes English rules with German passages that record the sessions the
+rules came from; the scripts are commented in German.
 
-Lizenz: MIT.
+License: MIT.
