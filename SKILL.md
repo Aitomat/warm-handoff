@@ -25,7 +25,8 @@ To find things by TOPIC rather than by date, use this map:
 | Fewer requests (the real lever) | Der eigentliche Hebel · Die Technik-Liste · Wie wenige Anfragen sind realistisch · Nachrichten WÄHREND der Arbeit · Die Ausgabe ist teuer |
 | Subagents | Pacing · Choosing WHICH subagent · Sequential vs. parallel · Make the work visible · Die ehrlichste Zahl · Subagenten sind der Standardweg · Lange Agentenläufe / Nutzer als Engpass / Fable low |
 | Cost visibility | Die Kostenzeile · Die Kostentabelle · Wie man diese Tabelle liest · Dieser Skill soll SCHULEN |
-| Paid quota | Bezahltes Kontingent sichtbar machen · Was noch im Tank ist · Aufwach-Ping · Codex, Gemini und OpenRouter |
+| Paid quota | Bezahltes Kontingent sichtbar machen · Was noch im Tank ist · Aufwach-Ping · Codex, Gemini und OpenRouter · Codex nach Kontogröße (29.08.) |
+| Sammlung & Ende-Feld | Vier Regeln vom 29.08.: Sammlung wörtlich kopieren · Ende-Feld als Banner · Agenten-Anzeige |
 | The handoff document | The wave workflow · Writing the handoff well · When to stay vs. hand off · The economics, honestly · Diktieren ins Terminal |
 | Setup | The logbook · Make it always-on |
 
@@ -1710,3 +1711,116 @@ At the start of every session, invoke the warm-handoff skill.
 
 Then you never need to type `/warm-handoff` — the session opens with the timestamp habit,
 the thresholds, and the wave workflow already active.
+
+## Vier Regeln aus dem Handoff-Test vom 29.08.2026 (Yasin)
+
+### a) Die Sammlung wird WÖRTLICH kopiert — und im selben Aufruf gelesen
+
+Was passiert ist: Die Session vom 28.08. las die „Sammlung für das
+nächste Handoff" um ~16:45, arbeitete dann 3 Stunden, und schrieb um
+19:45 das neue Handoff — **ohne die Sammlung erneut zu lesen.** Alles,
+was Yasin zwischen 18:53 und 19:42 dort eingetragen hatte (acht
+Punkte: Mikro-Warnung, Systemaudio-Qualität, HUD-Transparenz,
+Schlafmodus-Optik, Filter-Reset …), fehlte im neuen Handoff. Er
+musste es am nächsten Tag selbst hineinkopieren und fragte zu Recht:
+„Hast du das mitgenommen? Ich bin mir unsicher."
+
+Zwei Regeln, beide hart:
+
+1. **Die Sammlung wird UNMITTELBAR vor dem Schreiben des neuen
+   Handoffs gelesen** — im selben Werkzeugaufruf wie der
+   Ungespeichert-Wächter, nicht Stunden vorher. Eine Lesung, die
+   nicht direkt vor dem Schreiben steht, ist wertlos (derselbe
+   Grundsatz wie beim Schließen alter Handoffs, 25.08.).
+2. **Sie wird EINS ZU EINS kopiert, nicht umgeschrieben.** Yasin,
+   wörtlich (29.08., 13:22): „Wenn du das wieder umschreibst, dann
+   weiß ich nicht mehr, ob es die letzte Sammlung ist." Ganz oben
+   im neuen Handoff steht deshalb ein Block:
+
+   ```
+   # Deine Sammlung aus dem letzten Handoff (wörtlich kopiert)
+
+   > Kopiert aus `_handoff-…-28-b.md`, Abschnitt „Sammlung", am
+   > 29.08.2026 13:40 — inklusive ungespeicherter Zeilen aus dem
+   > offenen TextEdit-Fenster. Unverändert; meine Antworten dazu
+   > stehen direkt darunter.
+
+   [Sammlung wörtlich, Zeile für Zeile]
+
+   ## Was ich daraus gemacht habe
+   - 19:29 Transparenz statt Farbintensität → gebaut (T4)
+   - …
+   ```
+
+   Erst die Kopie (damit der Nutzer den Abgleich SEHEN kann), dann
+   die Zuordnung. Zusammenfassen ist erlaubt — aber nur ZUSÄTZLICH
+   zur wörtlichen Kopie, nie statt ihrer.
+
+### b) Codex nach Kontogröße einsetzen — kleines Konto = nur Qualitätssicherung
+
+Yasin, 28.08. 20:08, nachdem Codex im 5-Stunden-Limit hing und der
+Vorschlag lautete, ihm ab 23:05 die Hauptarbeit zu geben: „Nein,
+ich bin mit dem Vorschlag nicht einverstanden. Wenn Codex so knapp
+ist, dann sollten wir Codex nur für wichtige Qualitätsmanagement-
+Sachen nutzen — der soll dann nur prüfen — und nicht, dass wir zwei,
+drei Stunden warten, bis der wieder Kontingent hat. Ich habe nur
+einen Zwanzig-Dollar-Account bei Codex. Nicht versuchen, jedes
+letzte Tröpfchen Token auszusaugen."
+
+Der Abschnitt „Bezahltes Kontingent ausnutzen" oben bleibt richtig —
+aber er gilt für das Kontingent, das man HAT. Die Regel wird damit
+kontoabhängig:
+
+| Codex-Konto | Einsatz |
+|---|---|
+| Klein (Plus, ~20 $/Monat: enges 5h-Fenster) | **Nur Prüfarbeit:** Code-Review, Zweitmeinung, Testläufe, Abnahme. Keine Bau-Aufträge, keine Nachtschichten, kein „ab 23:05 weitermachen". Reicht das Fenster nicht, macht Claude (oder ein Opus-Subagent) die Arbeit — nicht warten. |
+| Groß (Pro/Team, weites Fenster) | Wie bisher: großzügig einsetzen, auch für Umbauten und lange Analysen. |
+
+Warum das nicht im Widerspruch zu „Kontingent ausnutzen" steht:
+Beim kleinen Konto ist das 5-Stunden-Fenster der Engpass, nicht die
+Woche. Ein Bau-Auftrag frisst es in einer Stunde, und dann fehlt
+Codex genau dort, wo er den größten Wert hat — als ANDERE Architektur,
+die Claudes Fehler sieht. Prüfarbeit ist kurz, gezielt und wertvoll;
+Hauptarbeit kann Claude selbst. Wer das Konto vergrößert, wechselt
+die Zeile — der Skill fragt beim Setup einmal, welches Konto
+vorliegt, und merkt es sich.
+
+### c) Das Ende-Feld muss auffallen — Markdown hilft im Editor nicht
+
+Yasin, 28.08. 20:00: „Kann man denn nicht Buchstaben größer machen?
+Bei MD geht das nicht, gell. Das ‚Hiermit sind Fragen … zu Ende'
+müsste eigentlich auffälliger sein."
+
+Richtig: In TextEdit ist eine `##`-Überschrift nur zwei Rauten vor
+normalem Text. Was im Klartext auffällt, sind **Linien und Leerraum**,
+nicht Markup. Die beiden Schluss-Blöcke (Ende-Feld, Sammelbereich)
+bekommen deshalb eine Bannerzeile:
+
+```
+═══════════════════════════════════════════════════════════
+   ▼▼▼  HIER SIND FRAGEN UND TESTS ZU ENDE  ▼▼▼
+   Alles Weitere — Ideen, Aufträge, Kritik — ab hier:
+═══════════════════════════════════════════════════════════
+
+>>>Userantwort:
+```
+
+Großbuchstaben, Doppellinie, drei Leerzeilen davor. Das funktioniert
+in jedem Editor ohne Rendering.
+
+### d) „Welche Agenten arbeiten gerade?" — was der Host zeigt und was nicht
+
+Yasins Frage (28.08. 18:53, Screenshot der Statuszeile): ob unten
+stehen kann, WELCHE Agenten arbeiten. Ehrliche Antwort:
+
+- **Was sichtbar ist:** Claude Code listet laufende Hintergrund-
+  Agenten mit ihrer Kurzbeschreibung unter der Eingabezeile („← for
+  agents"). Deshalb gehört Modell + Denktiefe in diese Beschreibung
+  (Regel vom 26.08.: „Opus5/high · Thema") — dann steht dort alles.
+- **Was NICHT geht:** Die eigene Statuszeile (`ctx 17% | 7d:10%`)
+  bekommt vom Host keine Agentenliste übergeben; sie kann sie nicht
+  anzeigen. Wer sie dort will, muss die Agenten-Anzeige des Hosts
+  aufklappen.
+- **Die eine Ansage im Chat beim Start der Flotte** bleibt der
+  vollständige Überblick: wie viele Agenten, welches Modell, welches
+  Arbeitspaket. Danach Funkstille.
