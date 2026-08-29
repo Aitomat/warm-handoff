@@ -74,6 +74,11 @@ Terminal-Tab-Vorschläge und jede Agenten-Fertigmeldung sind ebenfalls volle Anf
   Welle eine lange. Der ERSTE Schritt jedes Arbeiters ist, den aktuellen Branch-Tip zu ziehen
   (`git pull` / `git fetch && git rebase`), bevor er irgendeine Datei anfasst, damit er nie auf
   einer veralteten Basis baut.
+- **Arbeiter bauen und testen NICHT.** Sie schreiben Code + Tests, höchstens `swiftc -parse`,
+  und committen früh. Nur der Wächter baut — EINMAL, seriell, im Hauptrepo — und fährt die
+  Suite. 12 Arbeiter × je ein Kaltbuild = 400+ Compiler-Prozesse, Load 70, 18 GB RAM in den
+  Swap, Neustart erzwungen, 90 Minuten verloren (29.08.2026). Muss doch gebaut werden: nie
+  mehr als 4 gleichzeitig; `memory_pressure` vor der Vollsuite.
 - **Agenten auf ~30 Minuten, EINEN Auftrag kürzen** (nicht 40 Minuten / 2–3 Aufgaben — ein einziger
   fokussierter Auftrag landet schneller und lässt sich leichter mergen). Längere Arbeit liefert in
   eine DATEI (`docs/reviews/<datum>-<thema>.md`) und berichtet nur den Pfad; das Handoff listet

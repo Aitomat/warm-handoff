@@ -71,6 +71,11 @@ agent completion notification are full requests too.
   calls), never one after another — a serial tail of workers is what turns a cheap wave
   into a long one. Each worker's FIRST step is to pull the current branch tip (`git pull`
   / `git fetch && git rebase`) before touching any file, so it never builds on a stale base.
+- **Workers do NOT build or test.** They write code + tests, at most `swiftc -parse`, and
+  commit early. Only the guardian builds — ONCE, serially, in the main repo — and runs the
+  suite. 12 workers × one cold build each = 400+ compiler processes, load 70, 18 GB RAM
+  swapped to a halt, forced reboot, 90 minutes lost (29.08.2026). If workers must build,
+  never more than 4 at once; `memory_pressure` before the full suite.
 - **Cut agents to ~30 minutes, ONE task each** (not 40 minutes / 2–3 tasks — a single focused
   job lands faster and is easier to merge). Longer work delivers into a FILE
   (`docs/reviews/<date>-<topic>.md`) and reports only the path; the handoff lists the

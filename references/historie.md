@@ -1903,3 +1903,11 @@ deshalb geschärft, ohne die alte Erkenntnis zu verwerfen:
 
 Kurz: schnell UND günstig braucht beides — kleine Aufträge UND
 echte Gleichzeitigkeit beim Start. Eines allein reicht nicht.
+
+## 29.08.2026, 23:35 — Der Rechner-Absturz
+
+Welle 24: Der Wächter startete 12 Arbeiter gleichzeitig, jeder in eigenem
+Worktree mit eigenem Kaltbuild. 400+ swift-frontend-Prozesse, Load ~70 auf
+12 Kernen, 18 GB RAM → Swap → Rechner stand, Yasin musste neu starten; die
+Session brach ab, 90 Minuten verloren. Yasin: „Sowas sollte nicht mehr
+passieren." Regel: Arbeiter bauen nicht; nur der Wächter baut, einmal, seriell.
