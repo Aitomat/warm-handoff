@@ -979,3 +979,71 @@ Generally understandable, but frequently colloquial or non-native:
 - English instructions contain German headings, examples, paths, and `<projekt>`; localize consistently.
 
 The German version is faithful but contains awkward Anglicisms and phrasing such as “merged,” “serieller Schwanz,” “wackelnder Test,” and “Agenten auf ~30 Minuten, EINEN Auftrag kürzen.” Use “zusammenführen,” “serielle Nachzügler,” “flaky/instabiler Test,” and “Aufträge auf eine Aufgabe und etwa 30 Minuten begrenzen.”
+
+---
+
+# Auflösung der Befunde (Stand 30.08.2026, 00:54 — Welle 25 / Skill-A3)
+
+Jeder Befund oben ist hier mit `→ erledigt in <Datei>` oder `→ offen, weil …`
+markiert. Grundlage: SKILL.md und SKILL.de.md nach Welle 25.
+
+## High-priority issues
+
+1. **Broken script name** → erledigt in SKILL.md / SKILL.de.md (Welle A2):
+   der Setup-Abschnitt nennt jetzt `scripts/session-costs.sh` (= `session-kosten.sh`);
+   die installierte Datei `~/.claude/session-kosten.sh` existiert und läuft (geprüft 30.08. 00:52).
+2. **Parallel/serial contradiction** → erledigt in SKILL.md (Abschnitt „Subagents",
+   Pacing-Punkt) und SKILL.de.md („Taktung"): **Innerhalb einer Welle gewinnt die
+   Parallel-Regel** — ein Wächter startet seine Arbeiter IMMER parallel, unabhängig von
+   der Anwesenheit des Nutzers. Die Regel „Nutzer abwesend → seriell" gilt ausdrücklich
+   nur für Nicht-Wächter-Arbeit, die die Hauptsitzung selbst erledigt.
+3. **Verbatim/redaction conflict** → offen, weil in dieser Welle nicht beauftragt.
+   Vorgesehene Formulierung für die nächste Welle: „Schwärzen sticht wörtliches Kopieren;
+   jede Schwärzung wird an Ort und Stelle als `[geschwärzt: Grund]` markiert."
+4. **Unsafe ambiguity rule** → erledigt in SKILL.md / SKILL.de.md (Abschnitt Handoff-Datei,
+   „Escalation exception" / „Eskalations-Ausnahme"): sofort im Chat fragen bei
+   unumkehrbaren/zerstörenden Aktionen, Sicherheit/Zugangsdaten, extern Sichtbarem,
+   echtem Geld-/Kontingenteinsatz und Repo-Inhalten an externe Modelle. Alles Übrige
+   geht weiterhin ins Handoff.
+5. **Unapproved global mutation** → offen, weil Zustimmung, Idempotenz und Backups für
+   `~/.claude/CLAUDE.md`, Skriptkopien und Logbuch-Anhänge ein eigener Setup-Abschnitt
+   werden sollen (Befund 10 gehört dazu) — das ist eine eigene Welle, keine Randnotiz.
+6. **Git workflow unsafe/incomplete** → teilweise erledigt: Worktrees, Branch-Tip vor
+   dem ersten Zugriff, sofortiges Mergen bei Landung und je Themen-Wächter ein eigener
+   Integrationsbranch stehen im Skill. **Offen**, weil Dirty-Tree-Prüfung,
+   Rebase-vor-Merge, Konflikt-Eigentümerschaft und ein ausdrückliches Force-Push-Verbot
+   noch fehlen.
+7. **Testing contradiction** → teilweise erledigt: die Vollsuite läuft genau einmal, am
+   Ende, beim **Merge-Wächter** (neu in Welle 25) — der QA-Agent klickt danach, er fährt
+   keine zweite Suite. **Offen**, weil die Regel für den Wiederlauf nach einem Fix
+   („welche Tests nach welcher Korrektur") noch nicht formuliert ist.
+8. **Incorrect terminology („hit rate")** → offen, weil in dieser Welle nicht beauftragt.
+   Richtig wäre „Schreib-/Lese-Verhältnis"; die Zahl selbst und ihre Schwelle (<10 % = warm)
+   bleiben gültig.
+9. **Unsupported universal claims** → offen, weil die Quellenangabe (Claude-Code-Doku,
+   Stand 2026-08) zwar in der Überschrift steht, aber Produkt-/Modell-/Abrechnungs-Scope
+   nicht ausgewiesen ist.
+10. **Activation bootstrap problem** → offen, gehört mit Befund 5 in einen getrennten
+    Abschnitt „Einmaliges Setup" gegenüber „Laufzeitverhalten".
+
+## Missing rules
+
+- Fallbacks ohne macOS/TextEdit/Codex/Skripte/JSONL → **offen**.
+- Zustimmung vor dem Senden von Repo-Inhalten an externe Modelle → **erledigt** als Teil
+  der Eskalations-Ausnahme in SKILL.md / SKILL.de.md.
+- Definitionen („Welle", „Anfrage", „Kontext", „Kosten") → **offen**.
+- Timeout-/Abbruchregel zwischen „nie auf Nachzügler warten" und der 60-Minuten-Regel →
+  **teilweise**: Aufträge von 15–25 Minuten (Welle 25) verkleinern das Problem, eine
+  ausdrückliche Abbruchregel fehlt weiter.
+- Dateinamens-Kollisionen über `[-b]` hinaus, Auffinden der letzten zwei Handoffs → **offen**.
+- Frische-/Fehlersemantik der Kostenzeile → **offen**.
+- Sprach-/Versionsmarker und Paritätsprüfung der Übersetzungen → **offen**; faktisch werden
+  beide Dateien seit Welle 24 in derselben Welle geändert (auch in dieser).
+- „Messfehler dürfen die eigentliche Aufgabe nie blockieren" → **offen**.
+
+## Claude Code packaging & English quality
+
+→ **offen**, bewusst zurückgestellt: die Aufteilung in Laufzeitregeln / Setup / Vorlage /
+Referenz und die Sprachpolitur sind eine eigene Welle. Der Umfang wächst dabei weiter
+(Welle 25 hat Kostenrechnung, Themen-Wächter und Belege-Tabelle ergänzt), was den Befund
+„zu lang für einen Always-on-Skill" eher verschärft als entkräftet.

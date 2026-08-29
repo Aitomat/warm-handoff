@@ -47,6 +47,24 @@ Vollständige Historie mit datierten Nutzer-Zitaten und der Begründung jeder Re
 Break-even für eine frische Session: `(Start-Kontext × 2) / ((alter_Kontext − Start-Kontext) × 0,1)` Schritte.
 Der Startkontext wird pro Projekt GEMESSEN (82–125k gesehen), nie als "~20k" angenommen. Schritte = Tool-
 Aufrufe, nicht Nutzer-Nachrichten. Reden auf fettem Kontext ist billig; Arbeiten darauf nicht.
+
+**Was ein Subagent wirklich kostet.** Ein frischer Subagent ist NICHT gratis: sein erster
+Schritt zahlt den eigenen Startkontext ×2 (Cache-Aufbau), erst jeder weitere Schritt kostet
+×0,1. Eine Welle kostet also
+
+```
+Hauptkontext × 0,1 × eigene_Schritte  +  N Agenten × Startkontext × 2
+                                      +  N × Startkontext × 0,1 × Agentenschritte
+                                         └── die Zeile, die meist vergessen wird ──┘
+```
+
+Beispielrechnung, 220k Hauptkontext und 30k Agentkontext: ein Schritt in der Hauptsitzung
+kostet 220k × 0,1 = 22k; derselbe Schritt im Agenten kostet 30k × 0,1 = 3k, aber der Agent
+verbrennt einmalig 30k × 2 = 60k. Break-even: 60k ÷ (22k − 3k) ≈ **7 Schritte je Agent**.
+Darunter ist Selbermachen billiger, darüber gewinnt Delegieren — und der Vorsprung wächst.
+Beide Kontexte werden gemessen, nicht angenommen: bei 120k Hauptkontext liegt der Break-even
+bei 60k ÷ (12k − 3k) ≈ ebenfalls 7 Schritten, bei 400k nur noch bei ≈ 2. Die Zahl nennen,
+nicht "Agenten sind billig" behaupten.
 Bei jedem Wellenende beiläufig sagen: "Kontext 148k, Ziel 200k — reicht für ~1 Welle."
 Während die eigene Tool-Schleife des Agenten läuft, ist eine Nutzer-Nachricht fast gratis (hängt
 sich an die nächste Anfrage an); während Subagenten laufen oder der Agent leerläuft, kostet sie den vollen Kontext × 0,1.
@@ -69,6 +87,18 @@ Terminal-Tab-Vorschläge und jede Agenten-Fertigmeldung sind ebenfalls volle Anf
   Hauptsitzung wird EINMAL geweckt statt einmal pro Agent (8 → 1 Meldungen ≈ 140k gespart bei 190k Kontext).
   Fragen der Arbeiter landen beim Wächter, also müssen die Aufträge vollständig sein: Pfade, Ziel,
   Grenzen, Abnahmekriterien, "keine Rückfragen — entscheiden, die Annahme dokumentieren".
+- **Ein Wächter JE THEMENBEREICH, nicht einer je Welle** (30.08.2026). Ein Wächter mit 12
+  Arbeitern ist Engpass und Absturzrisiko; jeder Themenbereich (Oberfläche, Audio, Tests,
+  Doku …) bekommt einen eigenen Opus-Wächter mit **höchstens 4–6 Arbeitern**. Jeder Themen-
+  Wächter merged in seinen eigenen Integrationsbranch. Die Hauptsitzung führt die
+  Integrationsbranches zusammen und startet danach EINEN **Merge-Wächter** für den einen
+  Build, die Vollsuite, das Bundle und die QA-Runde. Geweckt wird die Hauptsitzung einmal je
+  Themen-Wächter, nicht einmal je Arbeiter.
+- **Build-Schloss — nie mehr als ein Build pro Rechner.** Vor jedem Build:
+  `mkdir /tmp/<projekt>-build.lock` (schlägt fehl, wenn es existiert → warten oder
+  überspringen; danach `rmdir`). `mkdir` ist atomar, funktioniert also über Agenten und
+  Worktrees hinweg. Das ist die mechanische Absicherung hinter "Arbeiter bauen nicht" nach
+  dem Absturz vom 29.08.
 - **Der Wächter startet alle Arbeiter gleichzeitig, in EINER Nachricht** (ein Batch von Agent-
   Aufrufen), nie nacheinander — ein serieller Schwanz von Arbeitern macht aus einer günstigen
   Welle eine lange. Der ERSTE Schritt jedes Arbeiters ist, den aktuellen Branch-Tip zu ziehen
@@ -79,8 +109,10 @@ Terminal-Tab-Vorschläge und jede Agenten-Fertigmeldung sind ebenfalls volle Anf
   Suite. 12 Arbeiter × je ein Kaltbuild = 400+ Compiler-Prozesse, Load 70, 18 GB RAM in den
   Swap, Neustart erzwungen, 90 Minuten verloren (29.08.2026). Muss doch gebaut werden: nie
   mehr als 4 gleichzeitig; `memory_pressure` vor der Vollsuite.
-- **Agenten auf ~30 Minuten, EINEN Auftrag kürzen** (nicht 40 Minuten / 2–3 Aufgaben — ein einziger
-  fokussierter Auftrag landet schneller und lässt sich leichter mergen). Längere Arbeit liefert in
+- **Aufträge auf eine Aufgabe und 15–25 Minuten begrenzen** (30.08.2026 — vorher ~30 Minuten,
+  davor 40 Minuten / 2–3 Aufgaben; ein einziger fokussierter Auftrag landet schneller und
+  lässt sich leichter zusammenführen, und erst der kurze Auftrag sorgt dafür, dass die 4–6
+  Arbeiter eines Themen-Wächters gemeinsam landen). Längere Arbeit liefert in
   eine DATEI (`docs/reviews/<datum>-<thema>.md`) und berichtet nur den Pfad; das Handoff listet
   die erwarteten Dateien, und die nächste Sitzung prüft zuerst mit `ls`. Nie auf einen Nachzügler warten.
 - **Jeden Arbeiter-Branch sofort bei Landung mergen**, Merges nicht für später sammeln — Konflikte
@@ -94,8 +126,11 @@ Terminal-Tab-Vorschläge und jede Agenten-Fertigmeldung sind ebenfalls volle Anf
   den Wächter und seine noch laufenden Arbeiter unter "erwartete Agenten-Ergebnisse" listen,
   die nächste Sitzung prüft sie nach.
 - **Modell + Effort im sichtbaren Label**: `Opus5/high · Verlauf-Tempo`, `Fable/low · Scan`.
-  Fable 5 als Subagent: **immer Effort low**; für schwieriges Review/Design Opus oder eine zweite
-  Architektur (Codex/GPT) nutzen. Nie die eigene Ausgabe selbst reviewen — an Codex weiterleiten.
+  Fable 5 als Subagent: **immer Effort low** — und **nur für Aufträge, die der Nutzer als
+  „wichtig" markiert hat**; dort lohnt das schnellere Modell. Alles andere: Opus (low).
+  **Sonnet nur für Triviales ohne Bau** (Umbenennen, Text verschieben, Dateien auflisten),
+  nie für einen Bauauftrag. Für schwieriges Review/Design Opus oder eine zweite Architektur
+  (Codex/GPT) nutzen. Nie die eigene Ausgabe selbst reviewen — an Codex weiterleiten.
 - **Agenten testen vor dem Nutzer.** Volle Suite + ein QA-Agent, der die App startet und jeden
   Testpunkt einmal anklickt; der Nutzer sollte meist nur "funktioniert, danke" sagen. **Der QA-
   Agent schließt die Fenster/Prozesse, die er zum Testen geöffnet hat**, bevor er fertig meldet —
@@ -103,8 +138,29 @@ Terminal-Tab-Vorschläge und jede Agenten-Fertigmeldung sind ebenfalls volle Anf
 - Berichtsvertrag: ≤ 300 Wörter, Status/Entscheidungen/Belege-mit-Pfaden/Risiken/Nächstes; keine
   Chronik, keine eingefügten Logs. Subagenten-Token zählen trotzdem aufs Wochenkontingent — was sie
   sparen, ist der HAUPTkontext (jeder Schritt ≈ 1/5 der Kosten, und nichts davon bleibt in der Sitzung).
-- Taktung: Nutzer anwesend + in Eile → parallel; Nutzer abwesend → seriell (jede Fertigmeldung
-  hält den Cache warm). Nie Beschäftigungstherapie erfinden.
+- Taktung — **innerhalb einer Welle gewinnt die Parallel-Regel** (damit ist der alte
+  Widerspruch aufgelöst): Ein Wächter startet seine Arbeiter IMMER parallel, in einer
+  Nachricht, egal ob der Nutzer da ist oder nicht. Die Regel „Nutzer abwesend → seriell" gilt
+  nur für Arbeit AUSSERHALB eines Wächters, die die Hauptsitzung selbst erledigt (kleine
+  Edits, Reviews, Prüfungen): die zeitlich strecken, damit jede Fertigmeldung den Cache warm
+  hält, statt alles in einem Schwung zu verbrennen und dann leerzulaufen. Nie
+  Beschäftigungstherapie erfinden.
+
+## Belege — gemessene Wellen (Aitomat, 29./30.08.2026)
+
+| Welle | Struktur | Anfragen | Äquivalent | Fertigmeldungen | Wanduhr |
+|---|---|---|---|---|---|
+| 22 | 6 Arbeiter + Merge-Agent, Hauptsitzung orchestriert | 58 | 2.075k | 8 | ~2 Std. |
+| 23 | 1 Wächter, wenige große Agenten | 43 | 1.531k | 1 | 2 Std. 20 |
+| 24 | 1 Wächter, 12 Arbeiter, alle bauend | 62 | 3.143k | 1 + 12 | 2 Std. 10 |
+| 25 | Themen-Wächter (neue Regel) | — | — | — | wird nachgetragen |
+
+So liest man das: Welle 23 war die günstigste in Token (ein Wächter = ein Wecken), aber die
+langsamste auf der Uhr — Token und Wartezeit sind zwei verschiedene Achsen. Welle 24 sieht in
+jeder Spalte am schlechtesten aus, aber 90 ihrer 130 Minuten und rund 2.400k des Äquivalents
+sind der Rechner-Absturz (12 parallele Kaltbuilds); **ohne den Absturz waren es ≈ 40 Minuten
+und ≈ 700k** — die schnellste Welle bisher. Genau das schützen das Build-Schloss und die
+Regel „4–6 Arbeiter je Wächter".
 
 ## Bezahltes Kontingent — sehen, nutzen, nach Kontogröße
 
@@ -160,6 +216,12 @@ Skills für die nächste Sitzung nennen. Struktur, von oben nach unten:
 Fragen an den Nutzer gehören ins Handoff (`## Fragen an dich` mit `>>>Antwort:`), nicht in den
 Chat: eine Chat-Frage blockiert eine Welle, zehn in der Datei blockieren nichts. Wellen so
 zuschneiden, dass sie ohne Rückfrage durchlaufen; die wahrscheinlichere Lesart nehmen und dokumentieren.
+**Eskalations-Ausnahme — sofort im Chat fragen, vor dem Handeln**, wenn die Unklarheit
+Folgendes berührt: unumkehrbare oder zerstörende Aktionen (`rm`, Historie umschreiben,
+Force-Push, Daten verwerfen), alles rund um Sicherheit und Zugangsdaten, alles von außen
+Sichtbare (Mail versenden, veröffentlichen, ausrollen, einen Live-Shop ändern), echtes Geld
+oder ein großes Kontingent ausgeben, oder Repo-Inhalte an ein externes Modell schicken.
+Alles Übrige gehört ins Handoff.
 
 ## Editor-Regeln (macOS / TextEdit)
 

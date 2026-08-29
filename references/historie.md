@@ -1911,3 +1911,48 @@ Worktree mit eigenem Kaltbuild. 400+ swift-frontend-Prozesse, Load ~70 auf
 12 Kernen, 18 GB RAM → Swap → Rechner stand, Yasin musste neu starten; die
 Session brach ab, 90 Minuten verloren. Yasin: „Sowas sollte nicht mehr
 passieren." Regel: Arbeiter bauen nicht; nur der Wächter baut, einmal, seriell.
+
+## Welle 25 — ein Wächter je Themenbereich (30.08.2026)
+
+Yasin, 30.08.2026, sinngemäß: „Je Themenbereich ein Opus-Wächter, der
+auf 3–5 Arbeiter aufpasst, Aufträge 15–25 Minuten."
+
+Nach Welle 23 (billig, aber 2 Std. 20 durch seriellen Schwanz) und
+Welle 24 (schnell gedacht, aber Rechner-Absturz durch 12 gleichzeitige
+Kaltbuilds) war klar: EIN Wächter je Welle ist die falsche Größe. Er ist
+Engpass, wenn er zu viele Arbeiter führt, und er kann den Bauzugriff nicht
+mehr ordnen. Daraus die Regeln der Welle 25:
+
+- **Ein Wächter JE THEMENBEREICH** (Oberfläche, Audio, Tests, Doku …),
+  jeder mit **höchstens 4–6 Arbeitern** (Yasins Zahl war 3–5; 4–6 ist die
+  im Skill festgehaltene Obergrenze). Jeder Themen-Wächter merged in seinen
+  eigenen Integrationsbranch. Die **Hauptsitzung** führt die Integrations-
+  branches zusammen und startet dann **einen Merge-Wächter** für den einen
+  Build, die Vollsuite, das Bundle und die QA-Runde. Damit wird die
+  Hauptsitzung einmal je Thema geweckt statt einmal je Arbeiter — und
+  bleibt trotzdem die Instanz, die den Gesamtstand kennt.
+- **Aufträge 15–25 Minuten** statt ~30. Kürzere Aufträge landen dichter
+  beieinander; ein Wächter mit fünf Arbeitern wartet sonst auf den
+  langsamsten und baut den seriellen Schwanz im Kleinen wieder ein.
+- **Build-Schloss:** `mkdir /tmp/<projekt>-build.lock` vor jedem Build,
+  `rmdir` danach. `mkdir` ist atomar, also wirkt das Schloss über Agenten,
+  Worktrees und Sitzungen hinweg. Nie mehr als ein Build pro Rechner — die
+  mechanische Fassung der Lehre vom 29.08.
+- **Modellwahl:** Fable 5 als Arbeiter nur für Aufträge, die der Nutzer
+  als „wichtig" markiert hat (dort lohnt das schnellere Modell); alles
+  andere Opus/low. **Sonnet nur für Triviales ohne Bau.**
+
+Ebenfalls am 30.08. präzisiert (aus dem Codex-Review vom 29.08.):
+
+- **Parallel schlägt seriell innerhalb einer Welle.** Der alte Widerspruch
+  („Wächter startet alle gleichzeitig" vs. „Nutzer abwesend → seriell")
+  wird so aufgelöst: Ein Wächter startet seine Arbeiter IMMER parallel.
+  Die Taktungsregel gilt nur für Nicht-Wächter-Arbeit der Hauptsitzung.
+- **Eskalations-Ausnahme:** Rückfragen gehören ins Handoff — außer bei
+  unumkehrbaren/zerstörenden Aktionen, Sicherheit/Zugangsdaten, von außen
+  Sichtbarem, echtem Geldeinsatz oder Repo-Inhalten an externe Modelle.
+  Dort sofort im Chat fragen, vor dem Handeln.
+- **Kostenrechnung für Subagenten korrigiert:** Der erste Schritt eines
+  frischen Subagenten zahlt seinen Startkontext ×2, erst danach ×0,1.
+  Break-even bei 220k Haupt- und 30k Agentkontext: 60k ÷ (22k − 3k) ≈
+  7 Schritte je Agent. Kürzere Aufträge macht man selbst.

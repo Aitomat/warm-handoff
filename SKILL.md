@@ -45,6 +45,22 @@ Full history with dated user quotes and the reasoning behind every rule:
 Break-even for a fresh session: `(start_ctx × 2) / ((old_ctx − start_ctx) × 0.1)` steps.
 Start context is MEASURED per project (82–125k seen), never assumed "~20k". Steps = tool
 calls, not user messages. Talking on a fat context is cheap; working on it is not.
+
+**What a subagent really costs.** A fresh subagent is NOT free: its first step pays its own
+start context ×2 (cache write), and only every further step costs ×0.1. So a wave costs
+
+```
+main_ctx × 0.1 × own_steps  +  N agents × start_ctx × 2  +  N × start_ctx × 0.1 × agent_steps
+                                └── the line that is usually forgotten ──┘
+```
+
+Worked example, 220k main context and 30k agent context: one step done in the main session
+costs 220k × 0.1 = 22k; the same step inside an agent costs 30k × 0.1 = 3k, but the agent
+first burns 30k × 2 = 60k once. Break-even: 60k ÷ (22k − 3k) ≈ **7 steps per agent**.
+Below that, doing it yourself is cheaper; above that, delegating wins and keeps growing.
+Both contexts are measured, not assumed — with a 120k main context the break-even moves to
+60k ÷ (12k − 3k) ≈ 7 steps too, with a 400k one it drops to ≈ 2. Say the number, not "agents
+are cheap".
 Say it at every wave end, casually: "Kontext 148k, Ziel 200k — reicht für ~1 Welle."
 While the agent's own tool loop runs, a user message is nearly free (attached to the next
 request); while subagents run or the agent idles, it costs the full context × 0.1.
@@ -67,6 +83,16 @@ agent completion notification are full requests too.
   woken ONCE instead of once per agent (8 → 1 notifications ≈ 140k saved at 190k ctx).
   Workers' questions land at the guardian, so briefs must be complete: paths, goal,
   limits, acceptance criteria, "no questions — decide, document the assumption".
+- **One guardian PER TOPIC, not one per wave** (30.08.2026). A guardian watching 12 workers
+  is a bottleneck and a crash risk; give each topic area (UI, audio, tests, docs …) its own
+  Opus guardian with **4–6 workers at most**. Each topic guardian merges into its own
+  integration branch. The main session merges the integration branches and then starts ONE
+  **merge guardian** for the single full build, the full suite, the bundle and the QA pass.
+  The main session is woken once per topic guardian, not once per worker.
+- **Build lock — never more than one build per machine.** Before any build:
+  `mkdir /tmp/<project>-build.lock` (fails if it exists → wait or skip; `rmdir` when done).
+  `mkdir` is atomic, so it works across agents and worktrees. This is the mechanical guard
+  behind "workers do not build" after the 29.08. crash.
 - **The guardian starts every worker at once, in a single message** (one batch of Agent
   calls), never one after another — a serial tail of workers is what turns a cheap wave
   into a long one. Each worker's FIRST step is to pull the current branch tip (`git pull`
@@ -76,8 +102,9 @@ agent completion notification are full requests too.
   suite. 12 workers × one cold build each = 400+ compiler processes, load 70, 18 GB RAM
   swapped to a halt, forced reboot, 90 minutes lost (29.08.2026). If workers must build,
   never more than 4 at once; `memory_pressure` before the full suite.
-- **Cut agents to ~30 minutes, ONE task each** (not 40 minutes / 2–3 tasks — a single focused
-  job lands faster and is easier to merge). Longer work delivers into a FILE
+- **Cut agents to 15–25 minutes, ONE task each** (30.08.2026 — was ~30 min, was 40 min /
+  2–3 tasks; a single focused job lands faster and is easier to merge, and a shorter brief
+  is what keeps a topic guardian's 4–6 workers landing together). Longer work delivers into a FILE
   (`docs/reviews/<date>-<topic>.md`) and reports only the path; the handoff lists the
   expected files and the next session checks `ls` first. Never wait for a straggler.
 - **Merge each worker's branch the moment it lands**, don't batch merges for later — conflicts
@@ -90,8 +117,11 @@ agent completion notification are full requests too.
   to point to. **The handoff starts even without a finished guardian**: list the guardian and
   its still-running workers under "expected agent results", the next session checks them.
 - **Model + effort in the visible label**: `Opus5/high · Verlauf-Tempo`, `Fable/low · Scan`.
-  Fable 5 as subagent: **always effort low**; for hard review/design use Opus or a second
-  architecture (Codex/GPT). Never review your own output yourself — route to Codex.
+  Fable 5 as subagent: **always effort low**, and **only for jobs the user marked "wichtig"
+  / important** — those are worth the faster model. Everything else: Opus (low). **Sonnet only
+  for trivia that does not build** (renames, moving text, listing files); never for a build
+  job. For hard review/design use Opus or a second architecture (Codex/GPT). Never review
+  your own output yourself — route to Codex.
 - **Agents test before the user.** Full suite + a QA agent that launches the app and clicks
   every test item once; the user should mostly say "works, thanks". **The QA agent closes
   the windows/processes it opened for testing** before it reports done — the user shouldn't
@@ -99,8 +129,27 @@ agent completion notification are full requests too.
 - Report contract: ≤ 300 words, status/decisions/evidence-with-paths/risks/next; no
   chronicle, no pasted logs. Subagent tokens still hit the weekly quota — what they save is
   the MAIN context (each step ≈ 1/5 the cost, and nothing of it stays in the session).
-- Pacing: user present + in a hurry → parallel; user away → sequential (each completion
-  keeps the cache warm). Never invent busywork.
+- Pacing — **the parallel rule wins inside a wave** (resolves the old contradiction): a
+  guardian ALWAYS starts its workers in parallel, in one message, whether the user is there
+  or not. The "user away → sequential" pacing applies only to NON-guardian work the main
+  session does on its own (small edits, reviews, checks): spread those out so each completion
+  keeps the cache warm instead of burning them in one burst and then idling. Never invent
+  busywork.
+
+## Evidence — measured waves (Aitomat, 29./30.08.2026)
+
+| Wave | Structure | Requests | Equivalent | Completion pings | Wall clock |
+|---|---|---|---|---|---|
+| 22 | 6 workers + merge agent, main session orchestrates | 58 | 2.075k | 8 | ~2 h |
+| 23 | 1 guardian, few large agents | 43 | 1.531k | 1 | 2 h 20 |
+| 24 | 1 guardian, 12 workers, all building | 62 | 3.143k | 1 + 12 | 2 h 10 |
+| 25 | topic guardians (new rule) | — | — | — | wird nachgetragen |
+
+Reading it: wave 23 was the cheapest in tokens (one guardian = one wake-up) but the slowest
+in wall clock — tokens and waiting time are two different axes. Wave 24 looks worst on every
+number, but 90 of its 130 minutes and roughly 2.400k of its equivalent are the machine crash
+(12 parallel cold builds); **without the crash it was ≈ 40 minutes and ≈ 700k** — the fastest
+wave so far. That is what the build lock and the 4–6-workers-per-guardian rule protect.
 
 ## Paid quota — see it, use it, by account size
 
@@ -156,6 +205,11 @@ for the next session. Structure, top to bottom:
 Questions for the user go into the handoff (`## Fragen an dich` with `>>>Antwort:`),
 not the chat: one chat question blocks a wave, ten in the file block nothing. Cut waves
 so they run through without asking; take the likelier reading and document it.
+**Escalation exception — ask in the chat, immediately, before acting**, when the ambiguity
+touches: irreversible or destructive actions (`rm`, history rewrite, force-push, dropping
+data), anything security- or credential-related, anything externally visible (sending mail,
+publishing, deploying, changing a live shop), spending real money or a large quota, or
+sending repository content to an external model. Everything else goes in the handoff.
 
 ## Editor rules (macOS / TextEdit)
 
