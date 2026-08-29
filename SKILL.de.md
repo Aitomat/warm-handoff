@@ -190,5 +190,5 @@ Pro Handoff eine Zeile an `~/.claude/warm-handoff-log.md` anhängen:
 `| 22.08.2026 14:40 | ctx 85k | 2 Wellen | Neuaufbauten: 1 (Pause 90min) | geschätzte Verschwendung ~60k |`
 Muster alle ~50 Einträge zusammenfassen. Immer aktiv: "Zu Beginn jeder Sitzung den warm-handoff-
 Skill aufrufen." in `~/.claude/CLAUDE.md` ergänzen. Skripte: `scripts/ctx.sh`,
-`scripts/session-costs.sh`, `scripts/codex-limit.sh` → nach `~/.claude/` kopieren.
+`scripts/session-costs.sh` (= `session-kosten.sh`), `scripts/codex-limit.sh` → nach `~/.claude/` kopieren.
 Terminal-neutral: "deine Statuszeile" sagen, nicht ein Feld eines bestimmten Hosts.

@@ -186,5 +186,5 @@ Append one line per handoff to `~/.claude/warm-handoff-log.md`:
 `| 22.08.2026 14:40 | ctx 85k | 2 waves | rebuilds: 1 (pause 90min) | est. waste ~60k |`
 Summarize patterns every ~50 entries. Always-on: add "At the start of every session,
 invoke the warm-handoff skill." to `~/.claude/CLAUDE.md`. Scripts: `scripts/ctx.sh`,
-`scripts/session-costs.sh`, `scripts/codex-limit.sh` → copy to `~/.claude/`.
+`scripts/session-costs.sh` (= `session-kosten.sh`), `scripts/codex-limit.sh` → copy to `~/.claude/`.
 Terminal-neutral: say "your status line", not a specific host's field.
