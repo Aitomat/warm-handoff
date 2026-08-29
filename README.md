@@ -1,5 +1,8 @@
 # warm-handoff 🏄
 
+> **Why is the skill file so short?** `SKILL.md` (~170 lines) is loaded into every session, so it is deliberately compact. The full history with dated user quotes and the reasoning behind every rule lives in `references/historie.md` (~1,850 lines) — long on purpose; read it when a rule looks odd.
+
+
 > **Primary language: English · Deutsche Fassung: [README.de.md](README.de.md)**
 
 **A Claude Code skill that paces your session around the prompt-cache window: it measures

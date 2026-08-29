@@ -1,5 +1,8 @@
 # warm-handoff 🏄
 
+> **Warum ist die Skill-Datei so kurz?** `SKILL.md` (~170 Zeilen) wird in jede Session geladen und ist deshalb bewusst knapp. Die vollständige Historie mit allen datierten Nutzer-Zitaten und der Begründung jeder Regel steht in `references/historie.md` (~1.850 Zeilen) — absichtlich lang; dort nachlesen, wenn eine Regel seltsam wirkt.
+
+
 > **Hauptsprache des Repos ist Englisch: [README.md](README.md). Dies ist die deutsche Fassung.**
 
 **Ein Claude-Code-Skill, der die Sitzung um das Prompt-Cache-Fenster herum taktet: Er
