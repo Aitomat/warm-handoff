@@ -1824,3 +1824,37 @@ stehen kann, WELCHE Agenten arbeiten. Ehrliche Antwort:
 - **Die eine Ansage im Chat beim Start der Flotte** bleibt der
   vollständige Überblick: wie viele Agenten, welches Modell, welches
   Arbeitspaket. Danach Funkstille.
+
+## Leitsatz — der ganze Skill in einem Satz (Yasin 29.08.2026, 14:01)
+
+> **Handoff → frische Session → Handoff.** Der Nutzer sammelt über
+> Stunden alles in EIN Handoff (Antworten, Ideen, Kritik), startet
+> eine neue Session, der Agent arbeitet alles durch und schreibt das
+> nächste Handoff — und dazwischen immer eine frische Session.
+
+Warum das der sparsamste Rhythmus ist: Die Kosten sitzen in den
+Anfragen (jede liest den ganzen Verlauf), nicht in den Nachrichten
+des Nutzers. Also: Hauptkontext klein halten (frische Session je
+Welle), Arbeit in wenige Subagenten mit MEHREREN Aufgaben (wenige
+Berichte = wenige Anfragen), und das Handoff ausführlich — mit
+Kostentabelle, Testliste, rotem Faden und der wörtlichen Sammlung —,
+weil es einen ganzen Kontext ersetzt. Ein dünnes Handoff spart
+nichts; es verschiebt die Kosten in Rückfragen.
+
+Drei Details, die dazugehören (alle vom 29.08.2026):
+
+- **Tab-Vorschläge des Terminals sind Anfragen.** Claude Code blendet
+  graue Vorschlagszeilen ein; wer sie mit Tab übernimmt und abschickt,
+  löst eine volle Anfrage aus (Kontext × 0,1). Die Zeile lässt sich
+  nicht beschriften — sie kommt vom Programm. Nur nutzen, wenn man
+  den Vorschlag wirklich will.
+- **Agenten-Fertigmeldungen sind Anfragen des Programms, nicht des
+  Agenten.** Jede „Agent X finished"-Meldung weckt den Hauptagenten —
+  das ist eine Anfrage, auch wenn er schweigt. Sein Einzeiler dazu
+  („zwei von sieben durch") kostet nur ~50 Token Ausgabe extra. Was
+  Anfragen SPART, ist nicht Schweigen, sondern weniger, größere
+  Agenten (drei Aufgaben in einem = eine Fertigmeldung).
+- **Der Sammelbereich trägt den Pfad seines Handoffs** in der
+  Bannerzeile („aus: /Users/…/_handoff-projekt-2026-08-29.md"), damit
+  bei mehreren offenen Handoffs klar ist, welche Sammlung das ist —
+  und der Pfad zum Kopieren bereitsteht.
