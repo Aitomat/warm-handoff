@@ -1856,3 +1856,50 @@ Drei Details, die dazugehören (alle vom 29.08.2026):
   Bannerzeile („aus: /Users/…/_handoff-projekt-2026-08-29.md"), damit
   bei mehreren offenen Handoffs klar ist, welche Sammlung das ist —
   und der Pfad zum Kopieren bereitsteht.
+
+## Welle 23 — günstig in Token, aber 2 Std. 20 durch seriellen Schwanz (29.08.2026)
+
+Welle 23 (Aitomat, Merge-Bericht siehe Commit `1f308c86`) lief mit
+wenigen, größeren Agenten nach der alten Regel oben („drei Aufgaben in
+einem = eine Fertigmeldung"). Ergebnis: **günstig gemessen** (wenig
+Hauptkontext verbraucht, wenige Fertigmeldungen), aber **2 Stunden 20
+Minuten Wanduhrzeit**, weil die Agenten nicht wirklich gleichzeitig
+liefen — mehrere Aufgaben in einem Agenten heißt, der Agent arbeitet
+sie INTERN nacheinander ab, und wenn ein zweiter Wächter-Agent auf das
+Ergebnis des ersten wartet, bevor er seine eigenen Arbeiter startet,
+entsteht ein serieller Schwanz aus Wartezeiten, den keine Kostenzeile
+zeigt. Yasin wartete dabei ~3 Stunden auf ein Ergebnis, das inhaltlich
+in Bruchteilen der Zeit fertig hätte sein können.
+
+Die Lehre: **Tokenkosten und Wanduhrzeit sind zwei verschiedene
+Achsen.** Weniger/größere Agenten sparen Anfragen (Achse 1), aber
+bündeln Arbeit seriell in der Wanduhrzeit (Achse 2) — genau dann teuer,
+wenn der Nutzer wartet statt nebenher zu arbeiten. Die Regel wird
+deshalb geschärft, ohne die alte Erkenntnis zu verwerfen:
+
+- **Ein Arbeits-Agent = EIN Auftrag, ~30 Minuten** (statt ~40 Minuten /
+  2–3 Aufgaben). Ein einziger fokussierter Auftrag lässt sich schneller
+  abschließen UND schneller mergen, ohne dass die interne Abarbeitung
+  mehrerer Aufgaben im selben Agenten eine unsichtbare Warteschlange
+  erzeugt.
+- **Der Wächter startet ALLE Arbeiter in einer einzigen Nachricht**
+  gleichzeitig, nie nacheinander — das serielle Anstoßen war die
+  eigentliche Ursache des Schwanzes in Welle 23, nicht die Anzahl der
+  Agenten selbst.
+- **Jeder Arbeiter zieht zuerst den aktuellen Branch-Tip**, bevor er
+  etwas anfasst — bei paralleler statt serieller Ausführung ist eine
+  veraltete Basis sonst wahrscheinlicher, weil mehrere Arbeiter
+  gleichzeitig vom selben Stand abzweigen.
+- **Merges sofort bei Landung, nicht gesammelt** — wer auf den
+  letzten Arbeiter wartet, um alle Merges auf einmal zu machen, baut
+  den seriellen Schwanz am Ende wieder ein.
+- **Volle Testsuite nur einmal, ganz am Ende**, gegen das gemergte
+  Ergebnis — nicht nach jedem einzelnen Merge, sonst multipliziert sich
+  die Laufzeit der Suite mit der Zahl der Arbeiter.
+- **Der Wächter schreibt nach 60 Minuten einen Zwischenstand**, falls
+  die Welle noch läuft, und **das Handoff startet auch ohne fertigen
+  Wächter** — in Welle 23 hätte ein Zwischenstand nach einer Stunde dem
+  Nutzer gezeigt, dass er nicht auf ein hängendes System wartet.
+
+Kurz: schnell UND günstig braucht beides — kleine Aufträge UND
+echte Gleichzeitigkeit beim Start. Eines allein reicht nicht.

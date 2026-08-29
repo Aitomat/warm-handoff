@@ -1,6 +1,6 @@
 # warm-handoff 🏄
 
-> **Warum ist die Skill-Datei so kurz?** `SKILL.md` (~170 Zeilen) wird in jede Session geladen und ist deshalb bewusst knapp. Die vollständige Historie mit allen datierten Nutzer-Zitaten und der Begründung jeder Regel steht in `references/historie.md` (~1.850 Zeilen) — absichtlich lang; dort nachlesen, wenn eine Regel seltsam wirkt.
+> **Warum ist die Skill-Datei so kurz?** `SKILL.md` (~190 Zeilen) wird in jede Session geladen und ist deshalb bewusst knapp. Die vollständige Historie mit allen datierten Nutzer-Zitaten und der Begründung jeder Regel steht in `references/historie.md` (~1.900 Zeilen, nur Deutsch) — absichtlich lang; dort nachlesen, wenn eine Regel seltsam wirkt. Eine vollständige deutsche Übersetzung des Skills selbst ist `SKILL.de.md`.
 
 
 > **Hauptsprache des Repos ist Englisch: [README.md](README.md). Dies ist die deutsche Fassung.**
@@ -401,6 +401,11 @@ Quellen: [How Claude Code uses prompt caching](https://code.claude.com/docs/en/p
 - Zweitmeinungen zu den Rechnungen: Codex/GPT-5.6 und Ox Alpha (OpenRouter).
 
 Issues, Messungen aus eigenen Sitzungen und Pull Requests sind willkommen — auf Deutsch
-oder Englisch.
+oder Englisch. `SKILL.md` ist durchgehend Englisch; die verbliebenen deutschen Wörter sind
+wörtliche Zitate dessen, was der Skill tatsächlich ausgibt (die Kostenzeile, Bannertext,
+Handoff-Abschnittsnamen) — die bleiben Deutsch, weil das der Nutzer so liest. Der
+vollständige deutsche Zwilling ist `SKILL.de.md`; `references/historie.md`, das die
+Sitzungen festhält, aus denen die Regeln entstanden sind, ist rein Deutsch, und die
+Skripte sind auf Deutsch kommentiert.
 
 Lizenz: MIT.

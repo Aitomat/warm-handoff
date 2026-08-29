@@ -1,6 +1,6 @@
 # warm-handoff 🏄
 
-> **Why is the skill file so short?** `SKILL.md` (~170 lines) is loaded into every session, so it is deliberately compact. The full history with dated user quotes and the reasoning behind every rule lives in `references/historie.md` (~1,850 lines) — long on purpose; read it when a rule looks odd.
+> **Why is the skill file so short?** `SKILL.md` (~190 lines) is loaded into every session, so it is deliberately compact. The full history with dated user quotes and the reasoning behind every rule lives in `references/historie.md` (~1,900 lines, German-only) — long on purpose; read it when a rule looks odd. A complete German translation of the skill itself is `SKILL.de.md`.
 
 
 > **Primary language: English · Deutsche Fassung: [README.de.md](README.de.md)**
@@ -392,7 +392,10 @@ Sources: [How Claude Code uses prompt caching](https://code.claude.com/docs/en/p
 - Second opinions on the arithmetic: Codex/GPT-5.6 and Ox Alpha (OpenRouter).
 
 Issues, measurements from your own sessions, and pull requests are welcome — in English or
-German. `SKILL.md` mixes English rules with German passages that record the sessions the
-rules came from; the scripts are commented in German.
+German. `SKILL.md` is English throughout; the German words that remain are literal quotes
+of what the skill actually outputs (the cost line, banner text, handoff section names) —
+those stay German because that is what the user reads. The full German twin is
+`SKILL.de.md`; `references/historie.md`, which records the sessions the rules came from,
+is German-only, and the scripts are commented in German.
 
 License: MIT.

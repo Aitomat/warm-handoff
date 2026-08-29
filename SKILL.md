@@ -67,14 +67,30 @@ agent completion notification are full requests too.
   woken ONCE instead of once per agent (8 → 1 notifications ≈ 140k saved at 190k ctx).
   Workers' questions land at the guardian, so briefs must be complete: paths, goal,
   limits, acceptance criteria, "no questions — decide, document the assumption".
-- **Cut agents to ~40 minutes**, 2–3 tasks each. Longer work delivers into a FILE
+- **The guardian starts every worker at once, in a single message** (one batch of Agent
+  calls), never one after another — a serial tail of workers is what turns a cheap wave
+  into a long one. Each worker's FIRST step is to pull the current branch tip (`git pull`
+  / `git fetch && git rebase`) before touching any file, so it never builds on a stale base.
+- **Cut agents to ~30 minutes, ONE task each** (not 40 minutes / 2–3 tasks — a single focused
+  job lands faster and is easier to merge). Longer work delivers into a FILE
   (`docs/reviews/<date>-<topic>.md`) and reports only the path; the handoff lists the
   expected files and the next session checks `ls` first. Never wait for a straggler.
+- **Merge each worker's branch the moment it lands**, don't batch merges for later — conflicts
+  are cheaper to resolve one at a time, right after the work is fresh. Run the FULL test
+  suite only ONCE, at the very end, against the merged result; a flaky/failing individual
+  test gets investigated on its own rather than re-running the whole suite.
+- **Guardian writes an interim status file after 60 minutes** if the wave is still running
+  (path in the handoff-to-be, e.g. `docs/wellen/<date>-zwischenstand.md`) — so a session that
+  checks in mid-wave, or a handoff written before the guardian finishes, has something real
+  to point to. **The handoff starts even without a finished guardian**: list the guardian and
+  its still-running workers under "expected agent results", the next session checks them.
 - **Model + effort in the visible label**: `Opus5/high · Verlauf-Tempo`, `Fable/low · Scan`.
   Fable 5 as subagent: **always effort low**; for hard review/design use Opus or a second
   architecture (Codex/GPT). Never review your own output yourself — route to Codex.
 - **Agents test before the user.** Full suite + a QA agent that launches the app and clicks
-  every test item once; the user should mostly say "works, thanks".
+  every test item once; the user should mostly say "works, thanks". **The QA agent closes
+  the windows/processes it opened for testing** before it reports done — the user shouldn't
+  inherit a pile of leftover test instances.
 - Report contract: ≤ 300 words, status/decisions/evidence-with-paths/risks/next; no
   chronicle, no pasted logs. Subagent tokens still hit the weekly quota — what they save is
   the MAIN context (each step ≈ 1/5 the cost, and nothing of it stays in the session).
@@ -138,7 +154,9 @@ so they run through without asking; take the likelier reading and document it.
 
 ## Editor rules (macOS / TextEdit)
 
-- Open every user-facing document immediately: `open -a TextEdit <file>`. Offer once:
+- Open every user-facing document immediately: `open -a TextEdit <file>`. This applies to any
+  newly mentioned document, not only the handoff — a plan, a QA report, a review file: the
+  moment it exists and is meant for the user to read, open it. Offer once:
   tabs (`defaults write -g AppleWindowTabbingMode always`), 18-pt default font
   (`defaults write com.apple.TextEdit NSFontSize 18`), `.md` default app via `duti`.
 - **Unsaved-changes guard before reading:**
