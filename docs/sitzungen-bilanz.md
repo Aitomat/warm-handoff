@@ -47,6 +47,7 @@ Stand: 30.08.2026, 00:52.
 | 29.08. 18:08 | Aitomat, Welle 22 | 125k → 192k | 6 Opus + Merge + 2 Codex-Analysen + Codex-QS, 4906 Tests | 0 | ~145k (8 Fertigmeldungen); Platte voll → 27 `.build`-Caches gelöscht | nicht gemessen |
 | 29.08. 21:10 | Aitomat, Welle 23 | nicht gemessen → 178k | 1 Wächter (1 Meldung statt 8), Skill 172 Z. | 0 | nicht gemessen (Kosten niedrig, aber 2 Std. 20 Wanduhr) | Handoff C |
 | 30.08. 00:10 | Aitomat, 1 Welle + Skill A2 | nicht gemessen → 139k | nicht gemessen | 1 (Rechner-Absturz 22:00) | **~700k** | Handoff D |
+| 30.08. 00:44–01:51 | Aitomat, Welle 25 (Themen-Wächter) | ~107k → 120k (gemessen 01:51) | 3 Themen-Wächter + 1 Merge-Wächter, 15 Arbeiter, 29 Anfragen, 2.495k gelesen / 319k geschrieben / 61k Ausgabe, Äquivalent **1.192k**, 5 Fertigmeldungen, 64 min (00:46–01:50) | 0 (kein Absturz) | 0 — die 319k „geschrieben" sind der Start-Cacheaufbau (~107k ×2) plus Handoff-/Plan-Anhänge, kein Neuaufbau | `_handoff-aitomat-2026-08-30-e.md` (Handoff E) |
 
 ## Muster — was sich seit 22.08. verbessert hat, was nicht
 
@@ -66,6 +67,15 @@ Stand: 30.08.2026, 00:52.
 4. **Die Wanduhr blieb dabei auf der Strecke.** Welle 23 war die
    günstigste und zugleich die langsamste (2 Std. 20). Token-Sparen und
    Warten-Sparen sind zwei Achsen; das Logbuch misst bisher nur die erste.
+   **Welle 25 hat diesen Zielkonflikt aufgelöst.** Mit 3 Themen-Wächtern +
+   1 Merge-Wächter über 15 Arbeiter war sie die **günstigste UND die
+   schnellste Welle bisher**: 29 Anfragen und 1.192k Äquivalent gegen
+   43/1.531k (W23), 58/2.075k (W22) und 62/3.143k (W24) — und 64 Minuten
+   gegen 2 Std. 20 (W23), ~2 Std. (W22), 2 Std. 10 (W24). Der Grund ist
+   strukturell, nicht glücklich: die Themen-Wächter starten ihre 4–6
+   Arbeiter parallel, und der Merge-Wächter zieht den seriellen Schwanz
+   (Build, volle Suite, Bundle, QA) auf einen einzigen Durchlauf zusammen.
+   Zugleich blieben es 5 Fertigmeldungen statt 13 wie in Welle 24.
 5. **Der Rechner ist der neue Engpass, nicht das Kontingent.** Innerhalb
    von 24 Stunden: Platte voll (27 `.build`-Caches), dann Absturz durch 12
    gleichzeitige Kaltbuilds (~700k Verschwendung). Beide Vorfälle sind
