@@ -89,6 +89,22 @@ agent completion notification are full requests too.
   integration branch. The main session merges the integration branches and then starts ONE
   **merge guardian** for the single full build, the full suite, the bundle and the QA pass.
   The main session is woken once per topic guardian, not once per worker.
+- **How MANY guardians? Count the topics, not the workers** (user asked, 30.08.2026, 02:24:
+  „drei Wächter, vier Wächter, zwei Wächter — was ist am sinnvollsten?"). The answer is
+  mechanical: **one guardian per disjoint topic that carries 4–6 jobs of its own.** Below 4
+  jobs a topic does not earn a guardian — the guardian pays `start_ctx × 2` just to exist
+  (60k at a 30k start context), which only amortizes over several worker steps; fold such a
+  topic into a neighbouring guardian or do it in the main session. Above 6 the guardian itself
+  becomes the bottleneck: it merges, builds and tests serially, and the last workers wait.
+  **Two guardians** are right only for two genuinely separate areas — with more topics they
+  serialize what could have run side by side (wave 23: one guardian, cheapest in tokens,
+  slowest on the clock at 2 h 20). **Four or more** are fine when there really are four
+  independent areas, and wasteful when the fourth is a slice of the third — wave 24 put 12
+  workers under one guardian and paid for it with 12 completion pings and a crash. Wave 25's
+  three topic guardians + one merge guardian over 15 workers (5 per guardian) is the measured
+  optimum so far: 29 requests, 1.192k, 64 minutes. So: three is usually right because three
+  disjoint areas of 4–6 jobs is what a wave usually has — but derive the number from the plan,
+  never pick it as a habit.
 - **Build lock — never more than one build per machine.** Before any build:
   `mkdir /tmp/<project>-build.lock` (fails if it exists → wait or skip; `rmdir` when done).
   `mkdir` is atomic, so it works across agents and worktrees. This is the mechanical guard
@@ -143,13 +159,18 @@ agent completion notification are full requests too.
 | 22 | 6 workers + merge agent, main session orchestrates | 58 | 2.075k | 8 | ~2 h |
 | 23 | 1 guardian, few large agents | 43 | 1.531k | 1 | 2 h 20 |
 | 24 | 1 guardian, 12 workers, all building | 62 | 3.143k | 1 + 12 | 2 h 10 |
-| 25 | topic guardians (new rule) | — | — | — | wird nachgetragen |
+| 25 | 3 topic guardians + merge guardian, 15 workers | 29 | 1.192k | 5 | 64 min |
 
 Reading it: wave 23 was the cheapest in tokens (one guardian = one wake-up) but the slowest
 in wall clock — tokens and waiting time are two different axes. Wave 24 looks worst on every
 number, but 90 of its 130 minutes and roughly 2.400k of its equivalent are the machine crash
 (12 parallel cold builds); **without the crash it was ≈ 40 minutes and ≈ 700k** — the fastest
 wave so far. That is what the build lock and the 4–6-workers-per-guardian rule protect.
+**Wave 25 (00:46–01:50, 30.08.2026, no crash) resolves that trade-off: the topic-guardian
+structure was the cheapest AND the fastest so far** — fewest requests (29 for 15 build jobs),
+lowest equivalent of any completed wave, and 64 minutes wall clock against 2 h+ for every
+earlier structure. The topic guardians start their workers in parallel, and the merge guardian
+collapses the serial tail into a single build; that is where both axes win at once.
 
 ## Paid quota — see it, use it, by account size
 
@@ -169,7 +190,13 @@ wave so far. That is what the build lock and the 4–6-workers-per-guardian rule
 Write the handoff after every big wave, unprompted. Path `<project>/_handoff-<projekt>-YYYY-MM-DD[-b].md`
 (project name in the file name AND title). Hard-wrap prose at ~60–70 chars; commands,
 paths, URLs on one line. Reference, don't copy (paths/URLs); redact secrets; name skills
-for the next session. Structure, top to bottom:
+for the next session. This skill is written in English, but everything in **bold German**
+below is literal output text for a German-speaking user — write those headings and banners
+into the handoff file exactly as they stand, do not translate them. Glossary for the recurring
+German terms: *Handoff* = the handover document, *Welle* = wave, *Wächter* = guardian agent,
+*Sammlung* = the user's free-form collection area, *Testliste* = test list, *Der rote Faden*
+= the through-line / next waves, *Hauptdokumente* = key documents, *Gedächtnis* = memory,
+*Kostentabelle* = cost table. Structure, top to bottom:
 
 1. Title with date/time. Then the copy-line for the next session:
    `> \`Ich habe das Handoff beantwortet: /abs/path/_handoff-….md\``
@@ -195,6 +222,19 @@ for the next session. Structure, top to bottom:
 7. **Der rote Faden** — next 2–3 waves as short paragraphs, each with
    `>>>Hast du dazu noch was anzumerken?`; then a compact Themenspeicher; then
    **Hauptdokumente** (3–6 real files with absolute path + one line + freshness).
+   Then, MANDATORY, directly after Hauptdokumente and before the Kostentabelle, the memory
+   block — the project's own memory file, inside the handoff (user, 30.08.2026: he wants to
+   switch Claude's own memory file off and carry the memory in the handoff instead). Heading
+   `## Gedächtnis`, two labelled lists of **4–6 lines each**, short and concrete:
+   ```
+   **Langzeit (gilt immer):**   → north star, working rules, model policy, house
+                                   rules that survive every wave
+   **Kurzzeit (diese Wochen):** → branch + tip + test count, what is open,
+                                   machine/disk state, current test items
+   ```
+   Template to copy the shape from: `/Users/pro16/Code/aitomat/_handoff-aitomat-2026-08-30-e.md`,
+   section `## Gedächtnis`. Carry the long-term list forward verbatim from the previous
+   handoff unless something actually changed; rewrite the short-term list every time.
 8. **Kostentabelle** via `~/.claude/session-kosten.sh --markdown` (unit = span between two
    user messages; explain k = thousand, context column ≠ cost) + honest findings, then the
    closing line with MEASURED context and start context: *"Kontext dieser Session: 192k
@@ -213,9 +253,12 @@ sending repository content to an external model. Everything else goes in the han
 
 ## Editor rules (macOS / TextEdit)
 
-- Open every user-facing document immediately: `open -a TextEdit <file>`. This applies to any
-  newly mentioned document, not only the handoff — a plan, a QA report, a review file: the
-  moment it exists and is meant for the user to read, open it. Offer once:
+**Open EVERY new user-facing document the moment it exists: `open -a TextEdit <file>`.** Not
+only the handoff — a plan, a QA report, a review file, a test list: if it is meant for the
+user to read, it gets opened in the same turn it is written. No exceptions, no "tell me if
+you want me to open it".
+
+- Offer once:
   tabs (`defaults write -g AppleWindowTabbingMode always`), 18-pt default font
   (`defaults write com.apple.TextEdit NSFontSize 18`), `.md` default app via `duti`.
 - **Unsaved-changes guard before reading:**
