@@ -41,8 +41,12 @@ evidence, not on memory.
 
 ## Every reply — three honesty rules
 
-1. **Timestamp from a `date` call in THAT reply** (`date "+%d.%m.%Y %H:%M"`, piggybacked on
-   any command). No `date` this turn → no timestamp. Never extrapolate, never `~19:40`.
+1. **Timestamp at the very START of every reply**, from a `date` call in THAT reply
+   (`date "+%d.%m.%Y %H:%M"`, piggybacked on any command). No `date` this turn → no timestamp.
+   Never extrapolate, never `~19:40`. **This includes interim messages** — "guardian A is
+   building, I'm waiting for both" is a full request, and only a timestamp at the front of it
+   shows the user that a request just ran and kept the cache warm (user, 30.08.2026, 15:44).
+   A reply whose first line is not a timestamp looks free, and nothing about it is free.
 2. **Never guess context size.** Sources: the user's status line, or `~/.claude/ctx.sh`
    appended to a command that runs anyway (`date … && ~/.claude/ctx.sh`). It reads the
    session JSONL (`cache_read + cache_creation` of the last request). None → "not measured".
@@ -209,8 +213,16 @@ agent completion notification are full requests too.
 | 25 | 3 topic guardians + merge guardian, 15 workers | 29 | 1.192k | 5 | 64 min |
 | 26 | 3 topic guardians + merge guardian + skill agent, 17 jobs | 34 | 1.159k | 5 | 53 min |
 | 27 | 4 topic guardians + merge + skill agent, Codex QM each, 19 jobs | 41 | 1.160k | 7 | 78 min |
+| 28 | 2 topic guardians **cut along FILES** + merge + skill agent, 11 jobs + skill | 33 | 1.080k | 5 | 57 min |
 
-Reading it: wave 23 was the cheapest in tokens (one guardian = one wake-up) but the slowest
+Full derivation, per-job normalisation and the percentages: **[`docs/evidenz.md`](docs/evidenz.md)**
+(German). Short version: against wave 22 — the same app, the same user, no guardian
+structure — the measured saving is **43–50 % of requests and 43–48 % of the main-context
+equivalent**; normalised per job (wave 22 did 7 jobs, waves 25–28 did 15–19) it is
+**73–79 %**. That is where "saves up to 70 %" comes from, and it is the conservative reading.
+
+Reading it: wave 23 was the cheapest in tokens of the structures known AT THAT TIME (one
+guardian = one wake-up; waves 25–28 later beat it) but the slowest
 in wall clock — tokens and waiting time are two different axes. Wave 24 looks worst on every
 number, but 90 of its 130 minutes and roughly 2.400k of its equivalent are the machine crash
 (12 parallel cold builds); **without the crash it was ≈ 40 minutes and ≈ 700k** — the fastest
@@ -231,6 +243,10 @@ same tokens as three (41 requests, 1.160k) but added 25 minutes — guardian B a
 topics (HUD crash and HUD recording indicator) touched the SAME files.
 **Cut topics along files, not along words.** Anything editing the same files belongs to ONE
 guardian, however differently the two jobs are named.
+**Wave 28 (15:12–16:09, 30.08.2026) is the proof of that rule:** two guardians cut strictly
+along files carried 11 jobs plus the skill wave in 33 requests, 1.080k, 5 pings, 57 minutes —
+the cheapest equivalent measured so far, and **zero merge conflicts**. Fewer, file-disjoint
+guardians beat more, topic-disjoint ones.
 
 ## Lessons (measured)
 
@@ -247,6 +263,20 @@ Only what the log actually shows — no extrapolation:
 - **The Codex quality-manager pass finds real P1s** — 4 of them in three Fable jobs (W26-A7).
 - **A fourth guardian buys nothing** (W27: 41 / 1.160k / 78 min against 34 / 1.159k / 53 min
   for three) — the extra topic overlapped in files and produced the first merge conflicts.
+- **Every guardian needs its OWN worktree** (W28). Guardians A and B shared the main repo and
+  switched each other's branch out from under their feet mid-wave. Rule:
+  `git worktree add ~/Code/<projekt>-w<N>-<topic> -b w<N>-<topic> <base>`, workers branch from
+  the guardian's integration branch into their own worktrees, and **nobody ever switches the
+  branch in the main repo**. Clean up merged worktrees' `.build` afterwards.
+- **Wait AT the build lock, actively — never stop and report.** In W28 guardian A halted while
+  waiting for `/tmp/<app>-build.lock` and had to be nudged: that is one avoidable request plus
+  idle minutes. The loop is
+  `while ! mkdir /tmp/<app>-build.lock 2>/dev/null; do sleep 30; done` … `rmdir` after, and
+  "the lock is busy" is never a reason to send a message.
+- **One logbook line per session, always** (`~/.claude/warm-handoff-log.md`): date, context,
+  what the wave was, rebuilds, requests, equivalent, waste, handoff path. It costs nothing —
+  it rides along on a command that runs anyway — and it is the only reason the evidence table
+  above exists at all. A wave without its logbook line is a wave that cannot be compared.
 - **Stray worker messages are normal, not a fault.** A worker whose guardian has already
   finished reports into the main session instead (1× in W27). Read it, note it, do not
   restart the work — the guardian's merge already contains it.
@@ -341,7 +371,7 @@ German terms: *Handoff* = the handover document, *Welle* = wave, *Wächter* = gu
    the handoff's `## Gedächtnis` replaces it, so there is one place, not two.
    Example to copy the shape from: `/Users/pro16/Code/aitomat/_handoff-aitomat-2026-08-30-g.md`,
    section `## Gedächtnis`.
-8. **Kostentabelle** via `~/.claude/session-kosten.sh --markdown` (unit = span between two
+8. **Kostentabelle** via `~/.claude/session-costs.sh --markdown` (unit = span between two
    user messages; explain k = thousand, context column ≠ cost) + honest findings, then the
    closing line with MEASURED context and start context: *"Kontext dieser Session: 192k
    (Start 125k). Die nächste Welle startet frisch aus diesem Handoff."*
@@ -394,5 +424,5 @@ Append one line per handoff to `~/.claude/warm-handoff-log.md`:
 `| 22.08.2026 14:40 | ctx 85k | 2 waves | rebuilds: 1 (pause 90min) | est. waste ~60k |`
 Summarize patterns every ~50 entries. Always-on: add "At the start of every session,
 invoke the warm-handoff skill." to `~/.claude/CLAUDE.md`. Scripts: `scripts/ctx.sh`,
-`scripts/session-costs.sh` (= `session-kosten.sh`), `scripts/codex-limit.sh` → copy to `~/.claude/`.
+`scripts/session-costs.sh` (identical German alias `session-kosten.sh` in the repo; the installer copies `session-costs.sh` — use that name everywhere), `scripts/codex-limit.sh` → copy to `~/.claude/`.
 Terminal-neutral: say "your status line", not a specific host's field.

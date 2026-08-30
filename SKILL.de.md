@@ -12,6 +12,26 @@ schreibt das nächste Handoff.
 Vollständige Historie mit datierten Nutzer-Zitaten und der Begründung jeder Regel:
 `references/historie.md` (lesen, wenn eine Regel hier seltsam wirkt — nicht standardmäßig laden).
 
+## Die sparsamste Arbeitsweise in fünf Sätzen
+
+Für den Nutzer, in einfachen Worten (gefragt am 30.08.2026, 15:06: *„was ist denn jetzt die
+Moral der Geschichte?"*):
+
+1. **Eine Session pro Welle** — Plan, Wächter, Merge, Handoff in einer; eine frische Session
+   kostet ihren ~200k-Startaufbau, also erst jenseits von ~200k Kontext eine neue anfangen.
+2. **Sammeln kostet nichts** — Testantworten, Einfälle und Kritik stundenlang in die
+   Handoff-Datei schreiben; das sind null Anfragen, während jede Chat-Nachricht ein volles
+   Kontext-Nachlesen kostet.
+3. **Wächter statt Pings** — ein Wächter je Thema startet die Arbeiter, dadurch wird die
+   Hauptsitzung 5–7 statt 15–20 Mal geweckt.
+4. **Unter 200k Kontext bleiben** — die Hauptsitzung plant, mergt und liest Berichte;
+   alles andere lebt in Agenten.
+5. **Handoff mit Kostentabelle** schließt die Welle ab — gemessene Zahlen, keine Gefühle.
+
+**Vorsatz (30.08.2026):** JEDE Sitzung messen — eine Logbuchzeile je Sitzung (Anfragen,
+Äquivalent, Fertigmeldungen, Wanduhr, Aufträge) — damit dieser Skill an Belegen wächst und
+nicht an Erinnerung.
+
 ## Die Fakten (Claude-Code-Doku, 2026-08)
 
 - Pro/Max: **1 Stunde gleitendes Cache-TTL** — jede Anfrage setzt es zurück. Subagenten: strikt 5 Min.
@@ -23,8 +43,12 @@ Vollständige Historie mit datierten Nutzer-Zitaten und der Begründung jeder Re
 
 ## Jede Antwort — drei Ehrlichkeitsregeln
 
-1. **Zeitstempel aus einem `date`-Aufruf IN DIESER Antwort** (`date "+%d.%m.%Y %H:%M"`,
-   huckepack auf einen ohnehin laufenden Befehl). Kein `date` in dieser Runde → kein Zeitstempel.
+1. **Zeitstempel ganz am ANFANG jeder Antwort**, aus einem `date`-Aufruf IN DIESER Antwort
+   (`date "+%d.%m.%Y %H:%M"`, huckepack auf einen ohnehin laufenden Befehl). Kein `date` in
+   dieser Runde → kein Zeitstempel. **Auch bei Zwischenmeldungen** — „Wächter A baut, ich warte
+   auf beide Meldungen" ist eine volle Anfrage, und nur der Zeitstempel vorne zeigt dem Nutzer,
+   dass gerade eine Anfrage lief und den Cache warm gehalten hat (Nutzer, 30.08.2026, 15:44).
+   Eine Antwort, deren erste Zeile kein Zeitstempel ist, sieht kostenlos aus — sie ist es nie.
    Nie extrapolieren, nie `~19:40`.
 2. **Nie die Kontextgröße raten.** Quellen: die Statuszeile des Nutzers oder `~/.claude/ctx.sh`,
    angehängt an einen ohnehin laufenden Befehl (`date … && ~/.claude/ctx.sh`). Es liest die
@@ -187,8 +211,17 @@ Terminal-Tab-Vorschläge und jede Agenten-Fertigmeldung sind ebenfalls volle Anf
 | 24 | 1 Wächter, 12 Arbeiter, alle bauend | 62 | 3.143k | 1 + 12 | 2 Std. 10 |
 | 25 | 3 Themen-Wächter + Merge-Wächter, 15 Arbeiter | 29 | 1.192k | 5 | 64 min |
 | 26 | 3 Themen-Wächter + Merge-Wächter + Skill-Agent, 17 Aufträge | 34 | 1.159k | 5 | 53 min |
+| 27 | 4 Themen-Wächter + Merge + Skill-Agent, Codex-QM je Wächter, 19 Aufträge | 41 | 1.160k | 7 | 78 min |
+| 28 | 2 Themen-Wächter **nach DATEIEN geschnitten** + Merge + Skill-Agent, 11 Aufträge + Skill | 33 | 1.080k | 5 | 57 min |
 
-So liest man das: Welle 23 war die günstigste in Token (ein Wächter = ein Wecken), aber die
+Vollständiger Rechenweg, Normierung je Auftrag und alle Prozentzahlen:
+**[`docs/evidenz.md`](docs/evidenz.md)**. Kurzfassung: gegen Welle 22 — dieselbe App,
+derselbe Nutzer, nur ohne Wächter-Struktur — sind **43–50 % der Anfragen und 43–48 % des
+Hauptkontext-Äquivalents** gespart; je Auftrag gerechnet (W22 erledigte 7 Aufträge, W25–W28
+je 15–19) sind es **73–79 %**. Daher „spart bis zu 70 %" — konservativ gelesen.
+
+So liest man das: Welle 23 war die günstigste in Token unter den DAMALS bekannten Strukturen
+(ein Wächter = ein Wecken; die Wellen 25–28 haben sie später unterboten), aber die
 langsamste auf der Uhr — Token und Wartezeit sind zwei verschiedene Achsen. Welle 24 sieht in
 jeder Spalte am schlechtesten aus, aber 90 ihrer 130 Minuten und rund 2.400k des Äquivalents
 sind der Rechner-Absturz (12 parallele Kaltbuilds); **ohne den Absturz waren es ≈ 40 Minuten
@@ -201,6 +234,16 @@ Bauaufträge, das niedrigste Äquivalent aller abgeschlossenen Wellen und 64 Min
 bestätigt das: dieselbe Struktur plus ein Skill-Agent trug 17 Aufträge in 34 Anfragen,
 1.159k Äquivalent, 5 Fertigmeldungen und 53 Minuten. Zweimal hintereinander ~1,2 Mio. und
 unter einer Stunde ist eine Struktur, die sich wiederholt, kein Glückstreffer.
+**Welle 27 (03:39–04:57) zeigt die Decke:** ein VIERTER Themen-Wächter kostete dieselben
+Token wie drei (41 Anfragen, 1.160k), brauchte aber 25 Minuten mehr — Wächter B allein lief
+45 min, und der Merge-Wächter musste erstmals Konflikte auflösen, weil zwei Themen dieselben
+Dateien anfassten.
+**Themen nach DATEIEN schneiden, nicht nach Worten.** Was dieselben Dateien ändert, gehört zu
+EINEM Wächter, so verschieden die Aufträge auch heißen mögen.
+**Welle 28 (15:12–16:09, 30.08.2026) ist der Beleg dafür:** zwei streng nach Dateien
+geschnittene Wächter trugen 11 Aufträge plus die Skill-Welle in 33 Anfragen, 1.080k,
+5 Fertigmeldungen und 57 Minuten — das niedrigste gemessene Äquivalent und **null
+Merge-Konflikte**. Weniger, dateidisjunkte Wächter schlagen mehr, themendisjunkte.
 
 ## Was wir gemessen haben (Lessons)
 
@@ -215,6 +258,33 @@ Nur, was das Logbuch wirklich zeigt — nichts hochgerechnet:
 - **Fertigmeldungen sind der Kostentreiber der Hauptsitzung:** 5 statt 13 ist der Unterschied
   zwischen Welle 25/26 und Welle 24 — mehr wert als jeder Formulierungstrick.
 - **Codex als Qualitätsmanager findet echte P1** — vier Stück in drei Fable-Aufträgen (W26-A7).
+- **Ein vierter Wächter bringt nichts** (W27: 41 / 1.160k / 78 min gegen 34 / 1.159k / 53 min
+  bei dreien) — das zusätzliche Thema überlappte in den Dateien und erzeugte die ersten
+  Merge-Konflikte.
+- **Jeder Wächter braucht seinen EIGENEN Worktree** (W28). Wächter A und B teilten sich das
+  Hauptrepo und wechselten sich mitten in der Welle gegenseitig den Branch weg. Regel:
+  `git worktree add ~/Code/<projekt>-w<N>-<thema> -b w<N>-<thema> <basis>`, Arbeiter zweigen
+  vom Integrationsbranch des Wächters in eigene Worktrees ab, und **niemand wechselt je den
+  Branch im Hauptrepo**. Danach `.build` gemergter Worktrees aufräumen.
+- **Am Build-Schloss AKTIV warten — nie anhalten und melden.** In W28 hielt Wächter A beim
+  Warten auf `/tmp/<app>-build.lock` an und musste angestoßen werden: eine vermeidbare
+  Anfrage plus Leerlauf. Die Schleife lautet
+  `while ! mkdir /tmp/<app>-build.lock 2>/dev/null; do sleep 30; done` … danach `rmdir`.
+  „Das Schloss ist belegt" ist nie ein Grund für eine Meldung.
+- **Eine Logbuchzeile je Sitzung, immer** (`~/.claude/warm-handoff-log.md`): Datum, Kontext,
+  worum die Welle ging, Rebuilds, Anfragen, Äquivalent, Verschwendung, Handoff-Pfad. Sie
+  kostet nichts — sie reitet auf einem ohnehin laufenden Befehl mit — und ist der einzige
+  Grund, warum es die Belegtabelle oben überhaupt gibt. Eine Welle ohne Logbuchzeile ist eine
+  Welle, die man nicht vergleichen kann.
+- **Stray-Meldungen von Arbeitern sind normal, kein Fehler.** Ein Arbeiter, dessen Wächter
+  schon fertig ist, meldet sich in der Hauptsitzung (1× in W27). Lesen, notieren, NICHT die
+  Arbeit neu starten — der Merge des Wächters enthält sie bereits.
+- **Ein API-Abbruch ist fortsetzbar.** Stirbt ein Agent mitten im Auftrag, KEINEN neuen
+  starten: `SendMessage` an dieselbe Agenten-ID — er behält seinen Kontext und macht weiter.
+- **Wenn der Nutzer „Absturz" sagt, zuerst die Crash-Reports ansehen**, im selben Aufruf wie
+  alles andere: `ls -t ~/Library/Logs/DiagnosticReports/<App>-*.ips | head`, dann den obersten
+  Stack lesen. In W27 nannten sechs `.ips`-Dateien dieselbe Zeile — aus einer vagen Meldung
+  wurde ein Einzeiler-Fix.
 - **Eine Pause > 60 min kostet einen Neuaufbau (≈ Kontext × 2)** — bei 114k also ≈ 230k, und
   damit immer noch weniger als eine frische Sitzung mit ~200k Startaufbau plus Neu-Briefing.
 
@@ -284,7 +354,7 @@ Skills für die nächste Sitzung nennen. Struktur, von oben nach unten:
    Vorlage für die Form: `/Users/pro16/Code/aitomat/_handoff-aitomat-2026-08-30-e.md`,
    Abschnitt `## Gedächtnis`. Die Langzeit-Liste wörtlich aus dem vorigen Handoff übernehmen,
    solange sich nichts wirklich geändert hat; die Kurzzeit-Liste jedes Mal neu schreiben.
-8. **Kostentabelle** via `~/.claude/session-kosten.sh --markdown` (Einheit = Spanne zwischen zwei
+8. **Kostentabelle** via `~/.claude/session-costs.sh --markdown` (Einheit = Spanne zwischen zwei
    Nutzer-Nachrichten; k = Tausend erklären, Kontextspalte ≠ Kosten) + ehrliche Befunde, dann die
    Schlusszeile mit GEMESSENEM Kontext und Startkontext: *"Kontext dieser Session: 192k
    (Start 125k). Die nächste Welle startet frisch aus diesem Handoff."*
@@ -335,5 +405,5 @@ Pro Handoff eine Zeile an `~/.claude/warm-handoff-log.md` anhängen:
 `| 22.08.2026 14:40 | ctx 85k | 2 Wellen | Neuaufbauten: 1 (Pause 90min) | geschätzte Verschwendung ~60k |`
 Muster alle ~50 Einträge zusammenfassen. Immer aktiv: "Zu Beginn jeder Sitzung den warm-handoff-
 Skill aufrufen." in `~/.claude/CLAUDE.md` ergänzen. Skripte: `scripts/ctx.sh`,
-`scripts/session-costs.sh` (= `session-kosten.sh`), `scripts/codex-limit.sh` → nach `~/.claude/` kopieren.
+`scripts/session-costs.sh` (im Repo liegt der identische deutsche Alias `session-kosten.sh`; installiert wird `session-costs.sh` — diesen Namen überall verwenden), `scripts/codex-limit.sh` → nach `~/.claude/` kopieren.
 Terminal-neutral: "deine Statuszeile" sagen, nicht ein Feld eines bestimmten Hosts.

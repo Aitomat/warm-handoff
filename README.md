@@ -17,6 +17,7 @@ every rule in it started as a session that went wrong or a bill that looked odd.
 
 ## Contents
 
+0. [The moral, in five sentences](#0-the-moral-in-five-sentences)
 1. [The problem in three minutes](#1-the-problem-in-three-minutes)
 2. [The cost arithmetic, with real numbers](#2-the-cost-arithmetic-with-real-numbers)
 3. [The wave workflow](#3-the-wave-workflow)
@@ -27,6 +28,51 @@ every rule in it started as a session that went wrong or a bill that looked odd.
 8. [Honest limits](#8-honest-limits)
 9. [The facts everything rests on](#9-the-facts-everything-rests-on)
 10. [Credits, prior art, license](#10-credits-prior-art-license)
+
+---
+
+## 0. The moral, in five sentences
+
+If you take one thing from this repo, take this:
+
+1. **One session per wave.** Plan, start guardians, merge, write the handoff — all in one
+   session. A fresh session costs its ~200k start build; it only pays off past ~200k context.
+2. **Collecting costs nothing.** Type test answers, ideas and criticism into the handoff file
+   for hours. Zero requests. A chat message, by contrast, re-reads the whole context — at a
+   measured 119k context that is ≈ 12k per interruption.
+3. **Guardians instead of pings.** One guardian per topic starts its own workers; the main
+   session is woken 5× instead of 15×.
+4. **Stay under 200k context.** The main session plans, merges, reads reports. Everything
+   else lives in agents.
+5. **A handoff with a cost table** closes the wave — measured numbers, not feelings.
+
+**Proven, not claimed:** [`docs/evidenz.md`](docs/evidenz.md) derives from the logbook and the
+handoff cost tables that this structure saves **43–50 % of requests and 43–48 % of cost**
+against the same work without it — and **73–79 % per completed job**. Every number there is
+measured, with its source and the arithmetic shown.
+
+### How a wave runs, for newcomers — copy it, then get it
+
+1. **Start a session.** First message: "I answered the handoff:
+   `/Users/…/project/_handoff-project-2026-08-30.md`". Claude reads it and knows everything.
+2. **Claude writes the wave plan as a file** (`docs/reviews/YYYY-MM-DD-waveN-plan.md`) before
+   any agent starts, so you can look it over first.
+3. **Claude starts the guardians** — one per topic, topics cut along *files*. From here it
+   runs without you.
+4. **You test in parallel** and write everything you notice into the collection section at the
+   bottom of the handoff document. Not into the chat. Don't forget ⌘S.
+5. **Claude reports back once**, when everything is merged, built and pushed — with a cost
+   table and a fresh handoff. Done; the next wave starts at step 1.
+
+### Why working through TextEdit documents is calmer
+
+The terminal collapses long input into `[pasted text]`. A document doesn't: you see the whole
+thing, jump between test items, add notes, leave it lying around for two days. Above all it
+**does not interrupt the running wave**. Ten items in the document cost the same as one
+(nothing); ten items in the chat cost ten full requests and pull the agent out of its work ten
+times. Nothing has to be remembered, nothing has to be "said quickly before I forget", nothing
+gets lost. One rule: **⌘S before asking Claude to read the file** — unsaved changes are
+invisible on disk.
 
 ---
 
@@ -156,6 +202,9 @@ invisible on disk.
 
 # Handoff Project — 27.08.2026, 18:21
 
+## Your collection from the last handoff (copied verbatim)
+…
+
 ## Quota
 Claude Code: 5-h window 34 % · week 61 % (resets Mon 09:00) · Codex: 10 %/7d (reading 2 h old)
 
@@ -190,6 +239,17 @@ Set the filter to "invoice", 2,000 entries, must not hang.
 >>>
 ```
 
+Two of those blocks are easy to skip over and are in fact the core:
+
+- **`## Gedächtnis`** (German for "memory", kept in German because that is how the user
+  introduced it) — long-term (what holds permanently: preferences, decisions, prohibitions)
+  and short-term (what only matters for the next wave), 4–6 lines each.
+- **`## Your collection from the last handoff (copied verbatim)`** — everything the user wrote
+  into the collection at the bottom during the last wave is carried **verbatim** into the top
+  of the new handoff. Do not summarise, do not shorten, do not drop anything. And: **look at
+  the collection once more before finalising** — the user often keeps writing while the
+  handoff is already being drafted (wave 28, 16:39).
+
 The details — the path at the very top ready to copy, the project name in the file name,
 pre-seeded answer lines, what belongs in a handoff and what doesn't (rules adopted from
 Matt Pocock's `/handoff`) — are in `SKILL.md`, section "The wave workflow".
@@ -200,7 +260,9 @@ The newest rule in the skill (28.08.2026): a human cannot sit at the terminal al
 Every clarifying question that halts a wave costs hours of wall-clock time. So waves are
 cut to **run through without questions**: defensible assumptions are made and flagged in
 the handoff, questions are **collected** into the handoff instead of asked one by one in
-chat, and agents get **several tasks bundled** and report only when everything is done.
+chat, and **guardians** get a whole topic bundled and report only when everything is done.
+(Its *workers* still get exactly ONE job each, 15–25 minutes — bundling happens at the
+guardian level, not the worker level.)
 Agents expected to run longer than an hour write their result to a file
 (`docs/reviews/<date>-<topic>.md`); the handoff lists the expected file, and the **next**
 session checks for it while reading the handoff — so the agent finishing costs no request
@@ -226,9 +288,24 @@ Three things to know:
    side: 147 steps become 600. Then the bill is roughly even again — but **four times as
    much got done**. That is "token maximisation": more work for the same quota, not less
    output.
-3. **The report is the hidden cost centre.** Every agent report is written into the main
-   context (×2) and then re-read on every later request (×0.1). So every agent gets a
-   report cap ("≤ 250 words, no diffs") and long results go into files.
+3. **The report is the hidden cost centre — and here is exactly why.** An agent report is
+   paid for **twice over, in two different ways**:
+   - **Once, at ×2:** the moment the report arrives it is appended to the main context and
+     written into the cache. That is a one-off cache-write at ×2 — it does not repeat.
+   - **Then forever, at ×0.1:** from that request on, the report is part of the warm prefix
+     and is re-read on **every** later request at ×0.1. Ten more requests in that session =
+     ten more ×0.1 readings of the same text.
+
+   So a 4k report costs 8k once **plus** 0.4k × every remaining request of the session —
+   after 20 requests that is 8k + 8k = 16k, i.e. **four times its own length**. The ×2 is
+   not the expensive half; the endless ×0.1 tail is.
+
+   (The subagent's own 5-minute cache TTL is a separate thing and does not enter this
+   calculation: it governs what the agent pays *inside* its own loop, not what its report
+   costs in the main context.)
+
+   Hence the report cap ("≤ 300 words, no diffs" — the same number as the report contract in `SKILL.md`) and long results into files: a file path
+   is 60 characters in the prefix, the file itself costs nothing until someone reads it.
 
 Model choice (from the table in the skill): finding files, renames, log sifting, tests to
 an existing pattern → **fast/cheap, effort low** (with Fable 5 as agent model: always
@@ -253,6 +330,13 @@ topic instead of once per worker.
 | 24 | 1 guardian, 12 workers, all building | 62 | 3,143k | 1 + 12 | 2 h 10 |
 | 25 | 3 topic guardians + merge guardian, 15 workers | 29 | 1,192k | 5 | 64 min |
 | 26 | 3 topic guardians + merge guardian + skill agent, 17 jobs | 34 | 1,159k | 5 | 53 min |
+| 27 | 4 topic guardians + merge + skill agent, 19 jobs | 41 | 1,160k | 7 | 78 min |
+| 28 | 2 topic guardians **cut along files** + merge + skill agent, 11 jobs + skill | 33 | 1,080k | 5 | 57 min |
+
+Waves 27 and 28 add the ceiling and the correction: a *fourth* guardian bought nothing (same
+tokens, 25 minutes more, first merge conflicts), while **two guardians cut strictly along
+FILES** produced the cheapest wave measured and zero conflicts. Cut topics along files, not
+along words. Full arithmetic: [`docs/evidenz.md`](docs/evidenz.md).
 
 Four rules the user added on 30.08.2026 while watching wave 26 run:
 
@@ -356,7 +440,7 @@ mkdir -p ~/.claude/skills/warm-handoff
 curl -fsSL https://raw.githubusercontent.com/Aitomat/warm-handoff/main/SKILL.md \
   -o ~/.claude/skills/warm-handoff/SKILL.md
 
-for f in ctx.sh codex-limit.sh session-costs.sh; do
+for f in ctx.sh codex-limit.sh session-costs.sh session-kosten.sh; do
   curl -fsSL "https://raw.githubusercontent.com/Aitomat/warm-handoff/main/scripts/$f" \
     -o ~/.claude/"$f"
   chmod +x ~/.claude/"$f"

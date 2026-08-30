@@ -17,6 +17,7 @@ zuerst eine Sitzung, die schiefging, oder eine Rechnung, die seltsam aussah.
 
 ## Inhalt
 
+0. [Die Moral in fünf Sätzen](#0-die-moral-in-fünf-sätzen)
 1. [Das Problem in drei Minuten](#1-das-problem-in-drei-minuten)
 2. [Die Kosten-Arithmetik mit echten Zahlen](#2-die-kosten-arithmetik-mit-echten-zahlen)
 3. [Der Wellen-Workflow](#3-der-wellen-workflow)
@@ -27,6 +28,52 @@ zuerst eine Sitzung, die schiefging, oder eine Rechnung, die seltsam aussah.
 8. [Ehrliche Grenzen](#8-ehrliche-grenzen)
 9. [Die Fakten, auf denen alles steht](#9-die-fakten-auf-denen-alles-steht)
 10. [Danksagung, Vorarbeiten, Lizenz](#10-danksagung-vorarbeiten-lizenz)
+
+---
+
+## 0. Die Moral in fünf Sätzen
+
+Wer nur eine Sache aus diesem Repo mitnimmt, dann diese:
+
+1. **Eine Session pro Welle.** Planen, Wächter starten, mergen, Handoff schreiben — alles in
+   einer Sitzung. Eine frische Sitzung kostet ihren Startaufbau von ~200k; erst jenseits von
+   ~200k Kontext lohnt sie sich.
+2. **Sammeln kostet nichts.** Testantworten, Einfälle, Kritik stundenlang in die
+   Handoff-Datei tippen. Null Anfragen. Jede Chat-Nachricht dagegen liest den ganzen Kontext
+   neu — bei 119k Kontext ≈ 12k pro Zwischenruf.
+3. **Wächter statt Pings.** Ein Wächter je Thema startet seine Arbeiter selbst; die
+   Hauptsitzung wird 5× geweckt statt 15×.
+4. **Unter 200k Kontext bleiben.** Die Hauptsitzung plant, mergt, liest Berichte. Alles
+   andere lebt in Agenten.
+5. **Handoff mit Kostentabelle** schließt die Welle ab — gemessene Zahlen, keine Gefühle.
+
+**Belegt, nicht behauptet:** [`docs/evidenz.md`](docs/evidenz.md) rechnet aus dem Logbuch und
+den Handoff-Kostentabellen vor, dass diese Struktur gegenüber derselben Arbeit ohne sie
+**43–50 % der Anfragen und 43–48 % der Kosten** spart — und je erledigtem Auftrag gerechnet
+**73–79 %**. Jede Zahl dort ist gemessen, mit Quelle und Rechenweg.
+
+### So läuft eine Welle für Einsteiger — kopieren, dann kapieren
+
+1. **Sitzung starten.** Erste Nachricht: „Ich habe das Handoff beantwortet:
+   `/Users/…/projekt/_handoff-projekt-2026-08-30.md`". Claude liest die Datei und weiß alles.
+2. **Claude schreibt den Wellenplan als Datei** (`docs/reviews/JJJJ-MM-TT-welleN-plan.md`),
+   bevor irgendein Agent startet. Du liest ihn in Ruhe, bevor es losgeht.
+3. **Claude startet die Wächter** — einer je Thema, Themen nach *Dateien* geschnitten. Ab
+   jetzt läuft alles ohne dich.
+4. **Du testest parallel** und schreibst alles, was dir auffällt, unten in die Sammlung des
+   Handoff-Dokuments. Nicht in den Chat. ⌘S nicht vergessen.
+5. **Claude meldet sich einmal**, wenn alles gemergt, gebaut und gepusht ist — mit
+   Kostentabelle und neuem Handoff. Fertig; die nächste Welle beginnt mit Schritt 1.
+
+### Warum das Arbeiten über TextEdit-Dokumente entspannter ist
+
+Das Terminal frisst lange Eingaben zu `[pasted text]`. Ein Dokument nicht: du siehst alles,
+springst zwischen Testpunkten, ergänzt Notizen, lässt es zwei Tage liegen. Vor allem aber
+**unterbricht es die laufende Welle nicht**. Zehn Punkte im Dokument kosten genauso viel wie
+einer (nämlich nichts); zehn Punkte im Chat kosten zehn volle Anfragen und reißen den Agenten
+zehnmal aus der Arbeit. Der Nutzer muss sich nichts merken, nichts „schnell noch sagen", und
+es geht nichts verloren. Eine Regel dazu: **⌘S, bevor Claude die Datei lesen soll** —
+Ungespeichertes ist auf der Platte unsichtbar.
 
 ---
 
@@ -159,6 +206,9 @@ Datei zu lesen** — ungespeicherte Änderungen sind auf der Platte unsichtbar.
 
 # Handoff Projekt — 27.08.2026, 18:21
 
+## Deine Sammlung aus dem letzten Handoff (wörtlich kopiert)
+…
+
 ## Kontingent
 Claude Code: 5-h-Fenster 34 % · Woche 61 % (reset Mo 09:00) · Codex: 10 %/7d (Messung 2 h alt)
 
@@ -188,9 +238,23 @@ Filter auf „Rechnung" setzen, 2.000 Einträge, darf nicht hängen.
 | # | Zeit | Worum es ging | Anfr. | Kontext | gelesen | geschr. | Ausgabe | Äquiv. |
 …
 
+## Gedächtnis (Memory-Block — Long-Term / Short-Term, je 4–6 Zeilen)
+
 ## Sammlung für das nächste Handoff
 >>>
 ```
+
+Zwei Blöcke daraus werden oft übersehen, sind aber der Kern:
+
+- **`## Gedächtnis`** — Long-Term (was dauerhaft gilt: Vorlieben, Entscheidungen, Verbote)
+  und Short-Term (was nur für die nächste Welle zählt), je 4–6 Zeilen. Der Name bleibt
+  deutsch, weil der Nutzer ihn so eingeführt hat; gemeint ist ein Memory-Block mit
+  Langzeit- und Kurzzeit-Teil.
+- **`## Deine Sammlung aus dem letzten Handoff (wörtlich kopiert)`** — alles, was der Nutzer
+  während der letzten Welle unten in die Sammlung geschrieben hat, wird **wörtlich** nach
+  oben in das neue Handoff übernommen. Nicht zusammenfassen, nicht kürzen, nichts weglassen.
+  Und: **vor dem Finalisieren die Sammlung noch einmal ansehen** — der Nutzer schreibt oft
+  weiter, während das Handoff schon entsteht (Welle 28, 16:39).
 
 Die Einzelheiten — Pfad ganz oben zum Kopieren, Projektname im Dateinamen, vorbereitete
 Antwortzeilen, was ins Handoff gehört und was nicht (Regeln übernommen von Matt Pococks
@@ -202,7 +266,7 @@ Die neueste Regel im Skill (28.08.2026): Der Mensch kann nicht dauernd am Termin
 Jede Rückfrage, die eine Welle anhält, kostet Stunden Echtzeit. Deshalb werden Wellen so
 geschnitten, dass sie **ohne Rückfrage durchlaufen**: Vertretbare Annahmen werden getroffen
 und im Handoff markiert, Fragen **gesammelt** ins Handoff geschrieben statt einzeln in den
-Chat, Agenten bekommen **mehrere Aufgaben gebündelt** und melden sich erst, wenn alles
+Chat, **Wächter** bekommen ein ganzes Thema gebündelt und melden sich erst, wenn alles
 fertig ist. Agenten, die länger als eine Stunde brauchen, schreiben ihr Ergebnis in eine
 Datei (`docs/reviews/<datum>-<thema>.md`); das Handoff nennt die erwartete Datei, und die
 **nächste** Session prüft beim Lesen des Handoffs, ob sie da ist — das Fertigwerden kostet
@@ -228,10 +292,76 @@ Drei Dinge, die man dabei wissen muss:
    nebenbei täte: aus 147 Schritten werden 600. Dann ist die Rechnung wieder ausgeglichen —
    aber es ist **viermal so viel erledigt**. Das ist „Token-Maximierung": mehr Arbeit fürs
    gleiche Kontingent, nicht weniger Ausgabe.
-3. **Der Bericht ist die versteckte Kostenstelle.** Jeder Agentenbericht wird in den
-   Hauptkontext geschrieben (×2) und danach bei jeder Anfrage mitgelesen (×0,1). Deshalb
-   bekommt jeder Agent eine Berichtsgrenze („≤ 250 Wörter, keine Diffs") und lange
-   Ergebnisse gehen in Dateien.
+3. **Der Bericht ist die versteckte Kostenstelle — und zwar genau so.** Ein Agentenbericht
+   wird **zweimal bezahlt, auf zwei verschiedene Arten**:
+   - **Einmal mit ×2:** In dem Moment, in dem der Bericht ankommt, wird er an den
+     Hauptkontext angehängt und in den Cache geschrieben. Das ist ein einmaliges
+     Cache-Schreiben mit ×2 — es wiederholt sich nicht.
+   - **Danach immer mit ×0,1:** Ab dieser Anfrage gehört der Bericht zum warmen Prefix und
+     wird bei **jeder** weiteren Anfrage mitgelesen, zu ×0,1. Zehn weitere Anfragen in der
+     Sitzung = zehnmal derselbe Text zu ×0,1.
+
+   Ein 4k-Bericht kostet also einmalig 8k **plus** 0,4k × jede verbleibende Anfrage der
+   Sitzung — nach 20 Anfragen sind das 8k + 8k = 16k, also **das Vierfache seiner eigenen
+   Länge**. Nicht das ×2 ist die teure Hälfte, sondern der endlose ×0,1-Schwanz.
+
+   (Der 5-Minuten-Cache-TTL des Subagenten ist eine andere Sache und geht in diese Rechnung
+   nicht ein: er bestimmt, was der Agent *innerhalb* seiner eigenen Schleife zahlt, nicht,
+   was sein Bericht im Hauptkontext kostet.)
+
+   Daher die Berichtsgrenze („≤ 300 Wörter, keine Diffs" — dieselbe Zahl wie der Berichtsvertrag in `SKILL.md`) und lange Ergebnisse in Dateien:
+   ein Dateipfad sind 60 Zeichen im Prefix, die Datei selbst kostet nichts, bis jemand sie
+   liest.
+
+### Wie eine Welle wirklich aufgebaut ist (Wellen 25–28)
+
+Die Form, die am besten gemessen hat: **ein Wächter je disjunktem Thema**, jeder mit 4–6
+Arbeitern, jeder mergt in seinen eigenen Integrationsbranch — dann EIN Merge-Wächter für den
+einen Build, die Vollsuite, das Bundle und den QA-Durchgang. Die Hauptsitzung wird einmal je
+Thema geweckt statt einmal je Arbeiter.
+
+| Welle | Struktur | Anfragen | Äquivalent | Fertigmeldungen | Wanduhr |
+|---|---|---:|---:|---:|---:|
+| 24 | 1 Wächter, 12 Arbeiter, alle bauend | 62 | 3.143k | 1 + 12 | 2 Std. 10 |
+| 25 | 3 Themen-Wächter + Merge-Wächter, 15 Arbeiter | 29 | 1.192k | 5 | 64 min |
+| 26 | 3 Themen-Wächter + Merge-Wächter + Skill-Agent, 17 Aufträge | 34 | 1.159k | 5 | 53 min |
+| 27 | 4 Themen-Wächter + Merge + Skill-Agent, 19 Aufträge | 41 | 1.160k | 7 | 78 min |
+| 28 | 2 Themen-Wächter **nach Dateien geschnitten** + Merge + Skill, 11 Aufträge + Skill | 33 | 1.080k | 5 | 57 min |
+
+Wellen 27 und 28 liefern Decke und Korrektur: ein *vierter* Wächter brachte nichts (gleiche
+Token, 25 Minuten mehr, die ersten Merge-Konflikte), während **zwei streng nach DATEIEN
+geschnittene Wächter** die günstigste gemessene Welle ergaben — und null Konflikte. Themen
+nach Dateien schneiden, nicht nach Worten. Vollständige Rechnung:
+[`docs/evidenz.md`](docs/evidenz.md).
+
+Vier Regeln, die der Nutzer am 30.08.2026 beim Zusehen ergänzt hat:
+
+1. **Der Wellenplan ist eine Datei, kein Satz Prompts.** Bevor irgendetwas startet, schreibt
+   die Hauptsitzung `docs/reviews/<datum>-welleN-plan.md` — Strukturregeln oben, dann eine
+   Tabelle je Thema (ID · Auftrag · Akzeptanz · Modell/Effort) —, committet ihn, öffnet ihn im
+   Editor und startet erst dann alle Wächter in EINER Nachricht, jeder Auftrag nur mit Verweis
+   auf die Datei. So kann der Nutzer die Welle ansehen, solange Ändern noch billig ist.
+2. **Modell und Effort ins Label, auch bei Arbeitern**: `Modell/Effort · ID Kurzname`, z. B.
+   `Fable/low · A1 Aufnahme-Rot`. Der Nutzer liest die Agentenliste unten am Bildschirm.
+   Codex ist ein Shell-Befehl, kein Agent — er taucht dort nie auf; das dazusagen.
+3. **Der Push gehört zum Auftrag.** Wächter und Skill-Agenten pushen ihren Branch, bevor sie
+   fertig melden, und nennen den gepushten Hash. Ein nur lokaler Branch ist nicht geliefert.
+4. **Codex als Qualitätsmanager.** Bei frischem Codex-Kontingent lässt jeder Themen-Wächter
+   seinen Integrationsbranch reviewen, bevor er den Abschlussbericht schreibt, und fixt die
+   P1 selbst. In Welle 26 fand das 4 P1-Befunde in drei Fable-Aufträgen.
+
+### Was wir gemessen haben
+
+- Themen-Wächter halbieren Anfragen und Wanduhr gegenüber einem Wächter mit 12 Arbeitern
+  (62 / 2 Std. 10 → 29 / 64 min → 34 / 53 min).
+- Der Start-Cacheaufbau (≈ 200k, einmalig) ist der größte Einzelposten einer kurzen Sitzung —
+  deshalb schlägt Weiterarbeiten in derselben Sitzung eine frische, solange Kontext < 200k.
+- Der Kontext blieb über eine ganze Welle flach bei ~114k, weil alle Arbeit in Agenten lag.
+- Fertigmeldungen sind der Kostentreiber der Hauptsitzung: 5 statt 13.
+- Jeder Wächter braucht einen eigenen Worktree; am Build-Schloss wird aktiv gewartet, nie
+  angehalten und gemeldet (beides Welle 28).
+- Eine Pause > 60 min kostet einen Neuaufbau (≈ Kontext × 2) — bei 114k ≈ 230k, immer noch
+  weniger als eine frische Sitzung mit Startaufbau plus Neu-Briefing.
 
 Modellwahl (aus der Tabelle im Skill): Dateien finden, Umbenennen, Log-Sichtung, Tests nach
 Muster → **schnell/billig, Effort low** (bei Fable 5 als Agent: immer low). Design-
@@ -317,7 +447,7 @@ mkdir -p ~/.claude/skills/warm-handoff
 curl -fsSL https://raw.githubusercontent.com/Aitomat/warm-handoff/main/SKILL.md \
   -o ~/.claude/skills/warm-handoff/SKILL.md
 
-for f in ctx.sh codex-limit.sh session-costs.sh; do
+for f in ctx.sh codex-limit.sh session-costs.sh session-kosten.sh; do
   curl -fsSL "https://raw.githubusercontent.com/Aitomat/warm-handoff/main/scripts/$f" \
     -o ~/.claude/"$f"
   chmod +x ~/.claude/"$f"
