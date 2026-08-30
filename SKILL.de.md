@@ -81,6 +81,21 @@ Terminal-Tab-Vorschläge und jede Agenten-Fertigmeldung sind ebenfalls volle Anf
 
 ## Subagenten — die Standardarbeitsweise
 
+- **Der Wellenplan ist eine DATEI, geschrieben BEVOR die Wächter starten** (Nutzer,
+  30.08.2026, 02:28: er will den Plan sehen und sich anschauen können). Vor jedem Start
+  schreibt die Hauptsitzung `docs/reviews/<datum>-welleN-plan.md`: oben die Struktur-Regeln,
+  die für alle Aufträge gelten (Branch-Basis, Build-Schloss, keine Rückfragen,
+  Berichtsvertrag, Push vor „fertig"), darunter JE THEMA EINE TABELLE mit den Spalten
+  **ID · Auftrag · Abnahmekriterium · Modell/Effort**. Sie committet die Datei, öffnet sie
+  sofort (`open -a TextEdit <datei>`) und startet erst dann ALLE Wächter in EINER Nachricht,
+  jeder Auftrag mit Verweis auf die Datei („dein Thema ist Tabelle B in <pfad>") statt mit
+  wiederholtem Plantext. Eine Datei = eine Stelle, die der Nutzer liest, und dieselbe, die
+  die Wächter lesen — kein Auseinanderdriften.
+- **Der Push gehört zum Auftrag.** Jeder Wächter und jeder Skill-Agent pusht seinen Branch
+  (`git push -u origin <branch>`), BEVOR er „fertig" meldet — nicht danach, nicht „macht die
+  Hauptsitzung". Am 30.08.2026 um 02:36 sah der Nutzer auf GitHub keine Bewegung, weil ein
+  Skill-Agent zwar committet, aber nicht gepusht hatte. Ein nur lokal existierender Branch
+  ist nicht geliefert; der Bericht nennt den gepushten Hash.
 - **Wächter-Agent (Guardian).** Für eine Bau-Welle bekommt EIN orchestrierender Agent (Opus,
   low/normal Effort) den ganzen Plan als Datei, startet die Arbeits-Agenten selbst, merged,
   testet, bündelt, räumt `.build` von gemergten Worktrees auf, schreibt den Bericht — die
@@ -94,6 +109,17 @@ Terminal-Tab-Vorschläge und jede Agenten-Fertigmeldung sind ebenfalls volle Anf
   Integrationsbranches zusammen und startet danach EINEN **Merge-Wächter** für den einen
   Build, die Vollsuite, das Bundle und die QA-Runde. Geweckt wird die Hauptsitzung einmal je
   Themen-Wächter, nicht einmal je Arbeiter.
+- **WIE VIELE Wächter? Die Themen zählen, nicht die Arbeiter** (Nutzerfrage, 30.08.2026,
+  02:24: „drei Wächter, vier Wächter, zwei Wächter — was ist am sinnvollsten?"). Die Antwort
+  ist mechanisch: **ein Wächter je abgegrenztem Thema, das 4–6 eigene Aufträge trägt.** Unter
+  4 Aufträgen lohnt ein Wächter nicht — er zahlt `Startkontext × 2` allein fürs Dasein (60k
+  bei 30k Startkontext); solch ein Thema kommt zum Nachbar-Wächter oder in die Hauptsitzung.
+  Über 6 wird der Wächter selbst zum Engpass: er merged, baut und testet seriell, die letzten
+  Arbeiter warten. **Zwei** Wächter stimmen nur bei zwei wirklich getrennten Bereichen;
+  **vier und mehr** sind richtig, wenn es vier unabhängige Bereiche gibt, und Verschwendung,
+  wenn der vierte nur eine Scheibe des dritten ist. Drei ist meist richtig, weil eine Welle
+  meist drei abgegrenzte Bereiche à 4–6 Aufträge hat — die Zahl aber aus dem Plan ableiten,
+  nie aus Gewohnheit wählen.
 - **Build-Schloss — nie mehr als ein Build pro Rechner.** Vor jedem Build:
   `mkdir /tmp/<projekt>-build.lock` (schlägt fehl, wenn es existiert → warten oder
   überspringen; danach `rmdir`). `mkdir` ist atomar, funktioniert also über Agenten und
@@ -125,7 +151,13 @@ Terminal-Tab-Vorschläge und jede Agenten-Fertigmeldung sind ebenfalls volle Anf
   geschrieben wird, etwas Reales zum Zeigen hat. **Das Handoff startet auch ohne fertigen Wächter**:
   den Wächter und seine noch laufenden Arbeiter unter "erwartete Agenten-Ergebnisse" listen,
   die nächste Sitzung prüft sie nach.
-- **Modell + Effort im sichtbaren Label**: `Opus5/high · Verlauf-Tempo`, `Fable/low · Scan`.
+- **Modell + Effort im sichtbaren Label — für Wächter UND für deren Arbeiter**
+  (Nutzer, 30.08.2026, 02:31). Das Muster ist `Modell/Effort · ID Kurzname`, z. B.
+  `Fable/low · A1 Aufnahme-Rot`, `Opus5/high · Verlauf-Tempo`. Auch ein Wächter beschriftet
+  die Arbeiter, die er startet, so — der Nutzer liest die Agentenliste unten am Bildschirm
+  und will dort Modell und Effort sehen, ohne zu fragen. Eine Ausnahme offen aussprechen:
+  **Codex läuft als Shell-Befehl, nicht als Agent — es erscheint in dieser Liste nie**;
+  das sagen, statt den Nutzer suchen zu lassen.
   Fable 5 als Subagent: **immer Effort low** — und **nur für Aufträge, die der Nutzer als
   „wichtig" markiert hat**; dort lohnt das schnellere Modell. Alles andere: Opus (low).
   **Sonnet nur für Triviales ohne Bau** (Umbenennen, Text verschieben, Dateien auflisten),
@@ -153,7 +185,8 @@ Terminal-Tab-Vorschläge und jede Agenten-Fertigmeldung sind ebenfalls volle Anf
 | 22 | 6 Arbeiter + Merge-Agent, Hauptsitzung orchestriert | 58 | 2.075k | 8 | ~2 Std. |
 | 23 | 1 Wächter, wenige große Agenten | 43 | 1.531k | 1 | 2 Std. 20 |
 | 24 | 1 Wächter, 12 Arbeiter, alle bauend | 62 | 3.143k | 1 + 12 | 2 Std. 10 |
-| 25 | Themen-Wächter (neue Regel) | — | — | — | wird nachgetragen |
+| 25 | 3 Themen-Wächter + Merge-Wächter, 15 Arbeiter | 29 | 1.192k | 5 | 64 min |
+| 26 | 3 Themen-Wächter + Merge-Wächter + Skill-Agent, 17 Aufträge | 34 | 1.159k | 5 | 53 min |
 
 So liest man das: Welle 23 war die günstigste in Token (ein Wächter = ein Wecken), aber die
 langsamste auf der Uhr — Token und Wartezeit sind zwei verschiedene Achsen. Welle 24 sieht in
@@ -161,6 +194,29 @@ jeder Spalte am schlechtesten aus, aber 90 ihrer 130 Minuten und rund 2.400k des
 sind der Rechner-Absturz (12 parallele Kaltbuilds); **ohne den Absturz waren es ≈ 40 Minuten
 und ≈ 700k** — die schnellste Welle bisher. Genau das schützen das Build-Schloss und die
 Regel „4–6 Arbeiter je Wächter".
+**Welle 25 (00:46–01:50, 30.08.2026, ohne Absturz) löst diesen Zielkonflikt auf: die
+Themen-Wächter-Struktur war die günstigste UND die schnellste bisher** — 29 Anfragen für 15
+Bauaufträge, das niedrigste Äquivalent aller abgeschlossenen Wellen und 64 Minuten gegen
+2 Std.+ bei jeder früheren Struktur. **Welle 26 (02:24–03:17) ist die Kontrollmessung** und
+bestätigt das: dieselbe Struktur plus ein Skill-Agent trug 17 Aufträge in 34 Anfragen,
+1.159k Äquivalent, 5 Fertigmeldungen und 53 Minuten. Zweimal hintereinander ~1,2 Mio. und
+unter einer Stunde ist eine Struktur, die sich wiederholt, kein Glückstreffer.
+
+## Was wir gemessen haben (Lessons)
+
+Nur, was das Logbuch wirklich zeigt — nichts hochgerechnet:
+
+- **Themen-Wächter halbieren Anfragen und Wanduhr** gegenüber einem Wächter mit 12 Arbeitern:
+  62 Anfragen / 2 Std. 10 (W24) → 29 / 64 min (W25) → 34 / 53 min (W26).
+- **Der Start-Cacheaufbau (≈ 200k, einmalig) ist der größte Einzelposten einer kurzen
+  Sitzung.** Deshalb lohnt Weiterarbeiten in DERSELBEN Sitzung, solange der Kontext < 200k ist.
+- **Der Kontext blieb über eine ganze Welle bei ~114k**, weil alle Arbeit in Agenten lag —
+  die Hauptsitzung plante, mergte und las Berichte.
+- **Fertigmeldungen sind der Kostentreiber der Hauptsitzung:** 5 statt 13 ist der Unterschied
+  zwischen Welle 25/26 und Welle 24 — mehr wert als jeder Formulierungstrick.
+- **Codex als Qualitätsmanager findet echte P1** — vier Stück in drei Fable-Aufträgen (W26-A7).
+- **Eine Pause > 60 min kostet einen Neuaufbau (≈ Kontext × 2)** — bei 114k also ≈ 230k, und
+  damit immer noch weniger als eine frische Sitzung mit ~200k Startaufbau plus Neu-Briefing.
 
 ## Bezahltes Kontingent — sehen, nutzen, nach Kontogröße
 
@@ -174,6 +230,14 @@ Regel „4–6 Arbeiter je Wächter".
   Ungenutztes Kontingent verfällt. Gemini/OpenRouter: kein auslesbares Guthaben — so sagen, nie schätzen.
 - **Kleines Codex-Konto (Plus, ~20 $)** → Codex macht NUR QA: Review, Zweitmeinung, Testläufe,
   Abnahme. Keine Bau-Aufträge, kein "mach um 23:05 weiter". Großes Konto → frei nutzen.
+- **Codex als Qualitätsmanager der Welle** (Nutzer, 30.08.2026, 03:05). Wenn das
+  Codex-Kontingent frisch ist, lässt JEDER Themen-Wächter seinen Integrationsbranch von Codex
+  reviewen, BEVOR er den Abschlussbericht schreibt, und fixt die P1-Befunde selbst — die Welle
+  endet reviewt, nicht „wird später reviewt". Befehlsform: `git diff <basis>..HEAD | codex exec
+  --skip-git-repo-check "Review this. Find bugs, risks, missing tests."` Beleg, dass das keine
+  Zeremonie ist: In Welle 26 ließ Auftrag A7 Codex auf drei Fable-Aufträge schauen — Codex fand
+  **4 P1-Befunde**, die die bauenden Agenten übersehen hatten. Kostet einen Codex-Aufruf je
+  Wächter und null Anfragen der Hauptsitzung.
 
 ## Der Wellen-Workflow und die Handoff-Datei
 
@@ -206,6 +270,20 @@ Skills für die nächste Sitzung nennen. Struktur, von oben nach unten:
 7. **Der rote Faden** — die nächsten 2–3 Wellen als kurze Absätze, jeweils mit
    `>>>Hast du dazu noch was anzumerken?`; danach ein kompakter Themenspeicher; dann
    **Hauptdokumente** (3–6 echte Dateien mit absolutem Pfad + einer Zeile + Aktualität).
+   Danach, PFLICHT, direkt nach den Hauptdokumenten und vor der Kostentabelle, der
+   Gedächtnis-Block — die Gedächtnisdatei des Projekts, im Handoff selbst (Nutzer,
+   30.08.2026: er will Claudes eigene Gedächtnisdatei abschalten und das Gedächtnis
+   stattdessen im Handoff führen). Überschrift `## Gedächtnis`, zwei beschriftete Listen mit
+   je **4–6 Zeilen**, kurz und konkret:
+   ```
+   **Langzeit (gilt immer):**   → Nordstern, Arbeitsregeln, Modellpolitik,
+                                   Hausregeln, die jede Welle überleben
+   **Kurzzeit (diese Wochen):** → Branch + Tip + Testzahl, was offen ist,
+                                   Rechner-/Plattenzustand, aktuelle Testpunkte
+   ```
+   Vorlage für die Form: `/Users/pro16/Code/aitomat/_handoff-aitomat-2026-08-30-e.md`,
+   Abschnitt `## Gedächtnis`. Die Langzeit-Liste wörtlich aus dem vorigen Handoff übernehmen,
+   solange sich nichts wirklich geändert hat; die Kurzzeit-Liste jedes Mal neu schreiben.
 8. **Kostentabelle** via `~/.claude/session-kosten.sh --markdown` (Einheit = Spanne zwischen zwei
    Nutzer-Nachrichten; k = Tausend erklären, Kontextspalte ≠ Kosten) + ehrliche Befunde, dann die
    Schlusszeile mit GEMESSENEM Kontext und Startkontext: *"Kontext dieser Session: 192k

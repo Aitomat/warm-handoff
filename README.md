@@ -181,6 +181,7 @@ Set the filter to "invoice", 2,000 entries, must not hang.
 …
 >>>Answer:
 
+## Gedächtnis (memory block — long-term / short-term, 4–6 lines each)
 # This session's cost table
 | # | Time | What it was about | Req. | Context | read | written | output | equiv. |
 …
@@ -236,7 +237,50 @@ low). Design decisions, security review → strong model, high effort, or a diff
 (`"Fable/low · rename test files"`) so the user sees in the terminal who is working.
 
 Parallel vs. sequential: **parallel for speed, sequential for warmth** — agents cache
-separately at 5 minutes; launch five at once and you have five cold caches.
+separately at 5 minutes; launch five at once and you have five cold caches. Inside a wave
+the parallel rule always wins; the pacing rule applies only to work the main session does
+itself.
+
+### How a wave is actually structured (waves 25 and 26)
+
+The shape that measured best: **one guardian per disjoint topic**, each with 4–6 workers,
+each merging into its own integration branch — then ONE merge guardian for the single
+build, the full suite, the bundle and the QA pass. The main session is woken once per
+topic instead of once per worker.
+
+| Wave | Structure | Requests | Equivalent | Completion pings | Wall clock |
+|---|---|---:|---:|---:|---:|
+| 24 | 1 guardian, 12 workers, all building | 62 | 3,143k | 1 + 12 | 2 h 10 |
+| 25 | 3 topic guardians + merge guardian, 15 workers | 29 | 1,192k | 5 | 64 min |
+| 26 | 3 topic guardians + merge guardian + skill agent, 17 jobs | 34 | 1,159k | 5 | 53 min |
+
+Four rules the user added on 30.08.2026 while watching wave 26 run:
+
+1. **The wave plan is a file, not a set of prompts.** Before anything starts, the main
+   session writes `docs/reviews/<date>-welleN-plan.md` — structure rules on top, then one
+   table per topic (ID · assignment · acceptance criterion · model/effort) — commits it,
+   opens it in the editor, and only then starts all guardians in ONE message, each brief
+   pointing at the file. The user can look the wave over before it is expensive to change.
+2. **Model and effort in the label, for workers too**: `Modell/Effort · ID Kurzname`, e.g.
+   `Fable/low · A1 Aufnahme-Rot`. The user reads the running-agent list at the bottom of
+   the screen. Codex is a shell command, not an agent — it never appears there; say so.
+3. **Push belongs to the job.** Guardians and skill agents push their branch before
+   reporting done, and name the pushed hash. A branch that exists only locally is not
+   delivered.
+4. **Codex as quality manager.** With fresh Codex quota, every topic guardian has its
+   integration branch reviewed before its closing report and fixes the P1s itself. In wave
+   26 that found 4 P1 issues across three Fable assignments.
+
+### Lessons, measured
+
+- Topic guardians roughly halve requests and wall clock against one guardian with 12
+  workers (62 / 2 h 10 → 29 / 64 min → 34 / 53 min).
+- The start-up cache build (≈ 200k, once) is the largest single item of a short session —
+  so continuing in the same session beats a fresh one while context stays under 200k.
+- Context stayed flat at ~114k across a whole wave, because all the work lived in agents.
+- Completion pings are the main session's cost driver: 5 instead of 13.
+- A pause > 60 min costs a rebuild (≈ context × 2) — at 114k ≈ 230k, still less than a
+  fresh session paying its start build plus re-briefing.
 
 ## 5. What the skill makes visible
 
