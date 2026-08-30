@@ -106,9 +106,25 @@ NAMEN = {"Bash": "Befehle", "Read": "Dateien gelesen", "Edit": "Dateien geänder
 teile = [f"{n}× {NAMEN.get(w, w)}" for w, n in werkzeuge.most_common(5)]
 womit = " · ".join(teile) if teile else "nur Antworten"
 
+# Ist das "Geschriebene" der einmalige Start-Cacheaufbau oder echter Zuwachs?
+# Beim ERSTEN Aufruf einer Sitzung wurde noch nichts aus dem Cache gelesen
+# (cache_read ≈ 0) — dann ist cache_creation der Aufbau des Gesprächsanfangs,
+# nicht "Neues". Yasin war am 30.08.2026, 00:49 verwirrt, weil "197k ×2"
+# neben "Kontext 11 % ≈ 111k" stand: der Cache-Write der ersten Anfrage ist
+# NICHT der aktuelle Kontext, sondern was einmalig in den Cache geschrieben
+# wurde (Systemprompt + Skills + erste Dateien, teils in mehreren Segmenten).
+start_aufbau = (lesen < 0.05 * max(schreiben, 1)) or (g_anfragen == anfragen)
+if start_aufbau:
+    schreib_label = "Start-Cacheaufbau (einmalig)"
+else:
+    schreib_label = "Neu gespeichert"
+
 print(f"SEIT DEINER LETZTEN NACHRICHT ≈ {k(aeq)} in {anfragen} Anfragen ({womit})")
 print(f"  davon: Gespräch {anfragen}× neu gelesen ({k(lesen)} ×0,1 = {k(lesen*0.1)})"
-      f" · Neues gespeichert ({k(schreiben)} ×2 = {k(schreiben*2)})"
+      f" · {schreib_label} ({k(schreiben)} ×2 = {k(schreiben*2)})"
       f" · meine Antworten ({k(ausgabe)} ×5 = {k(ausgabe*5)})")
+if start_aufbau:
+    print("  Hinweis: das Geschriebene ist der einmalige Cache-Aufbau dieser Sitzung,"
+          " NICHT der aktuelle Kontext — die beiden Zahlen sind verschieden.")
 print(f"  Sitzung gesamt: {g_anfragen} Anfragen, {k(g_aeq)}")
 PY
