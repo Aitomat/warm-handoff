@@ -77,6 +77,20 @@ agent completion notification are full requests too.
 
 ## Subagents — the default way to work
 
+- **The wave plan is a FILE, written before the guardians start** (user, 30.08.2026, 02:28:
+  he wants to see the plan and be able to look it over). Before spawning anything, the main
+  session writes `docs/reviews/<date>-welleN-plan.md`: first the structure rules that apply
+  to every job (branch base, build lock, no questions, report contract, push before "done"),
+  then ONE TABLE PER TOPIC with the columns **ID · assignment · acceptance criterion ·
+  model/effort**. It commits that file, opens it immediately (`open -a TextEdit <file>`),
+  and only then starts ALL guardians in a SINGLE message, each brief pointing at the file
+  („dein Thema ist Tabelle B in <pfad>") instead of repeating the plan. One file = one
+  place the user reads, one place the guardians read, no drift between the two.
+- **Push is part of the job.** Every guardian and every skill agent pushes its branch
+  (`git push -u origin <branch>`) BEFORE it reports done — not after, not "the main session
+  will". On 30.08.2026 02:36 the user looked at GitHub and saw nothing moving, because a
+  skill agent had committed but not pushed. A branch that only exists locally is not
+  delivered, and the report must name the pushed hash.
 - **Guardian agent (Wächter).** For a build wave, ONE orchestrating agent (Opus, low/normal
   effort) gets the whole plan as a file, spawns the worker agents itself, merges, tests,
   bundles, cleans `.build` of merged worktrees, writes the report — the main session is
@@ -132,7 +146,13 @@ agent completion notification are full requests too.
   checks in mid-wave, or a handoff written before the guardian finishes, has something real
   to point to. **The handoff starts even without a finished guardian**: list the guardian and
   its still-running workers under "expected agent results", the next session checks them.
-- **Model + effort in the visible label**: `Opus5/high · Verlauf-Tempo`, `Fable/low · Scan`.
+- **Model + effort in the visible label — for guardians AND for their workers**
+  (user, 30.08.2026, 02:31). The label pattern is `Modell/Effort · ID Kurzname`, e.g.
+  `Fable/low · A1 Aufnahme-Rot`, `Opus5/high · Verlauf-Tempo`. A guardian must label the
+  workers it spawns the same way, because the user reads the running-agent list at the
+  bottom of the screen and wants to see model and effort there without asking. Exception to
+  state openly: **Codex runs as a shell command, not as an agent — it never appears in that
+  list**; say so instead of letting the user hunt for it.
   Fable 5 as subagent: **always effort low**, and **only for jobs the user marked "wichtig"
   / important** — those are worth the faster model. Everything else: Opus (low). **Sonnet only
   for trivia that does not build** (renames, moving text, listing files); never for a build
@@ -160,6 +180,7 @@ agent completion notification are full requests too.
 | 23 | 1 guardian, few large agents | 43 | 1.531k | 1 | 2 h 20 |
 | 24 | 1 guardian, 12 workers, all building | 62 | 3.143k | 1 + 12 | 2 h 10 |
 | 25 | 3 topic guardians + merge guardian, 15 workers | 29 | 1.192k | 5 | 64 min |
+| 26 | 3 topic guardians + merge guardian + skill agent, 17 jobs | 34 | 1.159k | 5 | 53 min |
 
 Reading it: wave 23 was the cheapest in tokens (one guardian = one wake-up) but the slowest
 in wall clock — tokens and waiting time are two different axes. Wave 24 looks worst on every
@@ -171,6 +192,27 @@ structure was the cheapest AND the fastest so far** — fewest requests (29 for 
 lowest equivalent of any completed wave, and 64 minutes wall clock against 2 h+ for every
 earlier structure. The topic guardians start their workers in parallel, and the merge guardian
 collapses the serial tail into a single build; that is where both axes win at once.
+**Wave 26 (02:24–03:17, 30.08.2026) is the control measurement** and it confirms wave 25:
+the same structure — 3 topic guardians + merge guardian, plus a skill agent — carried 17
+jobs in 34 requests, 1.159k equivalent, 5 completion pings and 53 minutes. Two waves in a
+row at ~1.2M and under an hour, one of them with two jobs more than the other, is a
+structure that repeats, not a lucky run.
+
+## Lessons (measured)
+
+Only what the log actually shows — no extrapolation:
+
+- **Topic guardians roughly halve requests and wall clock** against one guardian with 12
+  workers: 62 requests / 2 h 10 (W24) → 29 / 64 min (W25) → 34 / 53 min (W26).
+- **The start-up cache build (≈ 200k, once) is the single largest item of a short session.**
+  That is why continuing in the SAME session beats a fresh one as long as context < 200k.
+- **Context stayed at ~114k across a whole wave**, because all the work lived in agents —
+  the main session only planned, merged and read reports.
+- **Completion pings are the main session's cost driver:** 5 instead of 13 is the difference
+  between wave 25/26 and wave 24, and it is worth more than any wording trick.
+- **The Codex quality-manager pass finds real P1s** — 4 of them in three Fable jobs (W26-A7).
+- **A pause > 60 min costs a rebuild (≈ context × 2)** — at 114k that is ≈ 230k, still less
+  than a fresh session that pays its ~200k start build plus re-briefing.
 
 ## Paid quota — see it, use it, by account size
 
@@ -184,6 +226,14 @@ collapses the serial tail into a single build; that is where both axes win at on
   quota expires. Gemini/OpenRouter: no readable balance — say so, never estimate.
 - **Small Codex account (Plus, ~20 $)** → Codex does ONLY QA: review, second opinion,
   test runs, acceptance. No build jobs, no "continue at 23:05". Large account → use freely.
+- **Codex as quality manager of the wave** (user, 30.08.2026, 03:05). Whenever the Codex
+  quota is fresh, EVERY topic guardian has its integration branch reviewed by Codex before
+  it writes its closing report, and fixes the P1 findings itself — the wave ends reviewed,
+  not "reviewed later". Command shape: `git diff <base>..HEAD | codex exec
+  --skip-git-repo-check "Review this. Find bugs, risks, missing tests."` Evidence that this
+  is not ceremony: in wave 26, job A7 let Codex look at three Fable assignments and it
+  found **4 P1 issues** that the building agents had not seen. Costs one Codex call per
+  guardian and zero main-session requests.
 
 ## The wave workflow and the handoff file
 

@@ -1982,3 +1982,50 @@ From this follows a rule about the NUMBER of guardians: one guardian per
 disjoint topic with 4–6 assignments. Below 4 assignments the start-up
 overhead (start_ctx × 2) does not pay off, and above 6 the guardian itself
 becomes the bottleneck.
+
+## Wave 26 — plan as a file, labels, push, Codex as quality manager (30.08.2026)
+
+Four rules come from this night, each from a sentence Yasin said while the
+wave was running. His words are kept in German, verbatim.
+
+**1. The wave plan becomes a file the user can read (02:28).**
+
+> „Mir gefällt es sehr gut mit diesem Plan für drei Wächter … dass du da so
+> das dann öffnest und dann dass ich mir es anschauen kann, das ist eine
+> sehr gute Maßnahme. Das sollten wir auch im Skill aufnehmen"
+
+Before wave 26 the plan for a wave lived in the prompts of the guardians —
+the user could see the agents running but not what they had been told to
+do. Writing it as `docs/reviews/<date>-welleN-plan.md` first, committing
+it, opening it in TextEdit and only THEN starting all guardians in one
+message costs one file and buys two things: the user can look the wave over
+before it is expensive to change, and every guardian reads the same text
+instead of a paraphrase of it. The file has structure rules on top and one
+table per topic (ID · assignment · acceptance criterion · model/effort).
+
+**2. Labels also for the workers, not only the guardians (02:31).** The
+user reads the list of running agents at the bottom of the screen and wants
+model and effort visible there. So a guardian labels the workers it spawns
+the same way the main session labels the guardians: `Modell/Effort · ID
+Kurzname`, e.g. `Fable/low · A1 Aufnahme-Rot`. One thing has to be said out
+loud rather than left as a puzzle: Codex is a shell command, not an agent,
+so it never shows up in that list at all.
+
+**3. Push belongs to the job (02:36).** The user looked at GitHub during the
+wave and saw nothing moving. The cause was not a slow agent — the skill
+agent had committed but never pushed. Hence: every guardian and every skill
+agent pushes its branch before it reports done, and names the pushed hash
+in the report. Local-only work is not delivered work.
+
+**4. Codex as quality manager of the wave (03:05).** With a fresh Codex
+quota, every topic guardian has its integration branch reviewed by Codex
+BEFORE the closing report and fixes the P1 findings itself. The evidence
+that this is worth a call: in job A7 of this wave, Codex found four P1
+issues across three Fable assignments that the building agents had missed.
+The wave then ends reviewed instead of "to be reviewed later".
+
+**The numbers of wave 26.** 02:24–03:17, 53 minutes: 3 topic guardians +
+1 merge guardian + 1 skill agent, 17 assignments, 34 requests, 1,159k
+equivalent, 5 completion pings, main-session context flat at 114k. It is a
+control measurement for wave 25 (29 requests / 1,192k / 64 min for 15
+assignments) and it confirms it: the structure repeats.

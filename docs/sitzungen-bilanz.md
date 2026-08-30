@@ -1,6 +1,6 @@
 # Sitzungsbilanz seit Skill-Start (22.08.–30.08.2026)
 
-Stand: 30.08.2026, 00:52.
+Stand: 30.08.2026, 03:20 (Welle 26 nachgetragen).
 
 **Quellen und was woher kommt — bitte beim Lesen mitdenken:**
 
@@ -48,6 +48,8 @@ Stand: 30.08.2026, 00:52.
 | 29.08. 21:10 | Aitomat, Welle 23 | nicht gemessen → 178k | 1 Wächter (1 Meldung statt 8), Skill 172 Z. | 0 | nicht gemessen (Kosten niedrig, aber 2 Std. 20 Wanduhr) | Handoff C |
 | 30.08. 00:10 | Aitomat, 1 Welle + Skill A2 | nicht gemessen → 139k | nicht gemessen | 1 (Rechner-Absturz 22:00) | **~700k** | Handoff D |
 | 30.08. 00:44–01:51 | Aitomat, Welle 25 (Themen-Wächter) | ~107k → 120k (gemessen 01:51) | 3 Themen-Wächter + 1 Merge-Wächter, 15 Arbeiter, 29 Anfragen, 2.495k gelesen / 319k geschrieben / 61k Ausgabe, Äquivalent **1.192k**, 5 Fertigmeldungen, 64 min (00:46–01:50) | 0 (kein Absturz) | 0 — die 319k „geschrieben" sind der Start-Cacheaufbau (~107k ×2) plus Handoff-/Plan-Anhänge, kein Neuaufbau | `_handoff-aitomat-2026-08-30-e.md` (Handoff E) |
+| 30.08. 02:24–03:17 | Aitomat, Welle 26 (Kontrollmessung) | ~114k → 114k | 3 Themen-Wächter + 1 Merge-Wächter + 1 Skill-Agent, 17 Aufträge, 34 Anfragen, Äquivalent **1.159k**, 5 Fertigmeldungen, 53 min (02:24–03:17) | 0 | 0 | `_handoff-aitomat-2026-08-30-f.md` (Handoff F) |
+| 30.08. 02:24–03:20 | Sitzung (Handoff F), gemessen mit `session-kosten.sh` | Kontext 114k | 34 Anfragen, 2.909k gelesen / 295k geschrieben / 55k Ausgabe, Äquivalent **1.159k** | 0 | 0 | `_handoff-aitomat-2026-08-30-f.md` |
 
 ## Muster — was sich seit 22.08. verbessert hat, was nicht
 
@@ -91,3 +93,10 @@ Stand: 30.08.2026, 00:52.
 8. **Rückwirkend messen geht nicht.** `session-kosten.sh` sieht nur die
    laufende Sitzung; alles, was nicht beim Wellenende ins Logbuch kam, ist
    dauerhaft verloren. Deshalb: die Zeile schreiben, bevor die Sitzung endet.
+9. **Welle 26 bestätigt Welle 25.** Dieselbe Struktur trug 17 statt 15
+   Aufträge in 34 Anfragen, 1.159k Äquivalent und 53 Minuten — zwei Wellen
+   hintereinander bei ~1,2 Mio. und unter einer Stunde. Das ist eine
+   Struktur, die sich wiederholt, kein Glückstreffer. Neu belegt in dieser
+   Welle: der Kontext der Hauptsitzung blieb über die ganze Welle bei 114k,
+   weil sämtliche Arbeit in Agenten lag, und Codex als Qualitätsmanager
+   fand in Auftrag A7 vier P1-Befunde in drei Fable-Arbeiten.
