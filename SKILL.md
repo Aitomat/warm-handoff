@@ -11,6 +11,25 @@ the agent works it all off through a few subagents and writes the next handoff.
 Full history with dated user quotes and the reasoning behind every rule:
 `references/historie.md` (read it when a rule here seems odd — do not load it by default).
 
+## Die sparsamste Arbeitsweise in fünf Sätzen
+
+For the user, in plain words (asked for on 30.08.2026, 15:06: *"was ist denn jetzt die
+Moral der Geschichte?"*):
+
+1. **Eine Session pro Welle** — plan, guardians, merge, handoff all in one; a fresh session
+   costs its ~200k start build, so only start one past ~200k context.
+2. **Sammeln kostet nichts** — collect test answers, ideas and critique in the handoff file
+   for hours; that is zero requests, while every chat message costs a full context re-read.
+3. **Wächter statt Pings** — one guardian per topic starts the workers, so the main session
+   is woken 5–7 times instead of 15–20.
+4. **Unter 200k Kontext bleiben** — the main session only plans, merges and reads reports;
+   everything else lives in agents.
+5. **Handoff mit Kostentabelle** schließt die Welle ab — measured numbers, not feelings.
+
+**Vorsatz (30.08.2026):** measure EVERY session for the next few days — one logbook line
+each (requests, equivalent, pings, wall clock, jobs) — so this skill gets perfected on
+evidence, not on memory.
+
 ## The facts (Claude Code docs, 2026-08)
 
 - Pro/Max: **1-hour sliding cache TTL** — every request resets it. Subagents: strict 5 min.
@@ -80,12 +99,20 @@ agent completion notification are full requests too.
 - **The wave plan is a FILE, written before the guardians start** (user, 30.08.2026, 02:28:
   he wants to see the plan and be able to look it over). Before spawning anything, the main
   session writes `docs/reviews/<date>-welleN-plan.md`: first the structure rules that apply
-  to every job (branch base, build lock, no questions, report contract, push before "done"),
+  to every job (branch base, build lock, no questions, report contract, one squashed
+  commit per job, push before "done"),
   then ONE TABLE PER TOPIC with the columns **ID · assignment · acceptance criterion ·
   model/effort**. It commits that file, opens it immediately (`open -a TextEdit <file>`),
   and only then starts ALL guardians in a SINGLE message, each brief pointing at the file
   („dein Thema ist Tabelle B in <pfad>") instead of repeating the plan. One file = one
   place the user reads, one place the guardians read, no drift between the two.
+- **Dose the commits: one commit per job, ≤ 50 a day** (user, 30.08.2026, 15:05 — the day
+  before had produced 158 contributions: *"das sollte man vielleicht doch nicht so
+  übertreiben … eher fünfzig Contributions"*). Workers commit early and often on their own
+  branch, but the guardian folds each worker branch into the topic branch with
+  `git merge --squash` + ONE commit per job, so the contribution graph shows real units of
+  work instead of every Kleinkram. Put this line in the plan file's structure rules too, so
+  every guardian reads it. Rule of thumb: a commit a reviewer would want to read alone.
 - **Push is part of the job.** Every guardian and every skill agent pushes its branch
   (`git push -u origin <branch>`) BEFORE it reports done — not after, not "the main session
   will". On 30.08.2026 02:36 the user looked at GitHub and saw nothing moving, because a
@@ -181,6 +208,7 @@ agent completion notification are full requests too.
 | 24 | 1 guardian, 12 workers, all building | 62 | 3.143k | 1 + 12 | 2 h 10 |
 | 25 | 3 topic guardians + merge guardian, 15 workers | 29 | 1.192k | 5 | 64 min |
 | 26 | 3 topic guardians + merge guardian + skill agent, 17 jobs | 34 | 1.159k | 5 | 53 min |
+| 27 | 4 topic guardians + merge + skill agent, Codex QM each, 19 jobs | 41 | 1.160k | 7 | 78 min |
 
 Reading it: wave 23 was the cheapest in tokens (one guardian = one wake-up) but the slowest
 in wall clock — tokens and waiting time are two different axes. Wave 24 looks worst on every
@@ -197,6 +225,12 @@ the same structure — 3 topic guardians + merge guardian, plus a skill agent �
 jobs in 34 requests, 1.159k equivalent, 5 completion pings and 53 minutes. Two waves in a
 row at ~1.2M and under an hour, one of them with two jobs more than the other, is a
 structure that repeats, not a lucky run.
+**Wave 27 (03:39–04:57, 30.08.2026) shows the ceiling:** a FOURTH topic guardian cost the
+same tokens as three (41 requests, 1.160k) but added 25 minutes — guardian B alone ran
+45 min, and the merge guardian had to resolve conflicts for the first time, because two
+topics (HUD crash and HUD recording indicator) touched the SAME files.
+**Cut topics along files, not along words.** Anything editing the same files belongs to ONE
+guardian, however differently the two jobs are named.
 
 ## Lessons (measured)
 
@@ -211,6 +245,18 @@ Only what the log actually shows — no extrapolation:
 - **Completion pings are the main session's cost driver:** 5 instead of 13 is the difference
   between wave 25/26 and wave 24, and it is worth more than any wording trick.
 - **The Codex quality-manager pass finds real P1s** — 4 of them in three Fable jobs (W26-A7).
+- **A fourth guardian buys nothing** (W27: 41 / 1.160k / 78 min against 34 / 1.159k / 53 min
+  for three) — the extra topic overlapped in files and produced the first merge conflicts.
+- **Stray worker messages are normal, not a fault.** A worker whose guardian has already
+  finished reports into the main session instead (1× in W27). Read it, note it, do not
+  restart the work — the guardian's merge already contains it.
+- **An API abort is resumable.** If an agent dies mid-job (API error, host restart), do NOT
+  spawn a fresh one: send `SendMessage` to the SAME agent id/name — it keeps its context and
+  carries on. Only start over if it never produced anything.
+- **When the user says "Absturz" (crash), look at the crash reports first**, in the same call
+  as everything else: `ls -t ~/Library/Logs/DiagnosticReports/<App>-*.ips | head`, then read
+  the topmost stack. In W27 six `.ips` files all named the same line, which turned a vague
+  report into a one-line fix. This belongs to the session-start look, not to a later step.
 - **A pause > 60 min costs a rebuild (≈ context × 2)** — at 114k that is ≈ 230k, still less
   than a fresh session that pays its ~200k start build plus re-briefing.
 
@@ -285,6 +331,16 @@ German terms: *Handoff* = the handover document, *Welle* = wave, *Wächter* = gu
    Template to copy the shape from: `/Users/pro16/Code/aitomat/_handoff-aitomat-2026-08-30-e.md`,
    section `## Gedächtnis`. Carry the long-term list forward verbatim from the previous
    handoff unless something actually changed; rewrite the short-term list every time.
+   **„Dreaming" — the memory is refreshed while the handoff is written** (user, 30.08.2026,
+   15:05): reread the previous handoff's `## Gedächtnis` and fold this session's durable
+   findings into it — new long-term rules up, stale short-term lines out. This is a STEP of
+   writing the handoff, never a separate agent and never an extra request; the file is open
+   in front of you anyway, so it costs nothing. One memory per project, living in that
+   project's handoff, visible and editable by the user (he may change or delete lines, and
+   `>>>` works here like everywhere else). **Claude's own memory file is no longer filled** —
+   the handoff's `## Gedächtnis` replaces it, so there is one place, not two.
+   Example to copy the shape from: `/Users/pro16/Code/aitomat/_handoff-aitomat-2026-08-30-g.md`,
+   section `## Gedächtnis`.
 8. **Kostentabelle** via `~/.claude/session-kosten.sh --markdown` (unit = span between two
    user messages; explain k = thousand, context column ≠ cost) + honest findings, then the
    closing line with MEASURED context and start context: *"Kontext dieser Session: 192k

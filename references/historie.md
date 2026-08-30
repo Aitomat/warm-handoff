@@ -2029,3 +2029,63 @@ The wave then ends reviewed instead of "to be reviewed later".
 equivalent, 5 completion pings, main-session context flat at 114k. It is a
 control measurement for wave 25 (29 requests / 1,192k / 64 min for 15
 assignments) and it confirms it: the structure repeats.
+
+## Wave 27 — the ceiling of the guardian structure (30.08.2026)
+
+03:39–04:57, 78 minutes: 4 topic guardians + merge guardian + skill agent,
+Codex quality-manager pass per guardian, 19 assignments, 41 requests,
+1,160k equivalent, 7 completion pings (plus one stray worker message and
+one API abort). The fourth guardian cost no extra tokens but 25 extra
+minutes: guardian B alone ran 45 minutes, and for the first time the merge
+guardian had conflicts to resolve, because two topics (HUD crash, HUD
+recording indicator) edited the SAME files. Lesson: **cut topics along
+files, not along words** — same files, one guardian, however differently
+the two jobs are named.
+
+Three side findings of the wave, now rules in SKILL.md: a worker whose
+guardian has already finished reports into the main session instead — read
+it, do not restart the work; an agent killed by an API error is resumed
+with `SendMessage` to the SAME agent, not replaced by a fresh one; and
+when the user says "Absturz", `~/Library/Logs/DiagnosticReports/*.ips`
+belongs to the session-start look — six crash files all named the same
+line and turned a vague report into a one-line fix.
+
+## "Dreaming" and dosed commits (Yasin, 30.08.2026, 15:05)
+
+> „Wegen Langzeitgedächtnis haben wir dann sowas wie Dreaming drin. Das
+> heißt, wenn du sowieso schon die Session dann schließt … dass du dann
+> eben mit jeder Session das Gedächtnis, das Kurzzeit-/Langzeit-, dann
+> auffrischt, und das wollen wir halt je Projekt zusammenhalten … im
+> Handoff gleichzeitig das Memory, und dann sieht der User das, der kann
+> auch mal was dazu sagen oder löschen … und natürlich nicht extra Kosten
+> haben."
+
+Hence: the `## Gedächtnis` block of the handoff is refreshed as a STEP of
+writing the handoff — no extra agent, no extra request — one memory per
+project, inside the handoff, visible and editable by the user. Claude's
+own memory file is no longer filled; one place, not two.
+
+> „Wegen GitHub: Da haben wir halt gestern hundertachtundfünfzig
+> Contributions gemacht. Das sollte man vielleicht doch nicht so
+> übertreiben … dass wir pro Tag maximal eher fünfzig Contributions
+> haben, wenn wir so viel arbeiten wie gestern … nicht für jeden
+> Kleinkrimskrams ein Contribution."
+
+Hence: workers commit freely on their own branch, but the guardian folds
+each worker branch in with `git merge --squash` and ONE commit per
+assignment. Target ≤ 50 commits a day even on full days.
+
+## "Die Moral der Geschichte" (Yasin, 30.08.2026, 15:06)
+
+> „Ja und ansonsten habe ich immer noch nicht kapiert, was das Sparsamste
+> ist in Sachen Warm-Handoff-Skill. Wie sollten wir da am besten arbeiten,
+> was ist denn jetzt die Moral der Geschichte? … alles immer sammeln, jede
+> Session, soweit es geht, aber eben tokensparend sammeln … und weiterhin
+> dokumentieren, die nächsten Tage, um ganz sicher zu gehen, was wie viel
+> Verbrauch ist, und da eben den Warm-Handoff-Skill perfektionieren."
+
+Hence the new section at the top of SKILL.md, "Die sparsamste Arbeitsweise
+in fünf Sätzen": one session per wave, collecting costs nothing, guardians
+instead of pings, stay under 200k context, close with a handoff carrying
+the cost table — plus the resolution to measure every session with one
+logbook line for the next few days.
