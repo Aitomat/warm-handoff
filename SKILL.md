@@ -490,6 +490,18 @@ data), anything security- or credential-related, anything externally visible (se
 publishing, deploying, changing a live shop), spending real money or a large quota, or
 sending repository content to an external model. Everything else goes in the handoff.
 
+
+## Zwischenrufe — the free side channel while agents run (user, 02.09.2026, 19:41/19:54)
+
+Every chat message the user sends while the main session is WAITING on background agents
+is a full request (whole context re-read). A skill cannot hold messages back. The free
+channel is a FILE: `<project>/_zwischenrufe-<projekt>.md`, opened in TextEdit at wave start
+(`open -a TextEdit`). The user writes short notes there any time (`>>>` or name + time).
+The main session reads it FIRST on every wake-up — appended to a command that runs anyway
+(`cat _zwischenrufe-*.md`) — acts on what belongs to the current wave, and moves the rest
+verbatim into the handoff's Sammlung. Then it truncates the file back to its header. Zero
+extra requests. The user's verdict on first use: „Zwischenrufe-Dokument ist super geworden."
+
 ## Editor rules (macOS / TextEdit)
 
 **Open EVERY new user-facing document the moment it exists: `open -a TextEdit <file>`.** Not
