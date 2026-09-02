@@ -491,16 +491,26 @@ publishing, deploying, changing a live shop), spending real money or a large quo
 sending repository content to an external model. Everything else goes in the handoff.
 
 
-## Zwischenrufe — the free side channel while agents run (user, 02.09.2026, 19:41/19:54)
+## Zwischenrufe — the free side channel while agents run (user, 02.09.2026, 19:41–19:59)
 
 Every chat message the user sends while the main session is WAITING on background agents
 is a full request (whole context re-read). A skill cannot hold messages back. The free
-channel is a FILE: `<project>/_zwischenrufe-<projekt>.md`, opened in TextEdit at wave start
-(`open -a TextEdit`). The user writes short notes there any time (`>>>` or name + time).
-The main session reads it FIRST on every wake-up — appended to a command that runs anyway
-(`cat _zwischenrufe-*.md`) — acts on what belongs to the current wave, and moves the rest
-verbatim into the handoff's Sammlung. Then it truncates the file back to its header. Zero
-extra requests. The user's verdict on first use: „Zwischenrufe-Dokument ist super geworden."
+channel is ONE FILE per session: `<project>/_zwischenrufe-<projekt>-YYYY-MM-DD-<a|b|c>.md`,
+created and opened in TextEdit at wave start (`open -a TextEdit`). Two sections:
+**„Zwischenrufe (für diese Session)"** — short notes for the running wave — and
+**„Sammlung für das nächste Handoff"** — ideas, orders, critique. The handoff file itself
+no longer carries its own SAMMLUNG banner; the collection lives here.
+
+Rules: the main session reads the file FIRST on every wake-up, appended to a command that
+runs anyway (`cat _zwischenrufe-*-<date>-*.md`), and takes only what is NEW. It never
+deletes; after reading it appends a marker line `— übernommen bis hier, HH:MM —` under
+the last read entry, so both sides see where "new" starts. At handoff time everything
+below the last marker is copied verbatim into the handoff's Sammlung block. A new session
+starts a NEW file (next date/letter); the old one stays open until the user closes it,
+and `sammlung-pruefen.sh` checks both. Header text for the file (German): explain the
+cost of chat messages while waiting, that terminals collapse long input to
+„[Pasted text]", and the marker rule. The user's verdict on first use (19:57):
+„geniale Lösung — so sparen wir uns jedes Mal mindestens eine Anfrage".
 
 ## Editor rules (macOS / TextEdit)
 
