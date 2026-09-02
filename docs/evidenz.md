@@ -1,6 +1,6 @@
 # Evidenz — was die Struktur wirklich spart (schwarz auf weiß)
 
-Stand: 30.08.2026, 17:40. **Nur gemessene Zahlen.** Jede Zeile stammt aus einer der
+Stand: 02.09.2026, 19:20 (Welle 40). **Nur gemessene Zahlen.** Jede Zeile stammt aus einer der
 Quellen unten; nichts ist geschätzt, hochgerechnet oder gerundet „nach Gefühl".
 
 ## Quellen (nachprüfbar)
@@ -11,7 +11,10 @@ Quellen unten; nichts ist geschätzt, hochgerechnet oder gerundet „nach Gefüh
 | Handoff W22 | `/Users/pro16/Code/aitomat/_handoff-aitomat-2026-08-29-b.md`, Z. 492 (Kostentabelle) | 58 Anfragen · 2.075k Äquivalent |
 | Handoff W23 | `/Users/pro16/Code/aitomat/_handoff-aitomat-2026-08-29-c.md`, Z. 52–56 („Wächter-Bilanz") | W22 vs. W23 direkt gegenübergestellt |
 | Handoff W28 | `/Users/pro16/Code/aitomat/_handoff-aitomat-2026-08-30-h.md`, Z. 49–56 + Z. 336 | W26/W27/W28-Bilanz, Kostentabelle |
-| Skill-Tabelle | `SKILL.md`, Abschnitt „Evidence — measured waves" | W22–W28 in einer Tabelle |
+| Skill-Tabelle | `SKILL.md`, Abschnitt „Evidence — measured waves" | W22–W39 in einer Tabelle |
+| Logbuch W37–W39 | `~/.claude/warm-handoff-log.md`, Zeilen 01.09. 16:35 / 02.09. 01:25 / 02.09. 04:51 | Anfragen, Äquivalent, Dauer, Verschwendung je Welle |
+| Sitzungs-JSONL | `~/.claude/projects/-Users-pro16-Code-aitomat/*.jsonl` (nur 01./02.09., nur aggregiert) | Abschnitt „Was die Nacht gekostet hat" |
+| Welle-40-Plan | `/Users/pro16/Code/aitomat/docs/reviews/2026-09-02-welle40-plan.md` | Modellpolitik 02.09. 18:51, Auftragszahl W40 |
 
 „Äquivalent" = die Spalte `equiv.` der Kostentabelle im jeweiligen Handoff: gelesene Tokens
 × 0,1 + geschriebene Tokens × 2 + Ausgabe, also der Preis der Welle im **Hauptkontext**.
@@ -29,6 +32,20 @@ verzerren den Vergleich nicht.
 | 26 | 3 Themen-Wächter + Merge + Skill | 34 | 1.159k | 5 | 53 min | 17 |
 | 27 | 4 Themen-Wächter + Merge + Skill | 41 | 1.160k | 7 | 78 min | 19 |
 | 28 | 2 Themen-Wächter (nach Dateien) + Merge + Skill | 33 | 1.080k | 5 | 57 min | 15 |
+| 37 | 4 Themen-Wächter (Opus) + Merge | 38 | 1.270k | 5 | ~65 min | 21 |
+| 38 | 5 Themen-Wächter **alle Fable/low** + Merge (Opus) | 102 | 3.147k | 5 + 10 Lock-Meldungen | 116 min | 20 |
+| 39 | 4 Themen-Wächter **Opus/low** + Merge, 3 Fable-Arbeiter | 48 | 1.283k | 5 + 2 Lock-Meldungen | 100 min | 23 |
+| 40 | 5 Themen-Wächter Opus/low + Merge + Skill (Modellpolitik 18:51) | läuft | läuft | — | — | 23 + Skill |
+
+**Welle 38 gegen Welle 39 ist die sauberste Einzelmessung der ganzen Reihe:** dieselbe App,
+dieselbe Nacht, fast gleich viele Aufträge (20 gegen 23), einziger nennenswerter Unterschied
+das Modell der Wächter. Fable-only kostete **3.147k in 102 Anfragen**, Opus/low **1.283k in
+48 Anfragen** — das **2,45-fache an Äquivalent und das 2,1-fache an Anfragen**, bei 16 Minuten
+längerer Laufzeit. Je Auftrag: 157,4k (W38) gegen 55,8k (W39), also **−64,5 %** allein durch
+die Modellwahl. Daraus die Modellpolitik vom 02.09.2026, 18:51: **Wächter und Arbeiter
+Opus/low; Opus/medium, wo ein echtes Unbekanntes im Auftrag steckt; Fable/low nur bei
+Wiederholungsfällen ab dem zweiten Fehlanlauf; mehrere Wächter je Welle, nach Dateien
+geschnitten.**
 
 **Zur Auftragszahl von Welle 28:** die Wächter-Bilanz im Handoff H schreibt »11 + Skill
 (4 Punkte)«. In diesem Dokument wird durchgängig mit **15** gerechnet (11 Bauaufträge + die
@@ -137,3 +154,49 @@ noch einmal ansehen).
 - Die Dauer „~120 min" für Welle 22 stammt aus der Wächter-Bilanz in Handoff W23 („~2 h") —
   das ist die gröbste Zahl in diesem Dokument. Alle Prozentangaben zur Dauer daher als
   Größenordnung lesen, die zu Anfragen und Äquivalent nicht als exakt.
+
+## Was die Nacht gekostet hat (01./02.09.2026)
+
+Gemessen am 02.09.2026 aus den Sitzungsdateien unter
+`~/.claude/projects/-Users-pro16-Code-aitomat/` (nur Zahlen aggregiert, keine Inhalte)
+und dem Logbuch `~/.claude/warm-handoff-log.md`. Preisfaktoren wie überall:
+Cache lesen ×0,1 · Cache schreiben ×2 · Ausgabe ×5.
+
+| Sitzung (Start) | Welle | Anfragen | gelesen | geschrieben | Ausgabe | Äquivalent |
+|---|---|---|---|---|---|---|
+| 01.09. 12:47–14:36 | W37-Nachlauf | 46 | 4.854k | 360k | 70k | **1.557k** |
+| 01.09. 21:13–23:26 | **W38 (Fable-only)** | 108 | 16.241k | 393k | 199k | **3.419k** |
+| 02.09. 01:00–02:55 | **W39 (Opus/low)** | 56 | 5.851k | 239k | 94k | **1.537k** |
+| 02.09. 16:50–16:56 | W40-Planung | 24 | 2.271k | 221k | 83k | **1.087k** |
+| **Summe** | | **234** | **29.217k** | **1.213k** | **446k** | **7.600k** |
+
+Vorbehalt: erfasst sind die Sitzungen, deren erste Zeile auf den 01./02.09. datiert;
+fortgesetzte ältere Sitzungen und die Subagenten-Sitzungen sind nicht enthalten. Die Summe
+ist also eine **Untergrenze** des Hauptkontext-Verbrauchs, keine Gesamtquote.
+
+Drei Befunde, die man in den Spalten sieht:
+
+1. **Die Fable-Nacht ist der größte Einzelposten.** W38 allein trägt 3.419k von 7.600k —
+   45 % der Nacht für 20 der 43 Aufträge. W39 machte drei Aufträge mehr für 1.537k.
+   Der Unterschied ist die Modellwahl, nicht die Arbeit.
+2. **Die eigene Ausgabe ist teurer, als sie aussieht.** 446k Ausgabe klingen neben 29.217k
+   Lesen nach nichts — mit dem Faktor ×5 sind es aber **2.230k, rund 29 % des Äquivalents
+   der ganzen Nacht**, während die 29.217k gelesenen Tokens mit ×0,1 nur 2.922k ergeben.
+   Lange Berichte und lange Antworten sind der zweitgrößte Posten überhaupt.
+3. **Die Anfragezahl schlägt die Kontextgröße.** W38 las im Schnitt 150k je Anfrage, W39
+   105k — der Faktor 2,2 bei den Anfragen (108 gegen 56) erklärt den Kostenunterschied
+   besser als jeder Kontextwert. Jede Zwischenmeldung eines Wächters ist eine volle Anfrage.
+
+### Drei konkrete Sparvorschläge
+
+1. **Modellpolitik durchhalten (spart ~1,9M je Welle).** Wächter und Arbeiter Opus/low,
+   Fable/low nur ab dem zweiten Fehlanlauf — W38 gegen W39 ist der Beleg: 3.419k gegen
+   1.537k bei mehr Aufträgen. Das ist die größte Einzelersparnis, die messbar ist.
+2. **Ausgabe deckeln (spart ~600–900k je Nacht).** Zwischenmeldung ≤ 100 Wörter, Bericht
+   ≤ 300, Einzelheiten in Dateien statt in den Chat. Bei 29 % Ausgabeanteil holt schon eine
+   Drittelung der Berichtslänge rund 700k der Nacht zurück — ohne dass ein Auftrag entfällt.
+3. **Am Build-Lock aktiv warten, nie melden (spart ~300k je Welle).** In W38 kamen zehn
+   „ich warte am Lock"-Meldungen, in W39 noch zwei; jede ist eine volle Anfrage über den
+   ganzen Hauptkontext (~30k). Die Schleife
+   `while ! mkdir /tmp/<app>-build.lock 2>/dev/null; do sleep 30; done` gehört wörtlich in
+   jeden Wächter-Brief, zusammen mit dem Satz „der Lock ist nie ein Grund für eine Nachricht".

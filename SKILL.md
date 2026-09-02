@@ -30,6 +30,40 @@ Moral der Geschichte?"*):
 each (requests, equivalent, pings, wall clock, jobs) — so this skill gets perfected on
 evidence, not on memory.
 
+## Projektstart — der Startkontext ist die erste Ersparnis
+
+Every request re-reads the whole prefix, and the prefix begins with the start context:
+system prompt, tool schemas, CLAUDE.md, and the name + description of EVERY skill, plugin
+skill and agent installed globally — whether this project needs them or not. Measured in
+Aitomat on 02.09.2026 (first request of two fresh sessions): **63k tokens start context,
+46 % of it skill and agent descriptions** (169 skills + 67 agents ≈ 29k), most of them
+`ads-*`, `seo-*`, `firecrawl-*` — irrelevant for a Swift dictation app. A separate project
+folder does not help; only project-local settings do.
+
+**At the FIRST handoff of a new project** (and once, retroactively, in every running one):
+
+1. Decide which skills, plugins and MCP servers this project actually needs. The full list
+   with one line of purpose each lives in `~/.claude/SKILLS-UEBERSICHT.md` (regenerate it
+   with `scripts/skills-uebersicht.sh` after installing or removing anything).
+2. Write `<projekt>/.claude/settings.json`: `"enabledPlugins": {"<id>@<marketplace>": false}`
+   for unneeded plugins, `"skillOverrides": {"<name>": "off"}` for every unneeded global
+   skill — one entry per skill, there are NO wildcards (`~/.claude/skills`, symlinked
+   `~/.agents/skills` included; plugin skills only via `enabledPlugins`). Global agents in
+   `~/.claude/agents/` have no project switch. Template: `/Users/pro16/Code/aitomat/.claude/settings.json`.
+3. Document the result in the handoff under the MANDATORY block
+   **`## Aktive Werkzeuge dieses Projekts`** (see the handoff structure below): active
+   skills, plugins, MCP servers, plus the line `Übersicht: ~/.claude/SKILLS-UEBERSICHT.md`.
+   Whenever a tool is added or switched off, update both the settings file and this block.
+4. Measure, don't believe: the first request of the next fresh session shows the new start
+   context (`cache_creation_input_tokens` in the session JSONL, or `~/.claude/ctx.sh`).
+
+**Why this matters even more for API customers.** Yasin, 02.09.2026, 19:10: on the API
+the prompt cache lives **5 minutes**, not an hour — every pause longer than that is a full
+rebuild of the whole start context at ×2. A fat start context is therefore paid over and
+over, while a lean one plus everything collected in the handoff file (zero requests while
+collecting) makes each rebuild cheap. Start-context diet first, collection second, fresh
+session third — in that order the wave stays affordable on any plan.
+
 ## The facts (Claude Code docs, 2026-08)
 
 - Pro/Max: **1-hour sliding cache TTL** — every request resets it. Subagents: strict 5 min.
@@ -214,6 +248,16 @@ agent completion notification are full requests too.
 | 26 | 3 topic guardians + merge guardian + skill agent, 17 jobs | 34 | 1.159k | 5 | 53 min |
 | 27 | 4 topic guardians + merge + skill agent, Codex QM each, 19 jobs | 41 | 1.160k | 7 | 78 min |
 | 28 | 2 topic guardians **cut along FILES** + merge + skill agent, 11 jobs + skill | 33 | 1.080k | 5 | 57 min |
+| 37 | 4 topic guardians (Opus) + merge, 21 jobs | 38 | 1.270k | 5 | ~65 min |
+| 38 | 5 topic guardians **all Fable/low** + merge (Opus), 20 jobs | 102 | 3.147k | 5 + 10 lock pings | 116 min |
+| 39 | 4 topic guardians **Opus/low** + merge, 23 jobs (3 Fable/low workers) | 48 | 1.283k | 5 + 2 lock pings | 100 min |
+
+**Model policy since 02.09.2026, 18:51 (user, after W38/W39 were measured against each
+other): guardians AND workers are Opus/low by default; Opus/medium for the heavier jobs
+(diagnosis, diffing, anything with a real unknown in it); Fable/low ONLY for a job that has
+already failed twice or more; several guardians per wave, cut along files.** W40 was planned
+that way: 5 topic guardians, 23 jobs, of which 5 Fable/low — all of them repeat offenders
+(A2 6th attempt, C1 4th, C2 4th, D6 2nd, E3 2nd).
 
 Full derivation, per-job normalisation and the percentages: **[`docs/evidenz.md`](docs/evidenz.md)**
 (German). Short version: against wave 22 — the same app, the same user, no guardian
@@ -287,6 +331,17 @@ Only what the log actually shows — no extrapolation:
   as everything else: `ls -t ~/Library/Logs/DiagnosticReports/<App>-*.ips | head`, then read
   the topmost stack. In W27 six `.ips` files all named the same line, which turned a vague
   report into a one-line fix. This belongs to the session-start look, not to a later step.
+- **Fable-only waves cost ~2.5× and are not faster** (W38, 01./02.09.2026: 5 Fable guardians,
+  20 jobs → 102 requests, 3.147k, 116 min against W37's 38 / 1.270k / 65 min for 21 jobs with
+  Opus guardians). Two causes, both measured: Fable guardians sent 10 interim "waiting at the
+  build lock" messages (each a full main-session request) and the serial lock tail ate 28 min;
+  and the weekly Fable share of the quota jumped in one night. User's rule since 02.09.2026,
+  02:58: **guardians and workers are Opus/low by default; Fable/low only when the user names
+  the job or when a job has failed 2–3 times already.** Fable buys depth on a stuck problem,
+  not throughput on a wave.
+- **Answer the handoff, don't chat** — the 02.09. session got 25 test answers plus a
+  collection in ONE handoff file over an hour (zero requests), and the next session turned
+  them into a 4-guardian plan in 4 requests. That is the cheapest hour the log has.
 - **A pause > 60 min costs a rebuild (≈ context × 2)** — at 114k that is ≈ 230k, still less
   than a fresh session that pays its ~200k start build plus re-briefing.
 
@@ -301,7 +356,10 @@ Only what the log actually shows — no extrapolation:
   a CONCRETE proposal if lots is free (big review, long test run, second opinion). Unused
   quota expires. Gemini/OpenRouter: no readable balance — say so, never estimate.
 - **Small Codex account (Plus, ~20 $)** → Codex does ONLY QA: review, second opinion,
-  test runs, acceptance. No build jobs, no "continue at 23:05". Large account → use freely.
+  test runs, acceptance. No build jobs, no "continue at 23:05".
+- **NEVER wait for Codex** (user, 31.08.2026, 19:27/19:28): if the Codex limit is reached
+  or a Codex call takes > 5 min, the guardian runs the SAME review itself with an Opus-low
+  agent instead — immediately, without asking. Put this line into every guardian brief. Large account → use freely.
 - **Codex as quality manager of the wave** (user, 30.08.2026, 03:05). Whenever the Codex
   quota is fresh, EVERY topic guardian has its integration branch reviewed by Codex before
   it writes its closing report, and fixes the P1 findings itself — the wave ends reviewed,
@@ -334,6 +392,14 @@ German terms: *Handoff* = the handover document, *Welle* = wave, *Wächter* = gu
    changes guard, including unsaved editor text) and copy it VERBATIM, then a block
    "Was ich daraus gemacht habe" mapping each item → built / answered / roadmap.
    Also check the handoff BEFORE that one for late additions. Never rewrite the user's text.
+   **MANDATORY mechanical check before finalising** (user, 02.09.2026 — it went wrong TWICE
+   that day): run `~/.claude/sammlung-pruefen.sh <neues-handoff.md>`. It takes the `>>>`
+   lines after the LAST `SAMMLUNG FÜR DAS NÄCHSTE HANDOFF` banner of the **two** preceding
+   handoffs and prints every line that is not in the new file. Exit 1 = lines missing →
+   paste them in VERBATIM, never paraphrase, then run it again until it says OK. A handoff
+   is not finished while that script exits non-zero. (Proof it is not ceremony: run against
+   `_handoff-aitomat-2026-09-02-s.md` it named exactly the three 03:07/03:12/03:15 items
+   that wave 39 had dropped.)
 4. Previous test answers → what became of them, one line each ("your T1 answer taken as:
    … — correct?"). Unanswered items carry over, marked.
 5. **Testliste vN** — every item pre-seeded with an empty `>>>Userantwort:` line.
@@ -348,7 +414,44 @@ German terms: *Handoff* = the handover document, *Welle* = wave, *Wächter* = gu
 7. **Der rote Faden** — next 2–3 waves as short paragraphs, each with
    `>>>Hast du dazu noch was anzumerken?`; then a compact Themenspeicher; then
    **Hauptdokumente** (3–6 real files with absolute path + one line + freshness).
-   Then, MANDATORY, directly after Hauptdokumente and before the Kostentabelle, the memory
+   Then, MANDATORY, directly after Hauptdokumente: **`## Weitere Dokumente`** (user,
+   02.09.2026, 13:15 — „am Ende jedes Handoffs eine Übersicht ALLER weiteren Dokumente
+   oder mindestens der Ordner"). Hauptdokumente names single FILES; this block names the
+   FOLDERS, so nothing the project owns is invisible to the next session. One line per
+   folder: absolute path + what lives there + how fresh (newest file's date, from an `ls -t`
+   that rides along on a command running anyway). List only folders that actually exist —
+   check with `ls -d <projekt>/docs/*/` before writing, never copy the previous list blind.
+   For Aitomat that is, as of 02.09.2026:
+   ```
+   ## Weitere Dokumente
+   - `/Users/pro16/Code/aitomat/docs/reviews/` — Wellen-Berichte je Wächter + `shots/`
+     (Sichtprüfungs-Screenshots). Der Ort, an dem eine Welle nachlesbar ist.
+   - `/Users/pro16/Code/aitomat/docs/wellen/` — Pläne und Zwischenstände laufender Wellen.
+   - `/Users/pro16/Code/aitomat/docs/plans/` — längerfristige Vorhaben, noch nicht in Wellen.
+   - `/Users/pro16/Code/aitomat/docs/design/` — Design-Gesetz, Farben, HUD-Gestalt.
+   - `/Users/pro16/Code/aitomat/docs/research/`, `docs/mitbewerber/`, `docs/website/`,
+     `docs/energie/`, `docs/feedback/`, `docs/kb-seed/` — Zuarbeiten, selten angefasst.
+   - `/Users/pro16/Code/aitomat/handoff-archiv/` — abgelegte Handoffs (mv, nie rm).
+   - `/Users/pro16/Code/aitomat/docs/archiv/` — überholte Dokumente, nur Nachschlagewerk.
+   - `~/.claude/skills/warm-handoff/docs/evidenz.md` — die Messreihe hinter der Arbeitsweise.
+   ```
+   Then, MANDATORY, directly after Weitere Dokumente: **`## Aktive Werkzeuge dieses
+   Projekts`** (user, 02.09.2026, 19:10 — see „Projektstart" above). Three short lists —
+   active skills, active plugins, MCP servers — as they stand in `<projekt>/.claude/settings.json`
+   and `.mcp.json`, plus the closing line `Übersicht aller Werkzeuge: ~/.claude/SKILLS-UEBERSICHT.md`.
+   Copy it forward unchanged unless the settings changed; if they did, say what and why.
+   For Aitomat, as of 02.09.2026:
+   ```
+   ## Aktive Werkzeuge dieses Projekts
+   - Skills: warm-handoff, cache-fenster, handoff, aitomat-qa, three-brain, graphify,
+     cmux*, playwright-cli, superpowers:*, context-mode:*, document-skills:* — 97 globale
+     Skills sind per `.claude/settings.json` (skillOverrides) aus.
+   - Plugins: superpowers, context-mode, document-skills, frontend-design, clangd-lsp;
+     aus: example-skills, plugin-dev, feature-dev.
+   - MCP: keiner projektweit (obs liegt in ~/Code/obs-mcp/.mcp.json).
+   - Übersicht aller Werkzeuge: ~/.claude/SKILLS-UEBERSICHT.md
+   ```
+   Then, MANDATORY, after Weitere Dokumente and before the Kostentabelle, the memory
    block — the project's own memory file, inside the handoff (user, 30.08.2026: he wants to
    switch Claude's own memory file off and carry the memory in the handoff instead). Heading
    `## Gedächtnis`, two labelled lists of **4–6 lines each**, short and concrete:
@@ -423,6 +526,7 @@ earlier misstatements explicitly.
 Append one line per handoff to `~/.claude/warm-handoff-log.md`:
 `| 22.08.2026 14:40 | ctx 85k | 2 waves | rebuilds: 1 (pause 90min) | est. waste ~60k |`
 Summarize patterns every ~50 entries. Always-on: add "At the start of every session,
-invoke the warm-handoff skill." to `~/.claude/CLAUDE.md`. Scripts: `scripts/ctx.sh`,
-`scripts/session-costs.sh` (identical German alias `session-kosten.sh` in the repo; the installer copies `session-costs.sh` — use that name everywhere), `scripts/codex-limit.sh` → copy to `~/.claude/`.
+invoke the warm-handoff skill." to `~/.claude/CLAUDE.md`. Scripts: `scripts/ctx.sh`, `scripts/skills-uebersicht.sh` (→ `~/.claude/SKILLS-UEBERSICHT.md`),
+`scripts/session-costs.sh` (identical German alias `session-kosten.sh` in the repo; the installer copies `session-costs.sh` — use that name everywhere), `scripts/codex-limit.sh`, `scripts/sammlung-pruefen.sh` → copy to `~/.claude/`
+(installed 02.09.2026 as `~/.claude/sammlung-pruefen.sh`, exit 1 = collection lines missing).
 Terminal-neutral: say "your status line", not a specific host's field.

@@ -268,6 +268,24 @@ Agents expected to run longer than an hour write their result to a file
 session checks for it while reading the handoff — so the agent finishing costs no request
 of its own and no rebuild after the overnight pause.
 
+## 3a. Project start — the start context is the first saving
+
+Every request re-reads the prefix, and the prefix starts with the descriptions of EVERY
+globally installed skill, plugin skill and agent. Measured in Aitomat (02.09.2026): **63k
+tokens start context, 46 % of it skill and agent descriptions** — most of them irrelevant
+for that project. So the first handoff of a new project now does a start-context diet:
+
+1. Decide which skills, plugins and MCP servers the project needs — the generated list
+   `~/.claude/SKILLS-UEBERSICHT.md` (`scripts/skills-uebersicht.sh`) has one line per tool.
+2. Write `<project>/.claude/settings.json` with `"enabledPlugins": {"<id>@<marketplace>": false}`
+   and `"skillOverrides": {"<skill>": "off"}` — one entry per skill, no wildcards.
+3. Record the result in the handoff under the mandatory block
+   `## Aktive Werkzeuge dieses Projekts`, and update it whenever a tool changes.
+
+Why it matters even more on the API: there the prompt cache lives 5 minutes, not an hour,
+so every pause rebuilds the whole start context at ×2. A lean start context plus a
+collection file that costs zero requests is what keeps that affordable.
+
 ## 4. Subagent economics
 
 In this skill subagents are **the default route, not the exception** — anything with more
