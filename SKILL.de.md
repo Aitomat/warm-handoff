@@ -32,6 +32,42 @@ Moral der Geschichte?"*):
 Äquivalent, Fertigmeldungen, Wanduhr, Aufträge) — damit dieser Skill an Belegen wächst und
 nicht an Erinnerung.
 
+## Projektstart — der Startkontext ist die erste Ersparnis
+
+Jede Anfrage liest den ganzen Präfix neu, und der Präfix beginnt mit dem Startkontext:
+System-Prompt, Werkzeug-Schemata, CLAUDE.md und Name + Beschreibung JEDES global
+installierten Skills, Plugin-Skills und Agenten — ob dieses Projekt sie braucht oder nicht.
+In Aitomat gemessen am 02.09.2026 (erste Anfrage zweier frischer Sitzungen): **63k Token
+Startkontext, davon 46 % Skill- und Agentenbeschreibungen** (169 Skills + 67 Agenten ≈ 29k),
+die meisten davon `ads-*`, `seo-*`, `firecrawl-*` — für eine Swift-Diktier-App irrelevant.
+Ein eigener Projektordner hilft nicht; nur projektlokale Einstellungen helfen.
+
+**Beim ERSTEN Handoff eines neuen Projekts** (und einmal nachträglich in jedem laufenden):
+
+1. Entscheiden, welche Skills, Plugins und MCP-Server dieses Projekt wirklich braucht. Die
+   vollständige Liste mit je einer Zweckzeile steht in `~/.claude/SKILLS-UEBERSICHT.md` (nach
+   jeder Installation oder Deinstallation neu erzeugen mit `scripts/skills-uebersicht.sh`).
+2. `<projekt>/.claude/settings.json` schreiben: `"enabledPlugins": {"<id>@<marktplatz>": false}`
+   für nicht gebrauchte Plugins, `"skillOverrides": {"<name>": "off"}` für jeden nicht
+   gebrauchten globalen Skill — ein Eintrag je Skill, es gibt KEINE Platzhalter (`~/.claude/skills`
+   und das verlinkte `~/.agents/skills` eingeschlossen; Plugin-Skills nur über `enabledPlugins`).
+   Globale Agenten in `~/.claude/agents/` haben keinen Projektschalter.
+   Vorlage: `/Users/pro16/Code/aitomat/.claude/settings.json`.
+3. Das Ergebnis im Handoff im PFLICHT-Block **`## Aktive Werkzeuge dieses Projekts`**
+   dokumentieren (siehe Handoff-Struktur unten): aktive Skills, Plugins, MCP-Server, dazu die
+   Zeile `Übersicht: ~/.claude/SKILLS-UEBERSICHT.md`. Wird ein Werkzeug ergänzt oder
+   abgeschaltet, werden beide Stellen nachgezogen — Einstellungsdatei und dieser Block.
+4. Messen, nicht glauben: die erste Anfrage der nächsten frischen Sitzung zeigt den neuen
+   Startkontext (`cache_creation_input_tokens` in der Session-JSONL, oder `~/.claude/ctx.sh`).
+
+**Warum das für API-Kunden noch mehr zählt.** Yasin, 02.09.2026, 19:10: über die API lebt der
+Prompt-Cache **5 Minuten**, nicht eine Stunde — jede längere Pause ist ein vollständiger
+Neuaufbau des ganzen Startkontexts zum doppelten Preis. Ein fetter Startkontext wird also
+immer wieder bezahlt, ein schlanker plus alles, was in der Handoff-Datei gesammelt wurde
+(null Anfragen beim Sammeln), macht jeden Neuaufbau billig. Startkontext-Diät zuerst,
+Sammeln zweitens, frische Sitzung drittens — in dieser Reihenfolge bleibt die Welle auf
+jedem Tarif bezahlbar.
+
 ## Die Fakten (Claude-Code-Doku, 2026-08)
 
 - Pro/Max: **1 Stunde gleitendes Cache-TTL** — jede Anfrage setzt es zurück. Subagenten: strikt 5 Min.
@@ -285,6 +321,18 @@ Nur, was das Logbuch wirklich zeigt — nichts hochgerechnet:
   alles andere: `ls -t ~/Library/Logs/DiagnosticReports/<App>-*.ips | head`, dann den obersten
   Stack lesen. In W27 nannten sechs `.ips`-Dateien dieselbe Zeile — aus einer vagen Meldung
   wurde ein Einzeiler-Fix.
+- **Reine Fable-Wellen kosten ~2,5× und sind nicht schneller** (W38, 01./02.09.2026: 5 Fable-
+  Wächter, 20 Aufträge → 102 Anfragen, 3.147k, 116 min gegen W37 mit 38 / 1.270k / 65 min bei
+  21 Aufträgen mit Opus-Wächtern). Zwei gemessene Ursachen: Die Fable-Wächter schickten 10
+  Zwischenmeldungen „warte am Build-Schloss" (jede eine volle Anfrage der Hauptsitzung), und
+  der serielle Schloss-Schwanz fraß 28 min; außerdem sprang der Wochenanteil von Fable am
+  Kontingent über Nacht hoch. Regel des Nutzers seit 02.09.2026, 02:58: **Wächter und Arbeiter
+  sind standardmäßig Opus/low; Fable/low nur, wenn der Nutzer den Auftrag benennt oder ein
+  Auftrag schon 2–3 Mal gescheitert ist.** Fable kauft Tiefe bei einem festgefahrenen Problem,
+  nicht Durchsatz in einer Welle.
+- **Das Handoff beantworten statt chatten** — die Sitzung vom 02.09. bekam 25 Testantworten plus
+  eine Sammlung in EINER Handoff-Datei über eine Stunde (null Anfragen), und die nächste Sitzung
+  machte daraus in 4 Anfragen einen Plan mit 4 Wächtern. Das ist die billigste Stunde im Logbuch.
 - **Eine Pause > 60 min kostet einen Neuaufbau (≈ Kontext × 2)** — bei 114k also ≈ 230k, und
   damit immer noch weniger als eine frische Sitzung mit ~200k Startaufbau plus Neu-Briefing.
 
@@ -370,6 +418,37 @@ Force-Push, Daten verwerfen), alles rund um Sicherheit und Zugangsdaten, alles v
 Sichtbare (Mail versenden, veröffentlichen, ausrollen, einen Live-Shop ändern), echtes Geld
 oder ein großes Kontingent ausgeben, oder Repo-Inhalte an ein externes Modell schicken.
 Alles Übrige gehört ins Handoff.
+
+## Zwischenrufe — der freie Seitenkanal, während Agenten laufen (Nutzer, 02.09.2026, 19:41–19:59)
+
+Jede Chat-Nachricht, die der Nutzer schickt, während die Hauptsitzung auf Hintergrund-Agenten
+WARTET, ist eine volle Anfrage (der ganze Kontext wird neu gelesen). Ein Skill kann Nachrichten
+nicht zurückhalten. Der freie Kanal ist EINE DATEI je Sitzung:
+`<projekt>/_zwischenrufe-<projekt>-JJJJ-MM-TT-<a|b|c>.md`, zu Wellenbeginn angelegt und in
+TextEdit geöffnet (`open -a TextEdit`). Zwei Abschnitte: **„Zwischenrufe (für diese Session)"**
+— kurze Hinweise für die laufende Welle — und **„Sammlung für das nächste Handoff"** — Ideen,
+Aufträge, Kritik. Die Handoff-Datei trägt kein eigenes SAMMLUNG-Banner mehr; die Sammlung lebt hier.
+
+Regeln: Die Hauptsitzung liest die Datei bei JEDEM Aufwachen ZUERST, angehängt an einen ohnehin
+laufenden Befehl (`cat _zwischenrufe-*-<datum>-*.md`), und nimmt nur das, was NEU ist. Sie löscht
+nie; nach dem Lesen hängt sie unter den letzten gelesenen Eintrag eine Markerzeile
+`— übernommen bis hier, HH:MM —`, damit beide Seiten sehen, wo „neu" beginnt. **Die Antwort
+gehört ebenfalls in die Datei** (Nutzer, 03.09.2026, 16:58): unter den Marker kommt
+`Antwort Claude, TT.MM.JJJJ-HH:MM:` und darunter DERSELBE Text, den der Nutzer sonst im Chat
+sähe — was mit jedem Zwischenruf geschehen ist, Entscheidungen, Status — dann die Zeile
+`— ab hier wieder Zwischenrufe —` und ein frisches `>>>`. Der Nutzer liest die Datei, nicht das
+Terminal; eine Antwort, die nur im Chat landet, ist eine Antwort, die er suchen muss.
+
+Weil die Datei in TextEdit offen ist: nie hineinschreiben, solange sie ungespeicherte Änderungen
+hat. Live-Text per `osascript` lesen, den zusammengeführten Text auf die Platte schreiben,
+schließen (`saving no`) und wieder öffnen — erst wenn TextEdit `modified = false` meldet.
+Beim Handoff wird alles unterhalb des letzten Markers wörtlich in den Sammlungs-Block des
+Handoffs kopiert. Eine neue Sitzung beginnt eine NEUE Datei (nächstes Datum/nächster Buchstabe);
+die alte bleibt offen, bis der Nutzer sie schließt, und `sammlung-pruefen.sh` prüft beide.
+Kopftext der Datei (deutsch): erklärt, was Chat-Nachrichten während des Wartens kosten, dass
+Terminals lange Eingaben zu „[Pasted text]" zusammenklappen, und die Marker-Regel. Das Urteil
+des Nutzers beim ersten Einsatz (19:57): „geniale Lösung — so sparen wir uns jedes Mal
+mindestens eine Anfrage".
 
 ## Editor-Regeln (macOS / TextEdit)
 

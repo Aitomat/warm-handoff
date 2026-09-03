@@ -21,6 +21,7 @@ zuerst eine Sitzung, die schiefging, oder eine Rechnung, die seltsam aussah.
 1. [Das Problem in drei Minuten](#1-das-problem-in-drei-minuten)
 2. [Die Kosten-Arithmetik mit echten Zahlen](#2-die-kosten-arithmetik-mit-echten-zahlen)
 3. [Der Wellen-Workflow](#3-der-wellen-workflow)
+3b. [Zwischenrufe-Datei und Sammlung für das nächste Handoff](#3b-zwischenrufe-datei-und-sammlung-für-das-nächste-handoff)
 4. [Subagenten-Ökonomie](#4-subagenten-ökonomie)
 5. [Was der Skill sichtbar macht: Kostenzeile, Kostentabelle, Kontingent](#5-was-der-skill-sichtbar-macht)
 6. [Installation](#6-installation)
@@ -271,6 +272,63 @@ fertig ist. Agenten, die länger als eine Stunde brauchen, schreiben ihr Ergebni
 Datei (`docs/reviews/<datum>-<thema>.md`); das Handoff nennt die erwartete Datei, und die
 **nächste** Session prüft beim Lesen des Handoffs, ob sie da ist — das Fertigwerden kostet
 so keine eigene Anfrage und keinen Neuaufbau nach der Nachtpause.
+
+## 3b. Zwischenrufe-Datei und Sammlung für das nächste Handoff
+
+**Warum.** Während die Hauptsitzung auf Hintergrund-Agenten wartet, ist jede Chat-Nachricht,
+die du schickst, eine **volle Anfrage**: der gesamte Kontext wird noch einmal gelesen. Ein
+„kurz noch: mach den Knopf gelb" kostet genauso viel wie ein ausformulierter Auftrag. Kein
+Skill kann das verhindern — die Nachricht geht ab, sobald du Enter drückst. Bei zehn Einfällen
+während einer Welle sind das zehn Anfragen für Gedanken, die alle bis zum nächsten Aufwachen
+der Sitzung hätten warten können. Dazu kommt: Terminals klappen lange Eingaben zu
+„[Pasted text]" zusammen, du siehst also nicht einmal mehr, was du geschrieben hast.
+
+**Wie.** Eine Datei je Sitzung, zu Wellenbeginn angelegt und in TextEdit geöffnet:
+
+```
+<projekt>/_zwischenrufe-<projekt>-JJJJ-MM-TT-<a|b|c>.md
+```
+
+Sie hat zwei Abschnitte:
+
+- **„Zwischenrufe (für diese Session)"** — kurze Hinweise für die gerade laufende Welle:
+  ein Fehler, den du gerade siehst, eine Korrektur, ein Screenshot-Pfad.
+- **„Sammlung für das nächste Handoff"** — alles, was nicht dringend ist: Ideen, neue
+  Aufträge, Kritik, Wünsche. Dieser Block wandert beim nächsten Handoff wörtlich in die
+  Handoff-Datei. Die Handoff-Datei trägt darum kein eigenes Sammlungs-Banner mehr.
+
+Du schreibst deine Zwischenrufe als Zeilen, die mit `>>>` beginnen (oder mit Name + Uhrzeit).
+Das kostet nichts: Tippen in einer Datei ist keine Anfrage.
+
+**Marker und Antwort.** Die Hauptsitzung liest die Datei bei jedem Aufwachen zuerst — angehängt
+an einen Befehl, der ohnehin läuft, also wieder ohne Extra-Anfrage — und nimmt nur, was neu ist.
+Sie löscht nie etwas. Stattdessen hängt sie unter den letzten gelesenen Eintrag eine Markerzeile:
+
+```
+— übernommen bis hier, 18:42 —
+
+Antwort Claude, 03.09.2026-18:42:
+D6 ist umgesetzt (Tab-Rundung wie im Finder), E9 läuft noch.
+Den Screenshot habe ich gesehen — der Griff war hinter dem Rahmen.
+
+— ab hier wieder Zwischenrufe —
+
+>>>
+```
+
+So sehen beide Seiten, wo „neu" anfängt. **Die Antwort steht in derselben Datei** — derselbe
+Text, den du sonst im Chat gesehen hättest. Du liest die Datei, nicht das Terminal; eine
+Antwort, die nur im Chat landet, ist eine Antwort, die du suchen musst.
+
+**Regeln für den Agenten.** Nie in die Datei schreiben, solange TextEdit ungespeicherte
+Änderungen hat: erst den Live-Text per `osascript` lesen, den zusammengeführten Text auf die
+Platte schreiben, dann schließen (`saving no`) und wieder öffnen — und nur, wenn TextEdit
+`modified = false` meldet. Eine neue Sitzung beginnt eine neue Datei (nächstes Datum, nächster
+Buchstabe); die alte bleibt offen, bis du sie schließt. `scripts/sammlung-pruefen.sh` prüft vor
+dem Handoff, dass keine Sammlung vergessen wurde.
+
+**Das Urteil des Nutzers beim ersten Einsatz** (02.09.2026, 19:57): „geniale Lösung — so sparen
+wir uns jedes Mal mindestens eine Anfrage."
 
 ## 4. Subagenten-Ökonomie
 

@@ -47,6 +47,9 @@ h3 { font-size: 15.75pt; font-weight: bold; }
 h4, h5, h6 { font-size: 14.25pt; font-weight: bold; }
 code, pre { font-family: Menlo, monospace; font-size: 11.25pt; }
 .zwischenruf { background-color: #FFF200; }
+/* Kopf-Kopierzeile („Ich habe das Handoff beantwortet: …") muss in EINE Zeile
+   passen: kleinere Schrift, kein Umbruch. 6.75 -> 9 pt. */
+.kopfzeile, .kopfzeile code, .kopfzeile a { font-size: 6.75pt; white-space: nowrap; }
 </style>'
 
 MD2HTML_PY='
@@ -59,6 +62,10 @@ with open(src, "r", encoding="utf-8", errors="replace") as fh:
 URL_RE  = re.compile(r"(?<![\w@/])(https?://[^\s<>()\[\]\"\x27]+)")
 PATH_RE = re.compile(r"(?<![\w~./-])((?:~|/Users|/Applications|/Library|/opt|/usr|/etc|/var|/private|/tmp)/[^\s<>()\[\]\"\x27,;]+)")
 MDLINK_RE = re.compile(r"\[([^\]\n]+)\]\(([^)\s]+)\)")
+# Marker wie ⟦Screenshot: ~/Dropbox/Screenshots/ScreenshotY 2026-09-03 um 18.25.55.jpg⟧
+# Alles bis zum schliessenden ⟧ ist EIN Pfad, Leerzeichen inbegriffen.
+MARKER_RE = re.compile(u"⟦\\s*(Screenshot|Bild|Datei|Kopie|Video|Audio)\\s*:\\s*(.*?)\\s*⟧", re.S)
+QUOTES = u"„“”«»" + chr(34) + chr(39)
 
 def file_href(p):
     q = os.path.expanduser(p.rstrip(".,;:"))
@@ -67,8 +74,29 @@ def file_href(p):
         for c in q
     )
 
+def marker_sub(m):
+    """⟦Screenshot: pfad mit leerzeichen⟧ -> klickbarer Link (HTML-escaped in/out)."""
+    kind = m.group(1)
+    raw = html.unescape(m.group(2)).strip().strip(QUOTES).strip()
+    if not raw:
+        return m.group(0)
+    label = html.escape(raw)
+    return u"⟦%s: <a href=\"%s\">%s</a>⟧" % (
+        kind, html.escape(file_href(raw), quote=True), label)
+
 def linkify(text):
     """text is already HTML-escaped; wrap URLs/paths in <a>."""
+    # Marker zuerst: ihr Inhalt darf nicht mehr von PATH_RE zerlegt werden.
+    if MARKER_RE.search(text):
+        pieces = []
+        pos = 0
+        for m in MARKER_RE.finditer(text):
+            pieces.append(linkify(text[pos:m.start()]))
+            pieces.append(marker_sub(m))
+            pos = m.end()
+        pieces.append(linkify(text[pos:]))
+        return "".join(pieces)
+
     def url_sub(m):
         u = m.group(1)
         tail = ""
@@ -197,7 +225,13 @@ for line in lines:
 
     if stripped.startswith(">"):
         close_lists()
-        out.append("<blockquote>%s</blockquote>" % inline(stripped.lstrip("> ")))
+        body = stripped.lstrip("> ")
+        if "Handoff beantwortet" in body:
+            # Kopf-Kopierzeile: eine Zeile, kleine Schrift, Home-Pfad als ~ gekuerzt
+            short = body.replace(os.path.expanduser("~"), "~")
+            out.append("<p class=\"kopfzeile\">%s</p>" % inline(short))
+            continue
+        out.append("<blockquote>%s</blockquote>" % inline(body))
         continue
 
     # Fortsetzungszeile eines weich umbrochenen Absatzes bzw. Listenpunkts
@@ -217,16 +251,36 @@ if command -v pandoc >/dev/null 2>&1; then
 import html, os, re, sys
 b = sys.stdin.read()
 b = re.sub(r"<p>(&gt;&gt;&gt;.*?)</p>", r"<p class=\"zwischenruf\">\1</p>", b, flags=re.S)
+# Kopf-Kopierzeile einzeilig: eigene Klasse, Home-Pfad gekuerzt
+def kopf(m):
+    inner = m.group(1).replace(html.escape(os.path.expanduser("~")), "~")
+    return "<p class=\"kopfzeile\">%s</p>" % inner
+b = re.sub(r"<blockquote>\s*<p>(.*?Handoff beantwortet.*?)</p>\s*</blockquote>", kopf, b, flags=re.S)
 PATH_RE = re.compile(r"(?<![\w~./->])((?:~|/Users|/Applications|/Library|/opt|/usr|/etc|/var|/private|/tmp)/[^\s<>()\[\]\"\x27,;]+)")
+MARKER_RE = re.compile(u"⟦\\s*(Screenshot|Bild|Datei|Kopie|Video|Audio)\\s*:\\s*(.*?)\\s*⟧", re.S)
+QUOTES = u"„“”«»" + chr(34) + chr(39)
 def href(p):
     q = os.path.expanduser(p)
     return "file://" + "".join((c if (c.isalnum() or c in "/-_.~!$&*+=@:") else "".join("%%%02X" % x for x in c.encode("utf-8"))) for c in q)
 def repl(m):
     p = m.group(1)
     return "<a href=\"%s\">%s</a>" % (html.escape(href(html.unescape(p)), quote=True), p)
+def marker(m):
+    raw = html.unescape(m.group(2)).strip().strip(QUOTES).strip()
+    if not raw:
+        return m.group(0)
+    return u"⟦%s: <a href=\"%s\">%s</a>⟧" % (m.group(1), html.escape(href(raw), quote=True), html.escape(raw))
 parts = re.split(r"(<[^>]+>)", b)
 for i in range(0, len(parts), 2):
-    parts[i] = PATH_RE.sub(repl, parts[i])
+    seg = parts[i]
+    chunks = []
+    pos = 0
+    for m in MARKER_RE.finditer(seg):
+        chunks.append(PATH_RE.sub(repl, seg[pos:m.start()]))
+        chunks.append(marker(m))
+        pos = m.end()
+    chunks.append(PATH_RE.sub(repl, seg[pos:]))
+    parts[i] = "".join(chunks)
 sys.stdout.write("".join(parts))
 ')"
 else

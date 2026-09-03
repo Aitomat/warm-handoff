@@ -21,6 +21,7 @@ every rule in it started as a session that went wrong or a bill that looked odd.
 1. [The problem in three minutes](#1-the-problem-in-three-minutes)
 2. [The cost arithmetic, with real numbers](#2-the-cost-arithmetic-with-real-numbers)
 3. [The wave workflow](#3-the-wave-workflow)
+3b. [The Zwischenrufe file and the collection for the next handoff](#3b-the-zwischenrufe-file-and-the-collection-for-the-next-handoff)
 4. [Subagent economics](#4-subagent-economics)
 5. [What the skill makes visible: cost line, cost table, quota](#5-what-the-skill-makes-visible)
 6. [Install](#6-install)
@@ -285,6 +286,61 @@ for that project. So the first handoff of a new project now does a start-context
 Why it matters even more on the API: there the prompt cache lives 5 minutes, not an hour,
 so every pause rebuilds the whole start context at ×2. A lean start context plus a
 collection file that costs zero requests is what keeps that affordable.
+
+## 3b. The Zwischenrufe file and the collection for the next handoff
+
+**Why.** While the main session is waiting on background agents, every chat message you send
+is a **full request**: the entire context is read again. A quick „also: make that button
+yellow" costs exactly as much as a fully written order. No skill can prevent this — the
+message goes out the moment you press Enter. Ten stray thoughts during one wave are ten
+requests for things that could all have waited until the session next woke up. On top of that,
+terminals collapse long input into „[Pasted text]", so you cannot even see what you wrote.
+
+**How.** One file per session, created at wave start and opened in TextEdit:
+
+```
+<project>/_zwischenrufe-<project>-YYYY-MM-DD-<a|b|c>.md
+```
+
+It has two sections:
+
+- **„Zwischenrufe (für diese Session)"** — short notes for the wave that is running right now:
+  a bug you can see, a correction, a screenshot path.
+- **„Sammlung für das nächste Handoff"** — everything that is not urgent: ideas, new orders,
+  criticism, wishes. At the next handoff this block is copied verbatim into the handoff file.
+  That is why the handoff no longer carries a collection banner of its own.
+
+You write your notes as lines starting with `>>>` (or name + time). Typing into a file is not
+a request, so it costs nothing.
+
+**Marker and answer.** The main session reads the file first on every wake-up — appended to a
+command that runs anyway, so again with no extra request — and takes only what is new. It never
+deletes anything. Instead it appends a marker line under the last entry it read:
+
+```
+— übernommen bis hier, 18:42 —
+
+Antwort Claude, 03.09.2026-18:42:
+D6 is done (Finder-style tab rounding), E9 still running.
+I saw the screenshot — the handle was behind the frame.
+
+— ab hier wieder Zwischenrufe —
+
+>>>
+```
+
+Both sides can then see where "new" begins. **The answer goes into the same file** — the same
+text you would otherwise have seen in the chat. You read the file, not the terminal; an answer
+that only lands in the chat is an answer you have to go looking for.
+
+**Rules for the agent.** Never write into the file while TextEdit has unsaved changes: read the
+live text via `osascript`, write the merged text to disk, then close (`saving no`) and reopen —
+and only when TextEdit reports `modified = false`. A new session starts a new file (next date,
+next letter); the old one stays open until you close it. `scripts/sammlung-pruefen.sh` checks
+before a handoff that no collection was forgotten.
+
+**The user's verdict on first use** (02.09.2026, 19:57): „geniale Lösung — so sparen wir uns
+jedes Mal mindestens eine Anfrage."
 
 ## 4. Subagent economics
 
