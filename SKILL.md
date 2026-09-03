@@ -504,7 +504,14 @@ no longer carries its own SAMMLUNG banner; the collection lives here.
 Rules: the main session reads the file FIRST on every wake-up, appended to a command that
 runs anyway (`cat _zwischenrufe-*-<date>-*.md`), and takes only what is NEW. It never
 deletes; after reading it appends a marker line `— übernommen bis hier, HH:MM —` under
-the last read entry, so both sides see where "new" starts. At handoff time everything
+the last read entry, so both sides see where "new" starts. **The answer goes into the
+file too** (user, 03.09.2026, 16:58): after the marker, write `Antwort Claude, DD.MM.YYYY-HH:MM:`
+followed by the SAME text the user would otherwise see in the chat — what was done with each
+Zwischenruf, decisions, status — then the line `— ab hier wieder Zwischenrufe —` and a fresh
+`>>>`. The user reads the file, not the terminal; a reply that only lands in the chat is a
+reply the user has to go looking for. Since the file is open in TextEdit, never write to it
+while it has unsaved changes: read the live text via osascript, write the merged text to
+disk, close (`saving no`) and reopen — only when TextEdit reports `modified = false`. At handoff time everything
 below the last marker is copied verbatim into the handoff's Sammlung block. A new session
 starts a NEW file (next date/letter); the old one stays open until the user closes it,
 and `sammlung-pruefen.sh` checks both. Header text for the file (German): explain the
