@@ -373,6 +373,11 @@ Alles Übrige gehört ins Handoff.
 
 ## Editor-Regeln (macOS / TextEdit)
 
+- **RTF-Zwilling:** Zu jedem Handoff wird beim Schreiben der Zwilling erzeugt —
+  `~/.claude/skills/warm-handoff/scripts/handoff-rtf.sh <handoff.md>` legt die gleichnamige
+  `.rtf` daneben (18 pt, fette Überschriften, klickbare Pfade/URLs, `>>>`-Zeilen gelb) — und
+  MIT geöffnet (`open -a TextEdit <datei>.rtf`).
+  Das Markdown bleibt die Quelle: Änderungen in die `.md`, danach den Zwilling neu erzeugen.
 - Jedes nutzerseitige Dokument sofort öffnen: `open -a TextEdit <datei>`. Das gilt für jedes
   neu erwähnte Dokument, nicht nur das Handoff — einen Plan, einen QA-Bericht, eine Review-
   Datei: sobald es existiert und für den Nutzer zum Lesen gedacht ist, öffnen. Einmal anbieten:

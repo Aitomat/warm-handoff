@@ -519,6 +519,11 @@ only the handoff — a plan, a QA report, a review file, a test list: if it is m
 user to read, it gets opened in the same turn it is written. No exceptions, no "tell me if
 you want me to open it".
 
+- **RTF twin:** every handoff gets a read-only twin next to the Markdown —
+  `~/.claude/skills/warm-handoff/scripts/handoff-rtf.sh <handoff.md>` writes the same-named
+  `.rtf` (18 pt, bold headings, clickable paths/URLs, `>>>` lines highlighted yellow); create it
+  when the handoff is written and open it TOO (`open -a TextEdit <file>.rtf`).
+  The Markdown stays the source — edits go into the `.md`, then regenerate the twin.
 - Offer once:
   tabs (`defaults write -g AppleWindowTabbingMode always`), 18-pt default font
   (`defaults write com.apple.TextEdit NSFontSize 18`), `.md` default app via `duti`.
@@ -549,6 +554,6 @@ Append one line per handoff to `~/.claude/warm-handoff-log.md`:
 `| 22.08.2026 14:40 | ctx 85k | 2 waves | rebuilds: 1 (pause 90min) | est. waste ~60k |`
 Summarize patterns every ~50 entries. Always-on: add "At the start of every session,
 invoke the warm-handoff skill." to `~/.claude/CLAUDE.md`. Scripts: `scripts/ctx.sh`, `scripts/skills-uebersicht.sh` (→ `~/.claude/SKILLS-UEBERSICHT.md`),
-`scripts/session-costs.sh` (identical German alias `session-kosten.sh` in the repo; the installer copies `session-costs.sh` — use that name everywhere), `scripts/codex-limit.sh`, `scripts/sammlung-pruefen.sh` → copy to `~/.claude/`
+`scripts/session-costs.sh` (identical German alias `session-kosten.sh` in the repo; the installer copies `session-costs.sh` — use that name everywhere), `scripts/codex-limit.sh`, `scripts/sammlung-pruefen.sh`, `scripts/handoff-rtf.sh` → copy to `~/.claude/`
 (installed 02.09.2026 as `~/.claude/sammlung-pruefen.sh`, exit 1 = collection lines missing).
 Terminal-neutral: say "your status line", not a specific host's field.
