@@ -23,6 +23,7 @@ every rule in it started as a session that went wrong or a bill that looked odd.
 3. [The wave workflow](#3-the-wave-workflow)
 3b. [The Zwischenrufe file and the collection for the next handoff](#3b-the-zwischenrufe-file-and-the-collection-for-the-next-handoff)
 3c. [Who plans what — main session and guardian](#3c-who-plans-what--main-session-and-guardian-have-different-jobs)
+3d. [The RTF twin — the handoff as a working document](#3d-the-rtf-twin--the-handoff-as-a-working-document)
 4. [Subagent economics](#4-subagent-economics)
 5. [What the skill makes visible: cost line, cost table, quota](#5-what-the-skill-makes-visible)
 6. [Install](#6-install)
@@ -384,6 +385,33 @@ next session will test **Fable/medium as the main session** and compare via the 
 requests, tokens, wall clock, and above all: how many jobs needed a second attempt. Until that
 line exists the question is open; it will be measured, not guessed.
 
+## 3d. The RTF twin — the handoff as a working document
+
+A handoff is not a printout, it is the place where the user answers. Markdown in a plain
+editor makes that painful: headings look like ordinary lines, screenshot paths with spaces
+are dead text, and the long copy-line at the top wraps into two. So **every handoff gets an
+RTF twin**, produced right after the `.md` by `scripts/handoff-rtf.sh` (Markdown → HTML →
+`textutil -convert rtf`, a macOS built-in — no extra dependency):
+
+- **18 pt** body text, bold headings, `>>>` lines highlighted yellow, so structure is visible.
+- **Clickable links for every path and URL** — screenshot paths that contain spaces become
+  `file://` links with the spaces percent-encoded (`…/ScreenshotY%202026-09-03%20um%2021.10.04.jpg`),
+  so one click opens the picture the paragraph is talking about.
+- **The header copy-line stays on one line** — it is what the user pastes back into the next
+  session, and a torn path is a broken path.
+- **The user writes the answers into the RTF**, under the `>>>Userantwort:` markers that the
+  handoff pre-seeds under every question and test item.
+
+The agent reads those answers back with one command:
+
+```bash
+textutil -convert txt -stdout _handoff-projekt-2026-09-03-v.rtf
+```
+
+Division of labour: the `.md` is the source for what the agent writes (edit it, then
+regenerate the twin), the `.rtf` carries what the user writes and is copied verbatim into the
+next handoff's collection.
+
 ## 4. Subagent economics
 
 In this skill subagents are **the default route, not the exception** — anything with more
@@ -585,6 +613,7 @@ scripts only read the local session files under `~/.claude/projects/` and
 |---|---|---|
 | `scripts/ctx.sh` | What was spent since the last user message and **on what**: request count, what happened inside them (agent reports, file access, commands, own replies), split into read/write/output. Produces the cost line. | `date "+%d.%m.%Y %H:%M" && ~/.claude/ctx.sh` — always appended to a command that runs anyway, so the measurement costs nothing |
 | `scripts/session-costs.sh` | The per-session cost table, wave by wave, from the session's `.jsonl`. Names the most expensive stretch and the cache hit rate. | `session-costs.sh` (current project, newest session) · `session-costs.sh <session.jsonl>` · `session-costs.sh --markdown` (ready for the handoff) |
+| `scripts/handoff-rtf.sh` | The RTF twin of a handoff: Markdown → HTML → `textutil -convert rtf`. 18 pt, bold headings, `>>>` lines yellow, every path/URL a clickable `file://` link (spaces percent-encoded), header copy-line kept on one line. The user answers in the `.rtf` under `>>>Userantwort:`; read it back with `textutil -convert txt -stdout <file>.rtf`. | `handoff-rtf.sh _handoff-projekt-2026-09-03.md` |
 | `scripts/codex-limit.sh` | How much of the Codex/GPT quota is used. The Codex CLI has no usage command; the script reads the `rate_limits` block from the last session file and prints the age of the reading. | `codex-limit.sh` · `--kurz` (status line: `codex 10%/7d`) · `--json` |
 
 Also described in the skill: a small status-line script that parks Claude Code's own

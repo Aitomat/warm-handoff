@@ -563,11 +563,22 @@ only the handoff — a plan, a QA report, a review file, a test list: if it is m
 user to read, it gets opened in the same turn it is written. No exceptions, no "tell me if
 you want me to open it".
 
-- **RTF twin:** every handoff gets a read-only twin next to the Markdown —
-  `~/.claude/skills/warm-handoff/scripts/handoff-rtf.sh <handoff.md>` writes the same-named
-  `.rtf` (18 pt, bold headings, clickable paths/URLs, `>>>` lines highlighted yellow); create it
-  when the handoff is written and open it TOO (`open -a TextEdit <file>.rtf`).
-  The Markdown stays the source — edits go into the `.md`, then regenerate the twin.
+- **RTF twin — mandatory for every handoff** (user, 03.09.2026, 21:57). Right after writing
+  the `.md`, run `~/.claude/skills/warm-handoff/scripts/handoff-rtf.sh <handoff.md>`; it goes
+  Markdown → HTML → `textutil -convert rtf` and writes the same-named `.rtf` next to it.
+  Open BOTH (`open -a TextEdit <file>.rtf`). Four properties the twin must have:
+  1. **18 pt** body text, bold larger headings, `>>>` lines highlighted yellow.
+  2. **Every path and URL clickable**, including screenshot paths that contain spaces:
+     they become `file://` links with the spaces percent-encoded (`.../ScreenshotY%202026-09-03%20um%2021.10.04.jpg`).
+     A raw path with spaces is not a link in TextEdit — encode, don't quote.
+  3. **The header copy-line stays on ONE line** (small font, `white-space: nowrap`), so the
+     path the user has to copy back is not torn in two.
+  4. **The user answers inside the RTF**, under the `>>>Userantwort:` markers — that is the
+     point of the twin, it is a working document, not a printout.
+  Read those answers back with `textutil -convert txt -stdout <file>.rtf` (one command, no
+  editor round-trip, no AppleScript). The Markdown stays the source for what YOU write: put
+  your edits in the `.md` and regenerate the twin; the user's replies live in the `.rtf` and
+  are copied from there into the next handoff's collection.
 - Offer once:
   tabs (`defaults write -g AppleWindowTabbingMode always`), 18-pt default font
   (`defaults write com.apple.TextEdit NSFontSize 18`), `.md` default app via `duti`.

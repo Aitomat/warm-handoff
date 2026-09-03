@@ -23,6 +23,7 @@ zuerst eine Sitzung, die schiefging, oder eine Rechnung, die seltsam aussah.
 3. [Der Wellen-Workflow](#3-der-wellen-workflow)
 3b. [Zwischenrufe-Datei und Sammlung für das nächste Handoff](#3b-zwischenrufe-datei-und-sammlung-für-das-nächste-handoff)
 3c. [Wer plant was — Hauptsitzung und Wächter](#3c-wer-plant-was--hauptsitzung-und-wächter-haben-verschiedene-aufgaben)
+3d. [Der RTF-Zwilling — das Handoff als Arbeitsdokument](#3d-der-rtf-zwilling--das-handoff-als-arbeitsdokument)
 4. [Subagenten-Ökonomie](#4-subagenten-ökonomie)
 5. [Was der Skill sichtbar macht: Kostenzeile, Kostentabelle, Kontingent](#5-was-der-skill-sichtbar-macht)
 6. [Installation](#6-installation)
@@ -374,6 +375,35 @@ nächste Sitzung wird **Fable/medium als Hauptsitzung** testen und über die Log
 verglichen — Anfragen, Token, Wanduhr und vor allem: wie viele Aufträge im zweiten Anlauf
 landeten. Bis diese Zeile existiert, ist die Frage offen; sie wird gemessen, nicht geraten.
 
+## 3d. Der RTF-Zwilling — das Handoff als Arbeitsdokument
+
+Ein Handoff ist kein Ausdruck, sondern der Ort, an dem der Nutzer antwortet. Markdown in
+einem einfachen Editor macht das mühsam: Überschriften sehen aus wie normale Zeilen,
+Screenshot-Pfade mit Leerzeichen sind toter Text, und die lange Kopierzeile oben bricht um.
+Deshalb bekommt **jedes Handoff einen RTF-Zwilling**, erzeugt direkt nach der `.md` durch
+`scripts/handoff-rtf.sh` (Markdown → HTML → `textutil -convert rtf`, ein macOS-Bordmittel —
+keine zusätzliche Abhängigkeit):
+
+- **18 pt** Grundschrift, fette Überschriften, `>>>`-Zeilen gelb — Struktur wird sichtbar.
+- **Klickbare Links für jeden Pfad und jede URL** — Screenshot-Pfade mit Leerzeichen werden zu
+  `file://`-Links mit prozent-codierten Leerzeichen
+  (`…/ScreenshotY%202026-09-03%20um%2021.10.04.jpg`), ein Klick öffnet das Bild, um das es im
+  Absatz geht.
+- **Die Kopf-Kopierzeile bleibt einzeilig** — sie wird in die nächste Sitzung kopiert, und ein
+  zerrissener Pfad ist ein kaputter Pfad.
+- **Der Nutzer schreibt die Antworten in die RTF**, unter die `>>>Userantwort:`-Marker, die
+  das Handoff unter jeder Frage und jedem Testpunkt schon vorbereitet.
+
+Der Agent liest die Antworten mit einem Befehl zurück:
+
+```bash
+textutil -convert txt -stdout _handoff-projekt-2026-09-03-v.rtf
+```
+
+Arbeitsteilung: Die `.md` ist die Quelle für das, was der Agent schreibt (dort ändern, dann
+den Zwilling neu erzeugen), die `.rtf` trägt das, was der Nutzer schreibt, und wird wörtlich
+in die Sammlung des nächsten Handoffs übernommen.
+
 ## 4. Subagenten-Ökonomie
 
 Subagenten sind im Skill **der Standardweg, nicht die Ausnahme** — alles mit mehr als einer
@@ -579,6 +609,7 @@ und `~/.codex/sessions/` — nichts geht nach außen.
 |---|---|---|
 | `scripts/ctx.sh` | Was seit der letzten Nutzernachricht verbraucht wurde und **wofür**: Anzahl Anfragen, was darin passiert ist (Agentenberichte, Dateizugriffe, Befehle, eigene Antworten), Verteilung auf Lesen/Schreiben/Ausgabe. Liefert die Kostenzeile. | `date "+%d.%m.%Y %H:%M" && ~/.claude/ctx.sh` — immer an einen ohnehin laufenden Befehl anhängen, damit die Messung nichts kostet |
 | `scripts/session-costs.sh` | Die Kostentabelle je Sitzung, Welle für Welle, aus der `.jsonl` der Session. Nennt teuersten Abschnitt und Cache-Trefferquote. | `session-costs.sh` (aktuelles Projekt, neueste Sitzung) · `session-costs.sh <sitzung.jsonl>` · `session-costs.sh --markdown` (fertig fürs Handoff) |
+| `scripts/handoff-rtf.sh` | Der RTF-Zwilling eines Handoffs: Markdown → HTML → `textutil -convert rtf`. 18 pt, fette Überschriften, `>>>`-Zeilen gelb, jeder Pfad/jede URL als klickbarer `file://`-Link (Leerzeichen prozent-codiert), Kopf-Kopierzeile einzeilig. Der Nutzer antwortet in der `.rtf` unter `>>>Userantwort:`; zurückgelesen mit `textutil -convert txt -stdout <datei>.rtf`. | `handoff-rtf.sh _handoff-projekt-2026-09-03.md` |
 | `scripts/codex-limit.sh` | Wie viel vom Codex/GPT-Kontingent verbraucht ist. Die Codex-CLI hat keinen Usage-Befehl; das Skript liest den `rate_limits`-Block aus der letzten Session-Datei und druckt das Alter der Messung dazu. | `codex-limit.sh` · `--kurz` (Statuszeile: `codex 10%/7d`) · `--json` |
 
 Dazu im Skill beschrieben: ein kleines Statuszeilen-Skript, das die Claude-Code-Prozente

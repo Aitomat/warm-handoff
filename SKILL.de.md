@@ -491,11 +491,23 @@ mindestens eine Anfrage".
 
 ## Editor-Regeln (macOS / TextEdit)
 
-- **RTF-Zwilling:** Zu jedem Handoff wird beim Schreiben der Zwilling erzeugt —
-  `~/.claude/skills/warm-handoff/scripts/handoff-rtf.sh <handoff.md>` legt die gleichnamige
-  `.rtf` daneben (18 pt, fette Überschriften, klickbare Pfade/URLs, `>>>`-Zeilen gelb) — und
-  MIT geöffnet (`open -a TextEdit <datei>.rtf`).
-  Das Markdown bleibt die Quelle: Änderungen in die `.md`, danach den Zwilling neu erzeugen.
+- **RTF-Zwilling — Pflicht bei jedem Handoff** (Nutzer, 03.09.2026, 21:57). Direkt nach dem
+  Schreiben der `.md`: `~/.claude/skills/warm-handoff/scripts/handoff-rtf.sh <handoff.md>`.
+  Der Weg ist Markdown → HTML → `textutil -convert rtf`; die gleichnamige `.rtf` liegt
+  danach daneben. BEIDE öffnen (`open -a TextEdit <datei>.rtf`). Vier Eigenschaften:
+  1. **18 pt** Grundschrift, Überschriften fett und größer, `>>>`-Zeilen gelb hinterlegt.
+  2. **Jeder Pfad und jede URL klickbar**, auch Screenshot-Pfade mit Leerzeichen: sie werden
+     zu `file://`-Links mit prozent-codierten Leerzeichen
+     (`.../ScreenshotY%202026-09-03%20um%2021.10.04.jpg`). Ein roher Pfad mit Leerzeichen ist
+     in TextEdit kein Link — codieren, nicht in Anführungszeichen setzen.
+  3. **Die Kopf-Kopierzeile bleibt EINZEILIG** (kleinere Schrift, `white-space: nowrap`),
+     damit der Pfad zum Zurückkopieren nicht zerrissen wird.
+  4. **Der Nutzer antwortet IN der RTF**, unter den `>>>Userantwort:`-Markern — dafür ist der
+     Zwilling da: ein Arbeitsdokument, kein Ausdruck.
+  Die Antworten liest der Agent mit `textutil -convert txt -stdout <datei>.rtf` zurück (ein
+  Befehl, kein Umweg über Editor oder AppleScript). Das Markdown bleibt die Quelle für das,
+  was DU schreibst: Änderungen in die `.md`, danach den Zwilling neu erzeugen; die Antworten
+  des Nutzers stehen in der `.rtf` und wandern von dort in die Sammlung des nächsten Handoffs.
 - Jedes nutzerseitige Dokument sofort öffnen: `open -a TextEdit <datei>`. Das gilt für jedes
   neu erwähnte Dokument, nicht nur das Handoff — einen Plan, einen QA-Bericht, eine Review-
   Datei: sobald es existiert und für den Nutzer zum Lesen gedacht ist, öffnen. Einmal anbieten:
