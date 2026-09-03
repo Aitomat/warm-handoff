@@ -22,6 +22,7 @@ every rule in it started as a session that went wrong or a bill that looked odd.
 2. [The cost arithmetic, with real numbers](#2-the-cost-arithmetic-with-real-numbers)
 3. [The wave workflow](#3-the-wave-workflow)
 3b. [The Zwischenrufe file and the collection for the next handoff](#3b-the-zwischenrufe-file-and-the-collection-for-the-next-handoff)
+3c. [Who plans what — main session and guardian](#3c-who-plans-what--main-session-and-guardian-have-different-jobs)
 4. [Subagent economics](#4-subagent-economics)
 5. [What the skill makes visible: cost line, cost table, quota](#5-what-the-skill-makes-visible)
 6. [Install](#6-install)
@@ -46,6 +47,16 @@ If you take one thing from this repo, take this:
 4. **Stay under 200k context.** The main session plans, merges, reads reports. Everything
    else lives in agents.
 5. **A handoff with a cost table** closes the wave — measured numbers, not feelings.
+
+**The single biggest lever against unnecessary requests** is point 2 — and it now has a file
+of its own: the **Zwischenrufe file** with its „Sammlung für das nächste Handoff" block
+(→ [section 3b](#3b-the-zwischenrufe-file-and-the-collection-for-the-next-handoff)). The
+user's verdict on first use: „was sehr, sehr cleveres" — something very, very clever. The
+arithmetic is simple: every chat message you send while the session is waiting on agents is a
+**full request** — the whole context is read again, at 119k context roughly 12k tokens for a
+„make that button yellow". The same line typed into the Zwischenrufe file costs **nothing**,
+and the session picks it up on its next wake-up anyway. Ten stray thoughts during a wave: ten
+requests versus none.
 
 **Proven, not claimed:** [`docs/evidenz.md`](docs/evidenz.md) derives from the logbook and the
 handoff cost tables that this structure saves **43–50 % of requests and 43–48 % of cost**
@@ -341,6 +352,37 @@ before a handoff that no collection was forgotten.
 
 **The user's verdict on first use** (02.09.2026, 19:57): „geniale Lösung — so sparen wir uns
 jedes Mal mindestens eine Anfrage."
+
+## 3c. Who plans what — main session and guardian have different jobs
+
+The most expensive common mix-up: a guardian being asked to „work out what needs doing". That
+is not its job. The division is sharp:
+
+**The MAIN SESSION writes the wave plan** — as a file, BEFORE any guardian exists
+(`docs/reviews/YYYY-MM-DD-waveNN-plan.md`). It contains **every single job** with its three
+entries: **What** (the fully written order including evidence, screenshot paths and the user's
+quote with a timestamp), **Acceptance** (how you can tell it is done — a test, a screenshot, a
+grep) and **Model** (effort). Plus the structural rules that apply to every job, and the split
+into tables — one guardian per table, with hard file ownership. Only the main session has the
+whole context: the answered handoff, the Zwischenrufe file, the screenshots, the topic store.
+Only it can therefore decide what this wave is even for.
+
+**The GUARDIAN invents no jobs.** It receives one table and does exactly five things: it splits
+the table into workers, **passes the order text on** (verbatim, not retold — the plan is the
+source), builds serially behind the build lock, merges with `git merge --squash`, has Codex
+review it and writes the report. Anything new it finds along the way belongs in the report —
+not in a job it made up itself.
+
+**Why this makes the main session's model matter.** If the main session writes the order texts,
+the quality of ALL subagent prompts hangs on its model. A guardian cannot repair a bad order,
+it can only execute it. A vague „make the window nicer" costs three attempts; an order with a
+quoted piece of evidence, a screenshot path and an acceptance criterion costs one. The saving
+from a cheaper main-session model can therefore be lost several times over elsewhere.
+
+**Open measurement (user, 03.09.2026, 18:38):** so far the main session has run on Opus. The
+next session will test **Fable/medium as the main session** and compare via the log line —
+requests, tokens, wall clock, and above all: how many jobs needed a second attempt. Until that
+line exists the question is open; it will be measured, not guessed.
 
 ## 4. Subagent economics
 

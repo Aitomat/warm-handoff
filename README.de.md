@@ -22,6 +22,7 @@ zuerst eine Sitzung, die schiefging, oder eine Rechnung, die seltsam aussah.
 2. [Die Kosten-Arithmetik mit echten Zahlen](#2-die-kosten-arithmetik-mit-echten-zahlen)
 3. [Der Wellen-Workflow](#3-der-wellen-workflow)
 3b. [Zwischenrufe-Datei und Sammlung für das nächste Handoff](#3b-zwischenrufe-datei-und-sammlung-für-das-nächste-handoff)
+3c. [Wer plant was — Hauptsitzung und Wächter](#3c-wer-plant-was--hauptsitzung-und-wächter-haben-verschiedene-aufgaben)
 4. [Subagenten-Ökonomie](#4-subagenten-ökonomie)
 5. [Was der Skill sichtbar macht: Kostenzeile, Kostentabelle, Kontingent](#5-was-der-skill-sichtbar-macht)
 6. [Installation](#6-installation)
@@ -47,6 +48,16 @@ Wer nur eine Sache aus diesem Repo mitnimmt, dann diese:
 4. **Unter 200k Kontext bleiben.** Die Hauptsitzung plant, mergt, liest Berichte. Alles
    andere lebt in Agenten.
 5. **Handoff mit Kostentabelle** schließt die Welle ab — gemessene Zahlen, keine Gefühle.
+
+**Der größte Einzelhebel gegen unnötige Anfragen** ist Punkt 2 — und er hat inzwischen eine
+eigene Datei: die **Zwischenrufe-Datei** mit dem Block „Sammlung für das nächste Handoff"
+(→ [Abschnitt 3b](#3b-zwischenrufe-datei-und-sammlung-für-das-nächste-handoff)). Yasins
+Urteil beim ersten Einsatz: „was sehr, sehr cleveres". Die Rechnung ist simpel: jede
+Chat-Nachricht, die du schickst, während die Sitzung auf Agenten wartet, ist eine **volle
+Anfrage** — der ganze Kontext wird neu gelesen, bei 119k Kontext ≈ 12k Token für ein „mach
+den Knopf gelb". Dieselbe Zeile in die Zwischenrufe-Datei getippt kostet **null**, und die
+Sitzung liest sie beim nächsten Aufwachen ohnehin mit. Zehn Einfälle während einer Welle:
+zehn Anfragen gegen keine.
 
 **Belegt, nicht behauptet:** [`docs/evidenz.md`](docs/evidenz.md) rechnet aus dem Logbuch und
 den Handoff-Kostentabellen vor, dass diese Struktur gegenüber derselben Arbeit ohne sie
@@ -329,6 +340,39 @@ dem Handoff, dass keine Sammlung vergessen wurde.
 
 **Das Urteil des Nutzers beim ersten Einsatz** (02.09.2026, 19:57): „geniale Lösung — so sparen
 wir uns jedes Mal mindestens eine Anfrage."
+
+## 3c. Wer plant was — Hauptsitzung und Wächter haben verschiedene Aufgaben
+
+Die häufigste teure Verwechslung: ein Wächter soll sich „überlegen, was zu tun ist". Das ist
+nicht seine Aufgabe. Die Arbeitsteilung ist scharf:
+
+**Die HAUPTSITZUNG schreibt den Wellenplan** — als Datei, BEVOR ein Wächter existiert
+(`docs/reviews/JJJJ-MM-TT-welleNN-plan.md`). Darin steht **jeder einzelne Auftrag** mit
+seinen drei Angaben: **Was** (der ausformulierte Auftragstext samt Belegen, Screenshot-Pfaden
+und Nutzerzitat mit Uhrzeit), **Abnahme** (woran man sieht, dass es fertig ist — Test,
+Screenshot, grep) und **Modell** (Effort). Dazu die Strukturregeln, die für jeden Auftrag
+gelten, und die Aufteilung in Tabellen — je Tabelle ein Wächter, mit hartem Dateibesitz. Nur
+die Hauptsitzung hat den ganzen Kontext: das beantwortete Handoff, die Zwischenrufe-Datei,
+die Screenshots, den Themenspeicher. Nur sie kann deshalb entscheiden, was diese Welle
+überhaupt soll.
+
+**Der WÄCHTER erfindet keine Aufträge.** Er bekommt eine Tabelle und tut genau fünf Dinge:
+er zerlegt sie in Arbeiter, **reicht den Auftragstext weiter** (wörtlich, nicht
+nacherzählt — der Plan ist die Quelle), baut seriell mit Build-Schloss, mergt per
+`git merge --squash`, lässt Codex prüfen und schreibt den Bericht. Findet er unterwegs etwas
+Neues, gehört das in den Bericht — nicht in einen selbst erfundenen Auftrag.
+
+**Warum das die Modellwahl der Hauptsitzung wichtig macht.** Wenn die Hauptsitzung die
+Auftragstexte schreibt, hängt die Qualität ALLER Unteragenten-Prompts an ihrem Modell. Ein
+Wächter kann einen schlechten Auftrag nicht reparieren, er kann ihn nur ausführen. Ein
+unscharfes „mach das Fenster schöner" kostet drei Anläufe; ein Auftrag mit Belegzitat,
+Screenshot-Pfad und Abnahmekriterium kostet einen. Die Ersparnis eines billigeren
+Hauptsitzungs-Modells kann also an anderer Stelle mehrfach wieder verloren gehen.
+
+**Offener Messpunkt (Yasin, 03.09.2026, 18:38):** bisher lief die Hauptsitzung auf Opus. Die
+nächste Sitzung wird **Fable/medium als Hauptsitzung** testen und über die Logbuchzeile
+verglichen — Anfragen, Token, Wanduhr und vor allem: wie viele Aufträge im zweiten Anlauf
+landeten. Bis diese Zeile existiert, ist die Frage offen; sie wird gemessen, nicht geraten.
 
 ## 4. Subagenten-Ökonomie
 

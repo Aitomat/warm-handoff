@@ -12,6 +12,12 @@ schreibt das nächste Handoff.
 Vollständige Historie mit datierten Nutzer-Zitaten und der Begründung jeder Regel:
 `references/historie.md` (lesen, wenn eine Regel hier seltsam wirkt — nicht standardmäßig laden).
 
+**Qualität vor Kürze.** Dieser Skill darf lang sein. Er wird einmal je Sitzung geladen und
+spart dafür bis zu 90 % der Anfragen einer Welle — jede Regel hier ist billiger als der
+Fehler, den sie verhindert. Nichts kürzen, was eine Regel trägt: kein Zusammenstreichen von
+Belegen, Zahlen oder Begründungen, weil der Text „zu lang" wirkt. Was raus darf, ist
+Wiederholung; was bleibt, ist alles, wonach jemand später handelt.
+
 ## Die sparsamste Arbeitsweise in fünf Sätzen
 
 Für den Nutzer, in einfachen Worten (gefragt am 30.08.2026, 15:06: *„was ist denn jetzt die
@@ -138,6 +144,39 @@ druckt · Ausgabe vorfiltern (`grep`/`tail`) · grep statt ganze Dateien lesen �
 Nachrichten pro Agent (eine Zusammenfassung, wenn die Flotte landet) · Berichte als Dateien, nicht
 im Chat · Budget für eigene Ausgabe: Zwischenstand ≤ 100 Wörter, final ≤ 500, Details in Dateien.
 Terminal-Tab-Vorschläge und jede Agenten-Fertigmeldung sind ebenfalls volle Anfragen.
+
+## Wer plant was — Hauptsitzung und Wächter haben verschiedene Aufgaben
+
+Die häufigste teure Verwechslung: ein Wächter soll sich „überlegen, was zu tun ist". Das ist
+nicht seine Aufgabe. Die Arbeitsteilung ist scharf:
+
+**Die HAUPTSITZUNG schreibt den Wellenplan** — als Datei, BEVOR ein Wächter existiert
+(`docs/reviews/JJJJ-MM-TT-welleNN-plan.md`). Darin steht **jeder einzelne Auftrag** mit
+seinen drei Angaben: **Was** (der ausformulierte Auftragstext samt Belegen, Screenshot-Pfaden
+und Nutzerzitat mit Uhrzeit), **Abnahme** (woran man sieht, dass es fertig ist — Test,
+Screenshot, grep) und **Modell** (Effort). Dazu die Strukturregeln, die für jeden Auftrag
+gelten, und die Aufteilung in Tabellen — je Tabelle ein Wächter, mit hartem Dateibesitz. Nur
+die Hauptsitzung hat den ganzen Kontext: das beantwortete Handoff, die Zwischenrufe-Datei,
+die Screenshots, den Themenspeicher. Nur sie kann deshalb entscheiden, was diese Welle
+überhaupt soll.
+
+**Der WÄCHTER erfindet keine Aufträge.** Er bekommt eine Tabelle und tut genau fünf Dinge:
+er zerlegt sie in Arbeiter, **reicht den Auftragstext weiter** (wörtlich, nicht
+nacherzählt — der Plan ist die Quelle), baut seriell mit Build-Schloss, mergt per
+`git merge --squash`, lässt Codex prüfen und schreibt den Bericht. Findet er unterwegs etwas
+Neues, gehört das in den Bericht — nicht in einen selbst erfundenen Auftrag.
+
+**Warum das die Modellwahl der Hauptsitzung wichtig macht.** Wenn die Hauptsitzung die
+Auftragstexte schreibt, hängt die Qualität ALLER Unteragenten-Prompts an ihrem Modell. Ein
+Wächter kann einen schlechten Auftrag nicht reparieren, er kann ihn nur ausführen. Ein
+unscharfes „mach das Fenster schöner" kostet drei Anläufe; ein Auftrag mit Belegzitat,
+Screenshot-Pfad und Abnahmekriterium kostet einen. Die Ersparnis eines billigeren
+Hauptsitzungs-Modells kann also an anderer Stelle mehrfach wieder verloren gehen.
+
+**Offener Messpunkt (Yasin, 03.09.2026, 18:38):** bisher lief die Hauptsitzung auf Opus. Die
+nächste Sitzung wird **Fable/medium als Hauptsitzung** testen und über die Logbuchzeile
+verglichen — Anfragen, Token, Wanduhr und vor allem: wie viele Aufträge im zweiten Anlauf
+landeten. Bis diese Zeile existiert, ist die Frage offen; sie wird gemessen, nicht geraten.
 
 ## Subagenten — die Standardarbeitsweise
 

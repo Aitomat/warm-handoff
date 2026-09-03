@@ -11,6 +11,12 @@ the agent works it all off through a few subagents and writes the next handoff.
 Full history with dated user quotes and the reasoning behind every rule:
 `references/historie.md` (read it when a rule here seems odd — do not load it by default).
 
+**Quality over brevity.** This skill is allowed to be long. It is loaded once per session and
+saves up to 90 % of a wave's requests in return — every rule here is cheaper than the mistake
+it prevents. Never cut anything that carries a rule: no trimming of evidence, numbers or
+reasoning because the text „feels long". What may go is repetition; what stays is everything
+somebody later acts on.
+
 ## Die sparsamste Arbeitsweise in fünf Sätzen
 
 For the user, in plain words (asked for on 30.08.2026, 15:06: *"was ist denn jetzt die
@@ -131,6 +137,37 @@ output (`grep`/`tail`) · grep instead of reading whole files · no per-agent st
 (one summary when the fleet lands) · reports as files, not chat · own output budget:
 interim ≤ 100 words, final ≤ 500, details in files. Terminal tab-suggestions and every
 agent completion notification are full requests too.
+
+## Who plans what — main session and guardian have different jobs
+
+The most expensive common mix-up: a guardian being asked to „work out what needs doing". That
+is not its job. The division is sharp:
+
+**The MAIN SESSION writes the wave plan** — as a file, BEFORE any guardian exists
+(`docs/reviews/YYYY-MM-DD-waveNN-plan.md`). It contains **every single job** with its three
+entries: **What** (the fully written order including evidence, screenshot paths and the user's
+quote with a timestamp), **Acceptance** (how you can tell it is done — a test, a screenshot, a
+grep) and **Model** (effort). Plus the structural rules that apply to every job, and the split
+into tables — one guardian per table, with hard file ownership. Only the main session has the
+whole context: the answered handoff, the Zwischenrufe file, the screenshots, the topic store.
+Only it can therefore decide what this wave is even for.
+
+**The GUARDIAN invents no jobs.** It receives one table and does exactly five things: it splits
+the table into workers, **passes the order text on** (verbatim, not retold — the plan is the
+source), builds serially behind the build lock, merges with `git merge --squash`, has Codex
+review it and writes the report. Anything new it finds along the way belongs in the report —
+not in a job it made up itself.
+
+**Why this makes the main session's model matter.** If the main session writes the order texts,
+the quality of ALL subagent prompts hangs on its model. A guardian cannot repair a bad order,
+it can only execute it. A vague „make the window nicer" costs three attempts; an order with a
+quoted piece of evidence, a screenshot path and an acceptance criterion costs one. The saving
+from a cheaper main-session model can therefore be lost several times over elsewhere.
+
+**Open measurement (user, 03.09.2026, 18:38):** so far the main session has run on Opus. The
+next session will test **Fable/medium as the main session** and compare via the log line —
+requests, tokens, wall clock, and above all: how many jobs needed a second attempt. Until that
+line exists the question is open; it will be measured, not guessed.
 
 ## Subagents — the default way to work
 
