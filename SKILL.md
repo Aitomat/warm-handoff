@@ -533,7 +533,7 @@ sending repository content to an external model. Everything else goes in the han
 Every chat message the user sends while the main session is WAITING on background agents
 is a full request (whole context re-read). A skill cannot hold messages back. The free
 channel is ONE FILE per session: `<project>/_zwischenrufe-<projekt>-YYYY-MM-DD-<a|b|c>.md`,
-created and opened in TextEdit at wave start (`open -a TextEdit`). Two sections:
+created and opened in TextEdit at wave start (`open -a TextEdit`); its FIRST line carries date AND time of creation (user, 03.09.2026, 19:11). Two sections:
 **„Zwischenrufe (für diese Session)"** — short notes for the running wave — and
 **„Sammlung für das nächste Handoff"** — ideas, orders, critique. The handoff file itself
 no longer carries its own SAMMLUNG banner; the collection lives here.
