@@ -389,6 +389,11 @@ Only what the log actually shows — no extrapolation:
   a tiny ping attached to the first real Codex call (`codex exec --skip-git-repo-check
   "Antworte nur mit: bereit"`). Claude Code quota: `cat ~/.claude/.claude-kontingent`
   (5h/7d %, written by the status line; web UI is the authority when they differ).
+- **A per-MODEL quota (Fable/Opus/Sonnet) cannot be shown in the status line / cmux footer**
+  — checked again 04.09.2026 against `~/.claude/statusline-command.sh`: the `rate_limits`
+  block Claude Code hands the status line carries only `five_hour`, `seven_day` and (gateway
+  mode) `spend_limit`. Model shares exist only in `/usage` and on claude.ai. Say that instead
+  of promising the field; the script documents it in its own header.
 - Handoff block "Was noch im Tank ist" right after the status: numbers + measurement age +
   a CONCRETE proposal if lots is free (big review, long test run, second opinion). Unused
   quota expires. Gemini/OpenRouter: no readable balance — say so, never estimate.
@@ -417,7 +422,22 @@ into the handoff file exactly as they stand, do not translate them. Glossary for
 German terms: *Handoff* = the handover document, *Welle* = wave, *Wächter* = guardian agent,
 *Sammlung* = the user's free-form collection area, *Testliste* = test list, *Der rote Faden*
 = the through-line / next waves, *Hauptdokumente* = key documents, *Gedächtnis* = memory,
-*Kostentabelle* = cost table. Structure, top to bottom:
+*Kostentabelle* = cost table.
+
+**Never write a handoff freely — always from the predecessor as a template** (wave 43 lost four
+mandatory blocks by writing from memory): copy the previous handoff's list of sections, then
+replace the contents. Blocks whose absence makes the handoff INVALID: the head copy-line
+`Ich habe das Handoff beantwortet: <Pfad>` (as a quote, in normal body size, on one line) plus
+its three explanatory lines · Sammlung wörtlich kopiert · Was ich daraus gemacht habe ·
+Testliste · Fragen an dich · Der rote Faden · Hauptdokumente · Weitere Dokumente · Aktive
+Werkzeuge · Gedächtnis · Kostentabelle. Before saying „Handoff fertig", `grep` for every one of
+those headings and add what is missing — the check comes before the message, not after it.
+**Three scripts are duty, not advice:** `~/.claude/sammlung-pruefen.sh` must run before the
+handoff is written (no run, no handoff), `~/.claude/session-costs.sh --markdown` produces the
+cost table (never estimated from memory), and `handoff-rtf.sh` + its `grep -c "file://"` check
+produce the twin. The logbook line closes the wave.
+
+Structure, top to bottom:
 
 1. Title with date/time. Then the copy-line for the next session:
    `> \`Ich habe das Handoff beantwortet: /abs/path/_handoff-….md\``
@@ -546,9 +566,29 @@ file too** (user, 03.09.2026, 16:58): after the marker, write `Antwort Claude, D
 followed by the SAME text the user would otherwise see in the chat — what was done with each
 Zwischenruf, decisions, status — then the line `— ab hier wieder Zwischenrufe —` and a fresh
 `>>>`. The user reads the file, not the terminal; a reply that only lands in the chat is a
-reply the user has to go looking for. Since the file is open in TextEdit, never write to it
-while it has unsaved changes: read the live text via osascript, write the merged text to
-disk, close (`saving no`) and reopen — only when TextEdit reports `modified = false`. At handoff time everything
+reply the user has to go looking for. **Write ONLY at the end of the file, never into the middle** (user, 03.09.2026, 22:57/23:09/
+23:12 — a mid-file rewrite destroyed what he was typing). Since the file is open in TextEdit:
+read the live text via osascript FIRST (unsaved text included), **append** with `>>`, and
+close (`saving no`) + reopen only when TextEdit reports `modified = false`. `scripts/zwischenrufe-antwort.sh <datei> "<text>"`
+does all of it in one call: live read, save unsaved user input rather than discard it, append
+marker + timestamp + answer + a fresh `>>>`, reload only if unmodified. Use it instead of
+hand-rolled `cat >>`. And say it once to the user: **„Trotzdem sichern" is ALWAYS the right
+button** — his text is the one thing that cannot be regenerated.
+
+**The file is an INBOX, not a notepad** (analysis of wave 43, `docs/reviews/2026-09-04-session-w43-analyse.md`):
+read it in full (`cat`) after every user message and **at least every 10 minutes**; read it
+again immediately before every append, so nothing is written over a stale state; **waiting
+means reading** — every wait loop (build lock, running agents) starts with a read. Every entry
+read is quoted back WITH ITS TIME and either answered or explicitly deferred („22:35 Screenshots
+— vertagt auf Welle 44"); an entry without a time-stamped receipt counts as unanswered. Before
+writing the handoff, read the file one last time and check every timestamp against the receipts;
+unreceipted entries go into the handoff verbatim.
+
+**Silence is an error state.** More than 10 minutes without user contact → short timestamped
+status note AND a read of the file. More than 30–45 minutes without a user message → ask
+explicitly whether there are Zwischenrufe instead of running on. And: every „done" needs its
+evidence in the same turn — file size, a `grep` count, a commit hash — especially for generated
+files. At handoff time everything
 below the last marker is copied verbatim into the handoff's Sammlung block. A new session
 starts a NEW file (next date/letter); the old one stays open until the user closes it,
 and `sammlung-pruefen.sh` checks both. Header text for the file (German): explain the
@@ -568,13 +608,20 @@ you want me to open it".
   Markdown → HTML → `textutil -convert rtf` and writes the same-named `.rtf` next to it.
   Open BOTH (`open -a TextEdit <file>.rtf`). Four properties the twin must have:
   1. **18 pt** body text, bold larger headings, `>>>` lines highlighted yellow.
-  2. **Every path and URL clickable**, including screenshot paths that contain spaces:
+  2. **Every path and URL clickable** — absolute paths, `~/…`, URLs, AND **relative project
+     paths** (`docs/reviews/….md`, `AGENTS.md`, `Sources/…/X.swift`; user, 04.09.2026, 14:53:
+     *jedes im Handoff genannte Dokument als Hyperlink*). The script resolves a relative path
+     against the directory of the `.md` and links it only if the file really exists, so a
+     word like `handoff.md` in prose never becomes a dead link. This includes screenshot paths that contain spaces:
      they become `file://` links with the spaces percent-encoded (`.../ScreenshotY%202026-09-03%20um%2021.10.04.jpg`).
      A raw path with spaces is not a link in TextEdit — encode, don't quote.
   3. **The header copy-line stays on ONE line** (small font, `white-space: nowrap`), so the
      path the user has to copy back is not torn in two.
   4. **The user answers inside the RTF**, under the `>>>Userantwort:` markers — that is the
      point of the twin, it is a working document, not a printout.
+  5. **Checked, not assumed:** right after generating it, run `grep -c "file://" <handoff>.rtf`.
+     A result of 0 means the twin is broken — regenerate it BEFORE mentioning it to the user
+     (measured on 04.09.2026: handoff X went 30 → 38 links when relative paths were added).
   Read those answers back with `textutil -convert txt -stdout <file>.rtf` (one command, no
   editor round-trip, no AppleScript). The Markdown stays the source for what YOU write: put
   your edits in the `.md` and regenerate the twin; the user's replies live in the `.rtf` and
@@ -609,6 +656,6 @@ Append one line per handoff to `~/.claude/warm-handoff-log.md`:
 `| 22.08.2026 14:40 | ctx 85k | 2 waves | rebuilds: 1 (pause 90min) | est. waste ~60k |`
 Summarize patterns every ~50 entries. Always-on: add "At the start of every session,
 invoke the warm-handoff skill." to `~/.claude/CLAUDE.md`. Scripts: `scripts/ctx.sh`, `scripts/skills-uebersicht.sh` (→ `~/.claude/SKILLS-UEBERSICHT.md`),
-`scripts/session-costs.sh` (identical German alias `session-kosten.sh` in the repo; the installer copies `session-costs.sh` — use that name everywhere), `scripts/codex-limit.sh`, `scripts/sammlung-pruefen.sh`, `scripts/handoff-rtf.sh` → copy to `~/.claude/`
+`scripts/session-costs.sh` (identical German alias `session-kosten.sh` in the repo; the installer copies `session-costs.sh` — use that name everywhere), `scripts/codex-limit.sh`, `scripts/sammlung-pruefen.sh`, `scripts/handoff-rtf.sh`, `scripts/zwischenrufe-antwort.sh` → copy to `~/.claude/`
 (installed 02.09.2026 as `~/.claude/sammlung-pruefen.sh`, exit 1 = collection lines missing).
 Terminal-neutral: say "your status line", not a specific host's field.

@@ -56,6 +56,7 @@ MD2HTML_PY='
 import html, os, re, sys
 
 src = sys.argv[1]
+PROJEKT = os.path.dirname(os.path.abspath(src)) or "."
 with open(src, "r", encoding="utf-8", errors="replace") as fh:
     lines = fh.read().split("\n")
 
@@ -66,6 +67,19 @@ MDLINK_RE = re.compile(r"\[([^\]\n]+)\]\(([^)\s]+)\)")
 # Alles bis zum schliessenden ⟧ ist EIN Pfad, Leerzeichen inbegriffen.
 MARKER_RE = re.compile(u"⟦\\s*(Screenshot|Bild|Datei|Kopie|Video|Audio)\\s*:\\s*(.*?)\\s*⟧", re.S)
 QUOTES = u"„“”«»" + chr(34) + chr(39)
+# Relative Projektpfade (Yasin, 04.09.2026, 14:53): jedes im Handoff genannte
+# Dokument soll ein Hyperlink sein — auch "docs/reviews/….md" oder "AGENTS.md".
+# Aufgeloest gegen das Verzeichnis der .md-Datei; verlinkt wird nur, was existiert.
+REL_RE = re.compile(
+    r"(?<![\w~./-])([A-Za-z0-9_][A-Za-z0-9_.-]*(?:/[A-Za-z0-9_.-]+)*"
+    r"\.(?:md|rtf|sh|swift|json|txt|py|csv|html|jpg|jpeg|png|plist|yml|yaml))(?![\w/])")
+
+def rel_target(p):
+    """Relativen Projektpfad zu absolutem machen — oder None, wenn es ihn nicht gibt."""
+    if p.startswith(("/", "~")) or ":" in p:
+        return None
+    cand = os.path.join(PROJEKT, p)
+    return cand if os.path.exists(cand) else None
 
 def file_href(p):
     q = os.path.expanduser(p.rstrip(".,;:"))
@@ -114,7 +128,19 @@ def linkify(text):
             p = p[:-1]
         raw = html.unescape(p)
         return "<a href=\"%s\">%s</a>%s" % (html.escape(file_href(raw), quote=True), p, tail)
-    return PATH_RE.sub(path_sub, text)
+    text = PATH_RE.sub(path_sub, text)
+
+    def rel_sub(m):
+        p = m.group(1)
+        target = rel_target(html.unescape(p))
+        if not target:
+            return p
+        return "<a href=\"%s\">%s</a>" % (html.escape(file_href(target), quote=True), p)
+    # Nur ausserhalb bereits gebauter <a …>-Tags ersetzen.
+    stuecke = re.split(r"(<a [^>]*>.*?</a>|<[^>]+>)", text)
+    for i in range(0, len(stuecke), 2):
+        stuecke[i] = REL_RE.sub(rel_sub, stuecke[i])
+    return "".join(stuecke)
 
 def inline(raw):
     """Markdown inline -> HTML."""
@@ -247,9 +273,10 @@ sys.stdout.write("\n".join(out))
 if command -v pandoc >/dev/null 2>&1; then
   BODY="$(pandoc -f markdown -t html "$SRC")"
   # >>>-Zeilen und Pfad-/URL-Links nachrüsten (pandoc verlinkt nackte Pfade nicht)
-  BODY="$(printf '%s' "$BODY" | python3 -c '
+  BODY="$(printf '%s' "$BODY" | PROJEKT_DIR="$(cd "$(dirname "$SRC")" && pwd)" python3 -c '
 import html, os, re, sys
 b = sys.stdin.read()
+PROJEKT = os.environ.get("PROJEKT_DIR", ".")
 b = re.sub(r"<p>(&gt;&gt;&gt;.*?)</p>", r"<p class=\"zwischenruf\">\1</p>", b, flags=re.S)
 # Kopf-Kopierzeile einzeilig: eigene Klasse, Home-Pfad gekuerzt
 def kopf(m):
@@ -270,16 +297,28 @@ def marker(m):
     if not raw:
         return m.group(0)
     return u"⟦%s: <a href=\"%s\">%s</a>⟧" % (m.group(1), html.escape(href(raw), quote=True), html.escape(raw))
-parts = re.split(r"(<[^>]+>)", b)
+REL_RE = re.compile(
+    r"(?<![\w~./-])([A-Za-z0-9_][A-Za-z0-9_.-]*(?:/[A-Za-z0-9_.-]+)*"
+    r"\.(?:md|rtf|sh|swift|json|txt|py|csv|html|jpg|jpeg|png|plist|yml|yaml))(?![\w/])")
+def rel(m):
+    p = m.group(1)
+    q = html.unescape(p)
+    if q.startswith(("/", "~")) or ":" in q:
+        return p
+    cand = os.path.join(PROJEKT, q)
+    if not os.path.exists(cand):
+        return p
+    return "<a href=\"%s\">%s</a>" % (html.escape(href(cand), quote=True), p)
+parts = re.split(r"(<a [^>]*>.*?</a>|<[^>]+>)", b, flags=re.S)
 for i in range(0, len(parts), 2):
     seg = parts[i]
     chunks = []
     pos = 0
     for m in MARKER_RE.finditer(seg):
-        chunks.append(PATH_RE.sub(repl, seg[pos:m.start()]))
+        chunks.append(REL_RE.sub(rel, PATH_RE.sub(repl, seg[pos:m.start()])))
         chunks.append(marker(m))
         pos = m.end()
-    chunks.append(PATH_RE.sub(repl, seg[pos:]))
+    chunks.append(REL_RE.sub(rel, PATH_RE.sub(repl, seg[pos:])))
     parts[i] = "".join(chunks)
 sys.stdout.write("".join(parts))
 ')"

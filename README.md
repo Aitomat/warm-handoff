@@ -671,4 +671,14 @@ those stay German because that is what the user reads. The full German twin is
 `SKILL.de.md`; `references/historie.md`, which records the sessions the rules came from,
 is German-only, and the scripts are commented in German.
 
+### „Was ist eigentlich PR 1?" — pull requests in one paragraph
+
+GitHub shows a tab **Pull requests** with a counter (`PR 1`). A pull request is somebody
+else's proposed change: they copy the repository (fork), change something in their copy and
+then *ask* for the change to be pulled into this one. Nothing is changed here until the
+change is merged — a PR is a proposal plus a discussion thread, not an edit. Open it, read
+the diff under "Files changed", and either **Merge pull request** (accept) or **Close**
+(decline, with a friendly line saying why). The counter shows only the OPEN ones, so it
+drops back to zero once each has been merged or closed.
+
 License: MIT.
