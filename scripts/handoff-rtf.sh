@@ -47,9 +47,9 @@ h3 { font-size: 15.75pt; font-weight: bold; }
 h4, h5, h6 { font-size: 14.25pt; font-weight: bold; }
 code, pre { font-family: Menlo, monospace; font-size: 11.25pt; }
 .zwischenruf { background-color: #FFF200; }
-/* Kopf-Kopierzeile („Ich habe das Handoff beantwortet: …") muss in EINE Zeile
-   passen: kleinere Schrift, kein Umbruch. 6.75 -> 9 pt. */
-.kopfzeile, .kopfzeile code, .kopfzeile a { font-size: 6.75pt; white-space: nowrap; }
+/* Kopf-Kopierzeile („Ich habe das Handoff beantwortet: …") bleibt auf EINER
+   Zeile (nowrap), aber in Normalgroesse — Yasin 04.09.2026: 13.5 -> 18 pt. */
+.kopfzeile, .kopfzeile code, .kopfzeile a { font-size: 13.5pt; white-space: nowrap; }
 </style>'
 
 MD2HTML_PY='

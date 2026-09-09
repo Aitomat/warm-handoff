@@ -1,7 +1,7 @@
 Reading additional input from stdin...
 OpenAI Codex v0.144.5
 --------
-workdir: /Users/pro16/Code/warm-handoff
+workdir: /path/to/warm-handoff
 model: gpt-5.6-sol
 provider: openai
 approval: never
@@ -25,9 +25,9 @@ hook: PreToolUse
 hook: PreToolUse Completed
 hook: PreToolUse Completed
 exec
-/bin/zsh -lc "pwd && rg --files -g 'AGENTS.md' -g 'SKILL.md' -g 'SKILL.de.md' -g '"'!node_modules'"'" in /Users/pro16/Code/warm-handoff
+/bin/zsh -lc "pwd && rg --files -g 'AGENTS.md' -g 'SKILL.md' -g 'SKILL.de.md' -g '"'!node_modules'"'" in /path/to/warm-handoff
  succeeded in 0ms:
-/Users/pro16/Code/warm-handoff
+/path/to/warm-handoff
 SKILL.de.md
 SKILL.md
 
@@ -38,7 +38,7 @@ hook: PreToolUse
 hook: PreToolUse Completed
 hook: PreToolUse Completed
 exec
-/bin/zsh -lc "wc -l SKILL.md SKILL.de.md && sed -n '1,240p' SKILL.md && sed -n '1,260p' SKILL.de.md" in /Users/pro16/Code/warm-handoff
+/bin/zsh -lc "wc -l SKILL.md SKILL.de.md && sed -n '1,240p' SKILL.md && sed -n '1,260p' SKILL.de.md" in /path/to/warm-handoff
  succeeded in 0ms:
      190 SKILL.md
      194 SKILL.de.md
@@ -437,7 +437,7 @@ hook: PreToolUse
 hook: PreToolUse Completed
 hook: PreToolUse Completed
 exec
-/bin/zsh -lc "nl -ba SKILL.md | sed -n '1,230p'; nl -ba SKILL.de.md | sed -n '1,230p'; rg --files scripts references 2>/dev/null || true; rg -n \"session-(kosten|costs)|ctx\\.sh|codex-limit|every reply|Every reply|Jede Antwort|one-liners|Einzeilern|parallel|sequential|seriell|starts every worker|Subagents|Subagenten|Never review|Nie die eigene|Questions for the user|Fragen an den Nutzer|Always-on|Immer aktiv\" SKILL.md SKILL.de.md" in /Users/pro16/Code/warm-handoff
+/bin/zsh -lc "nl -ba SKILL.md | sed -n '1,230p'; nl -ba SKILL.de.md | sed -n '1,230p'; rg --files scripts references 2>/dev/null || true; rg -n \"session-(kosten|costs)|ctx\\.sh|codex-limit|every reply|Every reply|Jede Antwort|one-liners|Einzeilern|parallel|sequential|seriell|starts every worker|Subagents|Subagenten|Never review|Nie die eigene|Questions for the user|Fragen an den Nutzer|Always-on|Immer aktiv\" SKILL.md SKILL.de.md" in /path/to/warm-handoff
  succeeded in 0ms:
      1	---
      2	name: warm-handoff
@@ -871,23 +871,23 @@ codex
 
 ## High-priority issues
 
-1. **Broken script name:** Both files invoke `~/.claude/session-kosten.sh`, but install `scripts/session-costs.sh`. The command will fail. [EN:144,189](/Users/pro16/Code/warm-handoff/SKILL.md:144) · [DE:148,193](/Users/pro16/Code/warm-handoff/SKILL.de.md:148)
+1. **Broken script name:** Both files invoke `~/.claude/session-kosten.sh`, but install `scripts/session-costs.sh`. The command will fail. [EN:144,189](/path/to/warm-handoff/SKILL.md:144) · [DE:148,193](/path/to/warm-handoff/SKILL.de.md:148)
 
-2. **Parallel/serial contradiction:** Guardians must start *all* workers simultaneously, “never” sequentially, while absent-user pacing explicitly requires sequential work. Define which rule wins. [EN:70,97](/Users/pro16/Code/warm-handoff/SKILL.md:70) · [DE:72,101](/Users/pro16/Code/warm-handoff/SKILL.de.md:72)
+2. **Parallel/serial contradiction:** Guardians must start *all* workers simultaneously, “never” sequentially, while absent-user pacing explicitly requires sequential work. Define which rule wins. [EN:70,97](/path/to/warm-handoff/SKILL.md:70) · [DE:72,101](/path/to/warm-handoff/SKILL.de.md:72)
 
-3. **Verbatim/redaction conflict:** User text must be copied verbatim, yet secrets must be redacted. State that safety redaction overrides verbatim copying and mark each redaction. [EN:117,125](/Users/pro16/Code/warm-handoff/SKILL.md:117)
+3. **Verbatim/redaction conflict:** User text must be copied verbatim, yet secrets must be redacted. State that safety redaction overrides verbatim copying and mark each redaction. [EN:117,125](/path/to/warm-handoff/SKILL.md:117)
 
-4. **Unsafe ambiguity rule:** “Questions never go in chat; take the likelier reading” is unsuitable for destructive, security-sensitive, costly, or externally visible actions. Add a mandatory clarification exception. [EN:151](/Users/pro16/Code/warm-handoff/SKILL.md:151)
+4. **Unsafe ambiguity rule:** “Questions never go in chat; take the likelier reading” is unsuitable for destructive, security-sensitive, costly, or externally visible actions. Add a mandatory clarification exception. [EN:151](/path/to/warm-handoff/SKILL.md:151)
 
-5. **Unapproved global mutation:** Automatically editing `~/.claude/CLAUDE.md`, copying scripts, changing UI state, and appending logs needs consent, idempotency, collision handling, and backups. [EN:155–189](/Users/pro16/Code/warm-handoff/SKILL.md:155)
+5. **Unapproved global mutation:** Automatically editing `~/.claude/CLAUDE.md`, copying scripts, changing UI state, and appending logs needs consent, idempotency, collision handling, and backups. [EN:155–189](/path/to/warm-handoff/SKILL.md:155)
 
-6. **Git workflow is unsafe/incomplete:** Concurrent workers pulling/rebasing only before editing still diverge after the first merge. Specify worktrees, upstream handling, dirty-tree checks, rebase-before-merge, conflict ownership, and prohibition of force-push. [EN:70–81](/Users/pro16/Code/warm-handoff/SKILL.md:70)
+6. **Git workflow is unsafe/incomplete:** Concurrent workers pulling/rebasing only before editing still diverge after the first merge. Specify worktrees, upstream handling, dirty-tree checks, rebase-before-merge, conflict ownership, and prohibition of force-push. [EN:70–81](/path/to/warm-handoff/SKILL.md:70)
 
-7. **Testing contradiction:** “Full suite only once” conflicts with “Full suite + QA agent” and gives no rule for rerunning after a fix. Say when workers run targeted tests and when the guardian must rerun affected/full tests. [EN:78–93](/Users/pro16/Code/warm-handoff/SKILL.md:78)
+7. **Testing contradiction:** “Full suite only once” conflicts with “Full suite + QA agent” and gives no rule for rerunning after a fix. Say when workers run targeted tests and when the guardian must rerun affected/full tests. [EN:78–93](/path/to/warm-handoff/SKILL.md:78)
 
-8. **Incorrect terminology:** `cache_creation / cache_read` is not a “hit rate”; it is a write/read ratio. Either rename it or calculate a genuine hit ratio. [EN:176](/Users/pro16/Code/warm-handoff/SKILL.md:176)
+8. **Incorrect terminology:** `cache_creation / cache_read` is not a “hit rate”; it is a write/read ratio. Either rename it or calculate a genuine hit ratio. [EN:176](/path/to/warm-handoff/SKILL.md:176)
 
-9. **Unsupported universal claims:** TTL, pricing multipliers, “every request resets it,” and output cost depend on product, model, and billing mode. Cite sources and label assumptions/version scope. [EN:14–21](/Users/pro16/Code/warm-handoff/SKILL.md:14)
+9. **Unsupported universal claims:** TTL, pricing multipliers, “every request resets it,” and output cost depend on product, model, and billing mode. Cite sources and label assumptions/version scope. [EN:14–21](/path/to/warm-handoff/SKILL.md:14)
 
 10. **Activation bootstrap problem:** A skill cannot ensure its own invocation at every session until the global instruction has already been installed. Separate an explicit one-time setup procedure from runtime behavior.
 
@@ -930,23 +930,23 @@ tokens used
 
 ## High-priority issues
 
-1. **Broken script name:** Both files invoke `~/.claude/session-kosten.sh`, but install `scripts/session-costs.sh`. The command will fail. [EN:144,189](/Users/pro16/Code/warm-handoff/SKILL.md:144) · [DE:148,193](/Users/pro16/Code/warm-handoff/SKILL.de.md:148)
+1. **Broken script name:** Both files invoke `~/.claude/session-kosten.sh`, but install `scripts/session-costs.sh`. The command will fail. [EN:144,189](/path/to/warm-handoff/SKILL.md:144) · [DE:148,193](/path/to/warm-handoff/SKILL.de.md:148)
 
-2. **Parallel/serial contradiction:** Guardians must start *all* workers simultaneously, “never” sequentially, while absent-user pacing explicitly requires sequential work. Define which rule wins. [EN:70,97](/Users/pro16/Code/warm-handoff/SKILL.md:70) · [DE:72,101](/Users/pro16/Code/warm-handoff/SKILL.de.md:72)
+2. **Parallel/serial contradiction:** Guardians must start *all* workers simultaneously, “never” sequentially, while absent-user pacing explicitly requires sequential work. Define which rule wins. [EN:70,97](/path/to/warm-handoff/SKILL.md:70) · [DE:72,101](/path/to/warm-handoff/SKILL.de.md:72)
 
-3. **Verbatim/redaction conflict:** User text must be copied verbatim, yet secrets must be redacted. State that safety redaction overrides verbatim copying and mark each redaction. [EN:117,125](/Users/pro16/Code/warm-handoff/SKILL.md:117)
+3. **Verbatim/redaction conflict:** User text must be copied verbatim, yet secrets must be redacted. State that safety redaction overrides verbatim copying and mark each redaction. [EN:117,125](/path/to/warm-handoff/SKILL.md:117)
 
-4. **Unsafe ambiguity rule:** “Questions never go in chat; take the likelier reading” is unsuitable for destructive, security-sensitive, costly, or externally visible actions. Add a mandatory clarification exception. [EN:151](/Users/pro16/Code/warm-handoff/SKILL.md:151)
+4. **Unsafe ambiguity rule:** “Questions never go in chat; take the likelier reading” is unsuitable for destructive, security-sensitive, costly, or externally visible actions. Add a mandatory clarification exception. [EN:151](/path/to/warm-handoff/SKILL.md:151)
 
-5. **Unapproved global mutation:** Automatically editing `~/.claude/CLAUDE.md`, copying scripts, changing UI state, and appending logs needs consent, idempotency, collision handling, and backups. [EN:155–189](/Users/pro16/Code/warm-handoff/SKILL.md:155)
+5. **Unapproved global mutation:** Automatically editing `~/.claude/CLAUDE.md`, copying scripts, changing UI state, and appending logs needs consent, idempotency, collision handling, and backups. [EN:155–189](/path/to/warm-handoff/SKILL.md:155)
 
-6. **Git workflow is unsafe/incomplete:** Concurrent workers pulling/rebasing only before editing still diverge after the first merge. Specify worktrees, upstream handling, dirty-tree checks, rebase-before-merge, conflict ownership, and prohibition of force-push. [EN:70–81](/Users/pro16/Code/warm-handoff/SKILL.md:70)
+6. **Git workflow is unsafe/incomplete:** Concurrent workers pulling/rebasing only before editing still diverge after the first merge. Specify worktrees, upstream handling, dirty-tree checks, rebase-before-merge, conflict ownership, and prohibition of force-push. [EN:70–81](/path/to/warm-handoff/SKILL.md:70)
 
-7. **Testing contradiction:** “Full suite only once” conflicts with “Full suite + QA agent” and gives no rule for rerunning after a fix. Say when workers run targeted tests and when the guardian must rerun affected/full tests. [EN:78–93](/Users/pro16/Code/warm-handoff/SKILL.md:78)
+7. **Testing contradiction:** “Full suite only once” conflicts with “Full suite + QA agent” and gives no rule for rerunning after a fix. Say when workers run targeted tests and when the guardian must rerun affected/full tests. [EN:78–93](/path/to/warm-handoff/SKILL.md:78)
 
-8. **Incorrect terminology:** `cache_creation / cache_read` is not a “hit rate”; it is a write/read ratio. Either rename it or calculate a genuine hit ratio. [EN:176](/Users/pro16/Code/warm-handoff/SKILL.md:176)
+8. **Incorrect terminology:** `cache_creation / cache_read` is not a “hit rate”; it is a write/read ratio. Either rename it or calculate a genuine hit ratio. [EN:176](/path/to/warm-handoff/SKILL.md:176)
 
-9. **Unsupported universal claims:** TTL, pricing multipliers, “every request resets it,” and output cost depend on product, model, and billing mode. Cite sources and label assumptions/version scope. [EN:14–21](/Users/pro16/Code/warm-handoff/SKILL.md:14)
+9. **Unsupported universal claims:** TTL, pricing multipliers, “every request resets it,” and output cost depend on product, model, and billing mode. Cite sources and label assumptions/version scope. [EN:14–21](/path/to/warm-handoff/SKILL.md:14)
 
 10. **Activation bootstrap problem:** A skill cannot ensure its own invocation at every session until the global instruction has already been installed. Separate an explicit one-time setup procedure from runtime behavior.
 

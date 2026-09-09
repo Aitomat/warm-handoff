@@ -1,6 +1,6 @@
 # warm-handoff 🏄
 
-> **Why is the skill file so short?** `SKILL.md` (~190 lines) is loaded into every session, so it is deliberately compact. The full history with dated user quotes and the reasoning behind every rule lives in `references/historie.md` (~1,900 lines, German-only) — long on purpose; read it when a rule looks odd. A complete German translation of the skill itself is `SKILL.de.md`.
+> **Claude Code and Codex:** The Claude workflow lives in `SKILL.md`, with historical evidence in `references/historie.md`. Codex users should start with [Use with Codex](#6a-use-with-codex); Claude-specific cache calculations elsewhere in this README do not describe Codex billing.
 
 
 > **Primary language: English · Deutsche Fassung: [README.de.md](README.de.md)**
@@ -27,6 +27,7 @@ every rule in it started as a session that went wrong or a bill that looked odd.
 4. [Subagent economics](#4-subagent-economics)
 5. [What the skill makes visible: cost line, cost table, quota](#5-what-the-skill-makes-visible)
 6. [Install](#6-install)
+6a. [Use with Codex](#6a-use-with-codex)
 7. [The scripts](#7-the-scripts)
 8. [Honest limits](#8-honest-limits)
 9. [The facts everything rests on](#9-the-facts-everything-rests-on)
@@ -606,6 +607,82 @@ Manually: `/warm-handoff`, or just say "cache", "handoff", "wave done", "fresh s
 Requirements: macOS or Linux, `bash`, `python3` (for the cost scripts), `jq` optional. The
 scripts only read the local session files under `~/.claude/projects/` and
 `~/.codex/sessions/` — nothing leaves the machine.
+
+## 6a. Use with Codex
+
+Codex supports skills as well as `AGENTS.md`. For this workflow, install the
+[AGENTS.md template](templates/AGENTS-warm-handoff.md) (Astra's German working
+agreement) as `docs/warm-handoff.md` in your project. From that project root:
+
+```sh
+mkdir -p docs
+curl -fsSL https://raw.githubusercontent.com/Aitomat/warm-handoff/main/templates/AGENTS-warm-handoff.md \
+  -o docs/warm-handoff.md
+```
+
+Use a new destination if that file already contains your notes. Add the following
+short binding section to your existing project `AGENTS.md`, keeping its other rules:
+
+```markdown
+## Working method (warm-handoff)
+
+At session start and before handoff, read `docs/warm-handoff.md` and follow its
+working agreement within the current task and host permissions.
+- Record durable state and longer feedback in the handoff document.
+- Read the designated Zwischenrufe inbox; preserve original user text.
+- Serialize authorized builds/tests with the project's shared build lock.
+- Make one commit per task, staging only assigned paths; push only when instructed.
+- Write the completion report to a file and link it with verified status.
+```
+
+Start a new session from the project root: `codex -C /path/to/project`.
+A standalone Markdown file is not automatically loaded. Codex reads global
+instructions from `~/.codex/AGENTS.override.md` or `AGENTS.md`, then project
+instructions from the repository root down to the working directory. An override
+wins at the same location; the default combined budget is 32 KiB.
+[Instruction discovery](https://learn.chatgpt.com/docs/agent-configuration/agents-md).
+
+**Skills are optional for this installation.** Current documented locations include
+`~/.agents/skills`, repository `.agents/skills`, `/etc/codex/skills`, and bundled
+skills. A skill uses `SKILL.md` and can be invoked as `$warm-handoff` when installed.
+On the inspected machine, this Codex host also exposes a separate installation in
+`~/.codex/skills/warm-handoff`; do not assume every client scans that legacy location
+or automatically imports `~/.claude/skills`. Claude tool names, hooks, settings,
+and cost scripts need review before reuse.
+[Skill support and discovery](https://learn.chatgpt.com/docs/build-skills).
+
+**Cache timing:** Do not transfer Claude's one-hour assumption. The current API
+guide gives GPT-5.6 and later at least 30 minutes after the last cache write/reuse;
+older `in_memory` modes typically have 5–10 minutes of inactivity. This may be a
+shorter planning window, but is not a measured Codex subscription guarantee.
+Save a handoff before a long pause; no keepalive pings or Claude price multipliers.
+[Prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching).
+
+**Separate workers and permissions:** Use `codex exec` for an explicitly assigned
+CLI worker, replacing Claude's `Agent` call. Codex hosts may also offer native
+subagents; this setup does not require them. With a prepared brief and report path:
+
+```sh
+codex --ask-for-approval on-request exec -C /path/to/project \
+  --sandbox workspace-write \
+  -c 'sandbox_workspace_write.writable_roots=["/path/to/project/.git"]' \
+  -c sandbox_workspace_write.network_access=false \
+  -o /path/to/project/report.md - < /path/to/project/task.txt
+```
+
+`workspace-write` allows workspace edits. `writable_roots` requests additional
+write access, including Git metadata needed for commits. For worktrees, resolve
+both `git rev-parse --absolute-git-dir` and
+`git rev-parse --path-format=absolute --git-common-dir` and include their actual
+absolute paths. Managed profiles can still keep `.git` read-only: report that
+block and let an authorized parent session perform the commit. `--ask-for-approval
+never` removes prompts, not restrictions. See the template for details.
+
+`network_access=true` enables outbound shell networking when needed for an
+instructed push; it neither authorizes publishing nor supplies GitHub credentials.
+These startup options cannot loosen an already imposed parent sandbox.
+[Configuration](https://learn.chatgpt.com/docs/config-file/config-reference) ·
+[Protected Git directories](https://learn.chatgpt.com/docs/config-file/config-advanced).
 
 ## 7. The scripts
 

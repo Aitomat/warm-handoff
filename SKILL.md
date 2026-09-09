@@ -55,7 +55,7 @@ folder does not help; only project-local settings do.
    for unneeded plugins, `"skillOverrides": {"<name>": "off"}` for every unneeded global
    skill — one entry per skill, there are NO wildcards (`~/.claude/skills`, symlinked
    `~/.agents/skills` included; plugin skills only via `enabledPlugins`). Global agents in
-   `~/.claude/agents/` have no project switch. Template: `/Users/pro16/Code/aitomat/.claude/settings.json`.
+   `~/.claude/agents/` have no project switch. Template: `/path/to/aitomat/.claude/settings.json`.
 3. Document the result in the handoff under the MANDATORY block
    **`## Aktive Werkzeuge dieses Projekts`** (see the handoff structure below): active
    skills, plugins, MCP servers, plus the line `Übersicht: ~/.claude/SKILLS-UEBERSICHT.md`.
@@ -481,15 +481,15 @@ Structure, top to bottom:
    For Aitomat that is, as of 02.09.2026:
    ```
    ## Weitere Dokumente
-   - `/Users/pro16/Code/aitomat/docs/reviews/` — Wellen-Berichte je Wächter + `shots/`
+   - `/path/to/aitomat/docs/reviews/` — Wellen-Berichte je Wächter + `shots/`
      (Sichtprüfungs-Screenshots). Der Ort, an dem eine Welle nachlesbar ist.
-   - `/Users/pro16/Code/aitomat/docs/wellen/` — Pläne und Zwischenstände laufender Wellen.
-   - `/Users/pro16/Code/aitomat/docs/plans/` — längerfristige Vorhaben, noch nicht in Wellen.
-   - `/Users/pro16/Code/aitomat/docs/design/` — Design-Gesetz, Farben, HUD-Gestalt.
-   - `/Users/pro16/Code/aitomat/docs/research/`, `docs/mitbewerber/`, `docs/website/`,
+   - `/path/to/aitomat/docs/wellen/` — Pläne und Zwischenstände laufender Wellen.
+   - `/path/to/aitomat/docs/plans/` — längerfristige Vorhaben, noch nicht in Wellen.
+   - `/path/to/aitomat/docs/design/` — Design-Gesetz, Farben, HUD-Gestalt.
+   - `/path/to/aitomat/docs/research/`, `docs/mitbewerber/`, `docs/website/`,
      `docs/energie/`, `docs/feedback/`, `docs/kb-seed/` — Zuarbeiten, selten angefasst.
-   - `/Users/pro16/Code/aitomat/handoff-archiv/` — abgelegte Handoffs (mv, nie rm).
-   - `/Users/pro16/Code/aitomat/docs/archiv/` — überholte Dokumente, nur Nachschlagewerk.
+   - `/path/to/aitomat/handoff-archiv/` — abgelegte Handoffs (mv, nie rm).
+   - `/path/to/aitomat/docs/archiv/` — überholte Dokumente, nur Nachschlagewerk.
    - `~/.claude/skills/warm-handoff/docs/evidenz.md` — die Messreihe hinter der Arbeitsweise.
    ```
    Then, MANDATORY, directly after Weitere Dokumente: **`## Aktive Werkzeuge dieses
@@ -518,7 +518,7 @@ Structure, top to bottom:
    **Kurzzeit (diese Wochen):** → branch + tip + test count, what is open,
                                    machine/disk state, current test items
    ```
-   Template to copy the shape from: `/Users/pro16/Code/aitomat/_handoff-aitomat-2026-08-30-e.md`,
+   Template to copy the shape from: `/path/to/aitomat/_handoff-aitomat-2026-08-30-e.md`,
    section `## Gedächtnis`. Carry the long-term list forward verbatim from the previous
    handoff unless something actually changed; rewrite the short-term list every time.
    **„Dreaming" — the memory is refreshed while the handoff is written** (user, 30.08.2026,
@@ -529,7 +529,7 @@ Structure, top to bottom:
    project's handoff, visible and editable by the user (he may change or delete lines, and
    `>>>` works here like everywhere else). **Claude's own memory file is no longer filled** —
    the handoff's `## Gedächtnis` replaces it, so there is one place, not two.
-   Example to copy the shape from: `/Users/pro16/Code/aitomat/_handoff-aitomat-2026-08-30-g.md`,
+   Example to copy the shape from: `/path/to/aitomat/_handoff-aitomat-2026-08-30-g.md`,
    section `## Gedächtnis`.
 8. **Kostentabelle** via `~/.claude/session-costs.sh --markdown` (unit = span between two
    user messages; explain k = thousand, context column ≠ cost) + honest findings, then the
@@ -615,8 +615,8 @@ you want me to open it".
      word like `handoff.md` in prose never becomes a dead link. This includes screenshot paths that contain spaces:
      they become `file://` links with the spaces percent-encoded (`.../ScreenshotY%202026-09-03%20um%2021.10.04.jpg`).
      A raw path with spaces is not a link in TextEdit — encode, don't quote.
-  3. **The header copy-line stays on ONE line** (small font, `white-space: nowrap`), so the
-     path the user has to copy back is not torn in two.
+  3. **The header copy-line stays on ONE line** in normal 18 pt body size (not small;
+     `white-space: nowrap`), so the path the user has to copy back is readable and not torn in two.
   4. **The user answers inside the RTF**, under the `>>>Userantwort:` markers — that is the
      point of the twin, it is a working document, not a printout.
   5. **Checked, not assumed:** right after generating it, run `grep -c "file://" <handoff>.rtf`.

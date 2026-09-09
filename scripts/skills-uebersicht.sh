@@ -89,7 +89,7 @@ lines += ['## 5. So schaltest du je Projekt ab', '',
  '```json', '{', '  "enabledPlugins": {', '    "example-skills@anthropic-agent-skills": false,',
  '    "plugin-dev@claude-plugins-official": false', '  },', '  "skillOverrides": {',
  '    "ads": "off",', '    "seo": "off",', '    "firecrawl": "off"', '  }', '}', '```', '',
- 'Vorlage mit allen 97 Aitomat-fremden Skills: `/Users/pro16/Code/aitomat/.claude/settings.json`.',
+ 'Vorlage mit allen 97 Aitomat-fremden Skills: `/path/to/aitomat/.claude/settings.json`.',
  'Globale Agenten (`~/.claude/agents/*.md`) haben keinen Projekt-Schalter — nur nach `~/.claude/agents-inaktiv/` verschieben.',
  'Prüfen: neue Session starten, erste Anfrage im Session-JSONL → `cache_creation_input_tokens` = Startkontext.', '']
 open(out, 'w', encoding='utf-8').write('\n'.join(lines))

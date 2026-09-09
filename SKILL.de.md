@@ -58,7 +58,7 @@ Ein eigener Projektordner hilft nicht; nur projektlokale Einstellungen helfen.
    gebrauchten globalen Skill — ein Eintrag je Skill, es gibt KEINE Platzhalter (`~/.claude/skills`
    und das verlinkte `~/.agents/skills` eingeschlossen; Plugin-Skills nur über `enabledPlugins`).
    Globale Agenten in `~/.claude/agents/` haben keinen Projektschalter.
-   Vorlage: `/Users/pro16/Code/aitomat/.claude/settings.json`.
+   Vorlage: `/path/to/aitomat/.claude/settings.json`.
 3. Das Ergebnis im Handoff im PFLICHT-Block **`## Aktive Werkzeuge dieses Projekts`**
    dokumentieren (siehe Handoff-Struktur unten): aktive Skills, Plugins, MCP-Server, dazu die
    Zeile `Übersicht: ~/.claude/SKILLS-UEBERSICHT.md`. Wird ein Werkzeug ergänzt oder
@@ -438,7 +438,7 @@ Skills für die nächste Sitzung nennen. Struktur, von oben nach unten:
    **Kurzzeit (diese Wochen):** → Branch + Tip + Testzahl, was offen ist,
                                    Rechner-/Plattenzustand, aktuelle Testpunkte
    ```
-   Vorlage für die Form: `/Users/pro16/Code/aitomat/_handoff-aitomat-2026-08-30-e.md`,
+   Vorlage für die Form: `/path/to/aitomat/_handoff-aitomat-2026-08-30-e.md`,
    Abschnitt `## Gedächtnis`. Die Langzeit-Liste wörtlich aus dem vorigen Handoff übernehmen,
    solange sich nichts wirklich geändert hat; die Kurzzeit-Liste jedes Mal neu schreiben.
 8. **Kostentabelle** via `~/.claude/session-costs.sh --markdown` (Einheit = Spanne zwischen zwei

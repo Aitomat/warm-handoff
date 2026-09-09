@@ -8,13 +8,13 @@ Quellen unten; nichts ist geschätzt, hochgerechnet oder gerundet „nach Gefüh
 | Quelle | Pfad | Was daraus kommt |
 |---|---|---|
 | Logbuch | `~/.claude/warm-handoff-log.md` | Datum, Kontext, Struktur, Rebuilds, Anfragen je Welle |
-| Handoff W22 | `/Users/pro16/Code/aitomat/_handoff-aitomat-2026-08-29-b.md`, Z. 492 (Kostentabelle) | 58 Anfragen · 2.075k Äquivalent |
-| Handoff W23 | `/Users/pro16/Code/aitomat/_handoff-aitomat-2026-08-29-c.md`, Z. 52–56 („Wächter-Bilanz") | W22 vs. W23 direkt gegenübergestellt |
-| Handoff W28 | `/Users/pro16/Code/aitomat/_handoff-aitomat-2026-08-30-h.md`, Z. 49–56 + Z. 336 | W26/W27/W28-Bilanz, Kostentabelle |
+| Handoff W22 | `/path/to/aitomat/_handoff-aitomat-2026-08-29-b.md`, Z. 492 (Kostentabelle) | 58 Anfragen · 2.075k Äquivalent |
+| Handoff W23 | `/path/to/aitomat/_handoff-aitomat-2026-08-29-c.md`, Z. 52–56 („Wächter-Bilanz") | W22 vs. W23 direkt gegenübergestellt |
+| Handoff W28 | `/path/to/aitomat/_handoff-aitomat-2026-08-30-h.md`, Z. 49–56 + Z. 336 | W26/W27/W28-Bilanz, Kostentabelle |
 | Skill-Tabelle | `SKILL.md`, Abschnitt „Evidence — measured waves" | W22–W39 in einer Tabelle |
 | Logbuch W37–W39 | `~/.claude/warm-handoff-log.md`, Zeilen 01.09. 16:35 / 02.09. 01:25 / 02.09. 04:51 | Anfragen, Äquivalent, Dauer, Verschwendung je Welle |
 | Sitzungs-JSONL | `~/.claude/projects/-Users-pro16-Code-aitomat/*.jsonl` (nur 01./02.09., nur aggregiert) | Abschnitt „Was die Nacht gekostet hat" |
-| Welle-40-Plan | `/Users/pro16/Code/aitomat/docs/reviews/2026-09-02-welle40-plan.md` | Modellpolitik 02.09. 18:51, Auftragszahl W40 |
+| Welle-40-Plan | `/path/to/aitomat/docs/reviews/2026-09-02-welle40-plan.md` | Modellpolitik 02.09. 18:51, Auftragszahl W40 |
 
 „Äquivalent" = die Spalte `equiv.` der Kostentabelle im jeweiligen Handoff: gelesene Tokens
 × 0,1 + geschriebene Tokens × 2 + Ausgabe, also der Preis der Welle im **Hauptkontext**.
