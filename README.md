@@ -1,13 +1,25 @@
 # warm-handoff 🏄
 
-> **Claude Code and Codex:** The Claude workflow lives in `SKILL.md`, with historical evidence in `references/historie.md`. Codex users should start with [Use with Codex](#6a-use-with-codex); Claude-specific cache calculations elsewhere in this README do not describe Codex billing.
+> **Current shared entry point:** [SKILL.md](SKILL.md) supports Codex and Claude Code through active [Codex](references/codex.md) and [Claude Code](references/claude-code.md) adapters. The detailed session arithmetic below records the workflow's history; it is not a universal current pricing, context or permission rule.
+
+## Current document workflow (W53)
+
+German documents, original answers preserved, copy line at the top: `Ich habe das Handoff beantwortet: /absolute/path/new.rtf`. After a completed user-relevant step, create a **new** editable RTF and open every mentioned reading document in the **active TextEdit tab group or one new common group**. Never merge unrelated windows, leave empty helper tabs/windows behind, or overwrite an existing answer file. See the [verified tab procedure and RTF limits](references/rtf-macos.md).
+
+Read complete Pasted Content and long dictation from **Codex, cmux and Claude**; a collapsed terminal placeholder is not its content. Reconcile sources and late additions. Authorized waves retain Oberchef → guardian → worker, with **at most four guardians**, isolated worktrees, file ownership and actual host/machine capacity. See [wave rules](references/wave-execution.md) and [handoff format](references/handoff-format.md).
+
+```sh
+scripts/handoff-rtf.sh /project/docs/new.md /project/new.rtf --project-root /project
+python3 -m unittest discover -s tests -v
+```
+
+Relative links resolve against the explicit project root or nearest `.git` marker, never a temporary HTML directory. Without either, the Markdown directory is the fallback. The renderer verifies text roundtrip and hyperlink fields before exclusive publication; existing files and symlinks are refused. Complex Markdown may remain visible syntax; viewer QA is separate. A repository update never implicitly updates an installed skill.
+
 
 
 > **Primary language: English · Deutsche Fassung: [README.de.md](README.de.md)**
 
-**A Claude Code skill that paces your session around the prompt-cache window: it measures
-where you stand, keeps the number of requests down, and writes a handoff document at the
-right moment.**
+**A skill for lossless handoffs and authorized work waves in Claude Code and Codex.**
 
 Author: **Yasin Akgün** ([github.com/Aitomat](https://github.com/Aitomat)). The skill grew
 out of building [Aitomat](https://aitomat.ai), a macOS app, with Claude Code every day —
@@ -35,7 +47,16 @@ every rule in it started as a session that went wrong or a bill that looked odd.
 
 ---
 
+**How to read the history below:** “200k” is not a current context limit.
+“Collecting costs nothing” meant that typing into a document does not itself trigger
+a model request; later reading and processing still use resources. The Claude-only
+steps describe the workflow's origin; today's document cycle supports **both**
+Claude and Codex. Old push, settings or editor commands do not grant permission.
+Current installation and usage resume in sections 6/6a.
+
 ## 0. The moral, in five sentences
+
+> **Historical section (August/September 2026).** These rules and calculations describe the earlier workflow, not current instructions. Use the [skill entry point](SKILL.md) and active [Claude](references/claude-code.md)/[Codex](references/codex.md) adapters today.
 
 If you take one thing from this repo, take this:
 
@@ -92,6 +113,8 @@ invisible on disk.
 
 ## 1. The problem in three minutes
 
+> **Historical section (August/September 2026).** These rules and calculations describe the earlier workflow, not current instructions. Use the [skill entry point](SKILL.md) and active [Claude](references/claude-code.md)/[Codex](references/codex.md) adapters today.
+
 If you use Claude Code, you see a chat interface. What you don't see:
 
 - **Every message is not one request but many.** Claude reads a file, greps, edits, runs a
@@ -117,6 +140,8 @@ token-equivalents**. The same amount of work, delegated to subagents and batched
 shorter, but **fewer requests inside the fat context**.
 
 ## 2. The cost arithmetic, with real numbers
+
+> **Historical section (August/September 2026).** These rules and calculations describe the earlier workflow, not current instructions. Use the [skill entry point](SKILL.md) and active [Claude](references/claude-code.md)/[Codex](references/codex.md) adapters today.
 
 All numbers in this skill are normalised to "fresh input = 1" (Anthropic list-price
 ratios, Opus tier). On a subscription nobody pays this sum in dollars — it measures **what
@@ -175,6 +200,8 @@ Inside the window all 147 run against the warm cache. Measured cache-write rates
 sessions were 1.6–3.3 % — warm throughout.
 
 ## 3. The wave workflow
+
+> **Historical section (August/September 2026).** These rules and calculations describe the earlier workflow, not current instructions. Use the [skill entry point](SKILL.md) and active [Claude](references/claude-code.md)/[Codex](references/codex.md) adapters today.
 
 The arithmetic rewards a specific rhythm. The skill calls it **waves**:
 
@@ -284,6 +311,8 @@ of its own and no rebuild after the overnight pause.
 
 ## 3a. Project start — the start context is the first saving
 
+> **Historical section (August/September 2026).** These rules and calculations describe the earlier workflow, not current instructions. Use the [skill entry point](SKILL.md) and active [Claude](references/claude-code.md)/[Codex](references/codex.md) adapters today.
+
 Every request re-reads the prefix, and the prefix starts with the descriptions of EVERY
 globally installed skill, plugin skill and agent. Measured in Aitomat (02.09.2026): **63k
 tokens start context, 46 % of it skill and agent descriptions** — most of them irrelevant
@@ -301,6 +330,8 @@ so every pause rebuilds the whole start context at ×2. A lean start context plu
 collection file that costs zero requests is what keeps that affordable.
 
 ## 3b. The Zwischenrufe file and the collection for the next handoff
+
+> **Historical section (August/September 2026).** These rules and calculations describe the earlier workflow, not current instructions. Use the [skill entry point](SKILL.md) and active [Claude](references/claude-code.md)/[Codex](references/codex.md) adapters today.
 
 **Why.** While the main session is waiting on background agents, every chat message you send
 is a **full request**: the entire context is read again. A quick „also: make that button
@@ -357,6 +388,8 @@ jedes Mal mindestens eine Anfrage."
 
 ## 3c. Who plans what — main session and guardian have different jobs
 
+> **Historical section (August/September 2026).** These rules and calculations describe the earlier workflow, not current instructions. Use the [skill entry point](SKILL.md) and active [Claude](references/claude-code.md)/[Codex](references/codex.md) adapters today.
+
 The most expensive common mix-up: a guardian being asked to „work out what needs doing". That
 is not its job. The division is sharp:
 
@@ -388,6 +421,8 @@ line exists the question is open; it will be measured, not guessed.
 
 ## 3d. The RTF twin — the handoff as a working document
 
+> **Historical section (August/September 2026).** These rules and calculations describe the earlier workflow, not current instructions. Use the [skill entry point](SKILL.md) and active [Claude](references/claude-code.md)/[Codex](references/codex.md) adapters today.
+
 A handoff is not a printout, it is the place where the user answers. Markdown in a plain
 editor makes that painful: headings look like ordinary lines, screenshot paths with spaces
 are dead text, and the long copy-line at the top wraps into two. So **every handoff gets an
@@ -414,6 +449,8 @@ regenerate the twin), the `.rtf` carries what the user writes and is copied verb
 next handoff's collection.
 
 ## 4. Subagent economics
+
+> **Historical section (August/September 2026).** These rules and calculations describe the earlier workflow, not current instructions. Use the [skill entry point](SKILL.md) and active [Claude](references/claude-code.md)/[Codex](references/codex.md) adapters today.
 
 In this skill subagents are **the default route, not the exception** — anything with more
 than a handful of steps goes to an agent. The reasons, in numbers:
@@ -513,6 +550,8 @@ Four rules the user added on 30.08.2026 while watching wave 26 run:
 
 ## 5. What the skill makes visible
 
+> **Historical section (August/September 2026).** These rules and calculations describe the earlier workflow, not current instructions. Use the [skill entry point](SKILL.md) and active [Claude](references/claude-code.md)/[Codex](references/codex.md) adapters today.
+
 ### The timestamp
 
 Under every reply: date and time, read fresh from `date`, never extrapolated from an
@@ -580,47 +619,37 @@ installed skills but from something else (`/context all` tells you what).
 
 ## 6. Install
 
-```bash
-mkdir -p ~/.claude/skills/warm-handoff
-curl -fsSL https://raw.githubusercontent.com/Aitomat/warm-handoff/main/SKILL.md \
-  -o ~/.claude/skills/warm-handoff/SKILL.md
+Copy the **complete repository directory** into a new, unused skill directory
+recognized by your host: `SKILL.md`, `references/` and `scripts/` belong together.
+For Claude Code, the established location is `~/.claude/skills/warm-handoff`.
+Inspect and preserve an existing installation before any separate authorized
+update. Do not download just SKILL.md or scatter scripts under `~/.claude/`:
+the RTF wrapper needs its neighboring Python modules.
 
-for f in ctx.sh codex-limit.sh session-costs.sh session-kosten.sh; do
-  curl -fsSL "https://raw.githubusercontent.com/Aitomat/warm-handoff/main/scripts/$f" \
-    -o ~/.claude/"$f"
-  chmod +x ~/.claude/"$f"
-done
-```
+Invoke `/warm-handoff` in Claude or `$warm-handoff` in a supporting Codex host.
+An automatic project agreement is optional; do not silently change existing
+`CLAUDE.md`, `AGENTS.md` or global settings. Section 6a remains the Codex option
+without installing the skill.
 
-Or clone the repo: `SKILL.md` goes to `~/.claude/skills/warm-handoff/SKILL.md`, everything
-in `scripts/` goes to `~/.claude/`, keeping the file names.
-
-**To have it fire in every session without typing anything**, one line in your global
-`~/.claude/CLAUDE.md`:
-
-```
-At the start of every session, invoke the warm-handoff skill. Put the time in every reply.
-```
-
-Manually: `/warm-handoff`, or just say "cache", "handoff", "wave done", "fresh session".
-
-Requirements: macOS or Linux, `bash`, `python3` (for the cost scripts), `jq` optional. The
-scripts only read the local session files under `~/.claude/projects/` and
-`~/.codex/sessions/` — nothing leaves the machine.
+RTF requires macOS, Bash, Python 3 and `textutil`. Historical telemetry helpers
+retain their individual prerequisites; inspect source selection and side effects
+before use. `zwischenrufe-antwort.sh` is a legacy editor-mutating helper and is
+not used by the current safe workflow: write receipts to new files instead.
 
 ## 6a. Use with Codex
 
 Codex supports skills as well as `AGENTS.md`. For this workflow, install the
 [AGENTS.md template](templates/AGENTS-warm-handoff.md) (Astra's German working
-agreement) as `docs/warm-handoff.md` in your project. From that project root:
+agreement) as `docs/warm-handoff.md` in your project. Replace the source path
+with your complete, reviewed checkout. From the project root:
 
 ```sh
 mkdir -p docs
-curl -fsSL https://raw.githubusercontent.com/Aitomat/warm-handoff/main/templates/AGENTS-warm-handoff.md \
-  -o docs/warm-handoff.md
+cp -n /path/to/warm-handoff/templates/AGENTS-warm-handoff.md docs/warm-handoff.md
 ```
 
-Use a new destination if that file already contains your notes. Add the following
+`cp -n` does not overwrite an existing file. If the destination is occupied,
+choose a new filename and update the reference below. Add the following
 short binding section to your existing project `AGENTS.md`, keeping its other rules:
 
 ```markdown
@@ -642,7 +671,8 @@ instructions from the repository root down to the working directory. An override
 wins at the same location; the default combined budget is 32 KiB.
 [Instruction discovery](https://learn.chatgpt.com/docs/agent-configuration/agents-md).
 
-**Skills are optional for this installation.** Current documented locations include
+**Skills are optional for this installation.** The original Codex template records
+locations including
 `~/.agents/skills`, repository `.agents/skills`, `/etc/codex/skills`, and bundled
 skills. A skill uses `SKILL.md` and can be invoked as `$warm-handoff` when installed.
 On the inspected machine, this Codex host also exposes a separate installation in
@@ -651,11 +681,11 @@ or automatically imports `~/.claude/skills`. Claude tool names, hooks, settings,
 and cost scripts need review before reuse.
 [Skill support and discovery](https://learn.chatgpt.com/docs/build-skills).
 
-**Cache timing:** Do not transfer Claude's one-hour assumption. The current API
-guide gives GPT-5.6 and later at least 30 minutes after the last cache write/reuse;
-older `in_memory` modes typically have 5–10 minutes of inactivity. This may be a
-shorter planning window, but is not a measured Codex subscription guarantee.
-Save a handoff before a long pause; no keepalive pings or Claude price multipliers.
+**Cache timing:** Do not transfer Claude's one-hour assumption. API cache-duration
+guidance is not a measured Codex subscription guarantee. Use telemetry actually
+available for the current host and model; missing values remain 'not measured'.
+Save a handoff before a long pause; no keepalive pings, universal context limits
+or Claude price multipliers.
 [Prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching).
 
 **Separate workers and permissions:** Use `codex exec` for an explicitly assigned
@@ -686,18 +716,21 @@ These startup options cannot loosen an already imposed parent sandbox.
 
 ## 7. The scripts
 
-| Script | What it does | Usage |
+| Script | Status and purpose | Usage |
 |---|---|---|
-| `scripts/ctx.sh` | What was spent since the last user message and **on what**: request count, what happened inside them (agent reports, file access, commands, own replies), split into read/write/output. Produces the cost line. | `date "+%d.%m.%Y %H:%M" && ~/.claude/ctx.sh` — always appended to a command that runs anyway, so the measurement costs nothing |
-| `scripts/session-costs.sh` | The per-session cost table, wave by wave, from the session's `.jsonl`. Names the most expensive stretch and the cache hit rate. | `session-costs.sh` (current project, newest session) · `session-costs.sh <session.jsonl>` · `session-costs.sh --markdown` (ready for the handoff) |
-| `scripts/handoff-rtf.sh` | The RTF twin of a handoff: Markdown → HTML → `textutil -convert rtf`. 18 pt, bold headings, `>>>` lines yellow, every path/URL a clickable `file://` link (spaces percent-encoded), header copy-line kept on one line. The user answers in the `.rtf` under `>>>Userantwort:`; read it back with `textutil -convert txt -stdout <file>.rtf`. | `handoff-rtf.sh _handoff-projekt-2026-09-03.md` |
-| `scripts/codex-limit.sh` | How much of the Codex/GPT quota is used. The Codex CLI has no usage command; the script reads the `rate_limits` block from the last session file and prints the age of the reading. | `codex-limit.sh` · `--kurz` (status line: `codex 10%/7d`) · `--json` |
+| `scripts/handoff-rtf.sh` | Current renderer: Markdown → deterministic RTF, text roundtrip and hyperlink checks before exclusive publication. Existing destinations are preserved. | `scripts/handoff-rtf.sh source.md new.rtf --project-root /project` · [Limits and viewer QA](references/rtf-macos.md) |
+| `scripts/ctx.sh` | Historical Claude helper with old price ratios; not evidence of current subscription cost. | Inspect and identify the exact session source before use. |
+| `scripts/session-costs.sh` | Historical session table; inspect its newest-session default and old ratios before use. | Supply an identified `.jsonl` instead of guessing the session. |
+| `scripts/codex-limit.sh` | Historical quota helper with automatic session discovery and a cache file under `~/.claude`; not task usage telemetry. | Prefer current host telemetry; check side effects and measurement age before use. |
+| `scripts/zwischenrufe-antwort.sh` | Legacy helper that changes editor state. | Do not use in the current safe workflow; write receipts to new files. |
 
-Also described in the skill: a small status-line script that parks Claude Code's own
-percentages from the stdin JSON into a file so the skill can quote them in the handoff,
-and a "wake-up ping" for the Codex readout (one mini call so the reading is fresh).
+Historical status-line and “wake-up ping” examples are not current advice.
+The skill creates no keepalive measurement requests and changes no global files
+to refresh a readout. Preserve all neighboring script files in the skill folder.
 
 ## 8. Honest limits
+
+> **Historical section (August/September 2026).** These rules and calculations describe the earlier workflow, not current instructions. Use the [skill entry point](SKILL.md) and active [Claude](references/claude-code.md)/[Codex](references/codex.md) adapters today.
 
 - The measurements come from real sessions of one developer on a subscription plan with
   the 1-hour cache, in one project (Swift/macOS). Other projects, other ratios — which is
@@ -713,6 +746,8 @@ and a "wake-up ping" for the Codex readout (one mini call so the reading is fres
   about a third), it gets corrected and the correction stays readable.
 
 ## 9. The facts everything rests on
+
+> **Historical section (August/September 2026).** These rules and calculations describe the earlier workflow, not current instructions. Use the [skill entry point](SKILL.md) and active [Claude](references/claude-code.md)/[Codex](references/codex.md) adapters today.
 
 | Rule | Value |
 |---|---|
@@ -733,20 +768,26 @@ Sources: [How Claude Code uses prompt caching](https://code.claude.com/docs/en/p
   ([mattpocock/skills](https://github.com/mattpocock/skills)) — the clearest thinking on
   *how* to write a handoff. Adopted: reference settled docs instead of copying them, redact
   secrets, suggest skills for the next agent. Deliberately different: our handoffs live *in
-  the project* as dated, user-annotated working documents, and past the context threshold
-  we prefer handoff + fresh session over `/compact`.
+  the project* as dated, user-annotated working documents; when a handoff is needed,
+  verified state remains available independently of the current conversation.
 - Further handoff implementations: [392fyc](https://github.com/392fyc/claude-handoff),
   [REMvisual](https://github.com/REMvisual/claude-handoff),
   [willseltzer](https://github.com/willseltzer/claude-handoff),
   [ykdojo](https://github.com/ykdojo/claude-code-tips/blob/main/skills/handoff/SKILL.md).
 - Second opinions on the arithmetic: Codex/GPT-5.6 and Ox Alpha (OpenRouter).
+- Actual contributions: Yasin Akgün developed the original workflow through daily
+  work with Claude Code. In W53, Codex (GPT-6 Astra) revised the shared entry point,
+  active adapters, safe RTF renderer and regression tests; Codex reviews added
+  marker and tab-group cases. Product intent, user decisions and acceptance remain
+  attributed to Yasin.
 
-Issues, measurements from your own sessions, and pull requests are welcome — in English or
-German. `SKILL.md` is English throughout; the German words that remain are literal quotes
-of what the skill actually outputs (the cost line, banner text, handoff section names) —
-those stay German because that is what the user reads. The full German twin is
-`SKILL.de.md`; `references/historie.md`, which records the sessions the rules came from,
-is German-only, and the scripts are commented in German.
+Issues, measurements from your own sessions, and pull requests are welcome in
+English or German. `SKILL.md` is the shared English entry point; `SKILL.de.md`
+is a German orientation, not a full translation of the old long-form text.
+Active detail references and user documents are German. The complete earlier
+Claude versions remain available in [English](references/claude-workflow-history.md)
+and [German](references/claude-workflow-history.de.md); the German
+[history](references/historie.md) records their provenance.
 
 ### „Was ist eigentlich PR 1?" — pull requests in one paragraph
 

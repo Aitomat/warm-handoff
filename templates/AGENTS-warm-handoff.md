@@ -94,6 +94,10 @@ Preisfaktoren und absoluten Kontextgrenzen darf deshalb nicht unverändert
   schreibende Lauf erhält einen eigenen Worktree mit geprüftem Basis-Commit;
   niemals im Hauptrepo den Branch wechseln. Parallelität nach Dateibesitz und
   Rechnerkapazität begrenzen; gemeinsame Dateien gehören einem Verantwortlichen.
+- Hierarchie: Oberchef → Wächter → Arbeiter. Höchstens vier Wächter gleichzeitig,
+  zusätzlich begrenzt durch echte Host-Slots und Rechnerressourcen. Bei vier
+  gesamten Slots etwa Oberchef + ein Wächter + zwei Arbeiter; weitere Themen
+  staffeln. Keine CLI-Läufe zur Umgehung von Host-Limits starten.
 - Arbeiter über `codex exec` starten. Auftrag aus einer Datei übergeben,
   Prozess-/Session-ID und erwarteten Bericht festhalten, Exitstatus abwarten.
   Bei Fehlern erst Arbeitsbaum, Bericht und Prozesszustand prüfen; keinen
@@ -119,6 +123,11 @@ Preisfaktoren und absoluten Kontextgrenzen darf deshalb nicht unverändert
 - Nutzertext unverändert erhalten. Jeden gelesenen Punkt mit Zeit/Beleg
   einer Antwort, Umsetzung oder ausdrücklich offenen Entscheidung zuordnen.
   Antworten an die Sammlung nur anhängen, niemals Nutzereingaben umschreiben.
+  Bei offenem Nutzereingang eine separate neue Quittungsdatei verwenden und
+  später in den nächsten Handoff übernehmen; nicht parallel hineinschreiben.
+- Pasted Content / `[pasted text]` gilt auch für Codex und cmux: vollständigen
+  zugehörigen Inhalt oder die referenzierte Datei lesen. Ein eingeklappter
+  Terminalplatzhalter ersetzt das Original nicht. Fehlende Eingänge offenhalten.
 - Vor Dateizugriffen klären, ob ein offener Editor ungesicherte Änderungen
   enthält. Falls zugänglich, Live-Text lesen und als Eingabe berücksichtigen;
   sonst eine neue Datei verwenden und die Unsicherheit benennen. Offene
@@ -128,6 +137,15 @@ Preisfaktoren und absoluten Kontextgrenzen darf deshalb nicht unverändert
   lesen. RTF niemals neu erzeugen, bevor vorhandene Nutzerantworten gesichert
   sind. Eine RTF-Fassung nur bei vereinbartem Bedarf und verfügbaren Werkzeugen
   erstellen, dann Lesbarkeit und Links prüfen; Markdown bleibt transportabel.
+- Im vereinbarten deutschen RTF/TextEdit-Ablauf steht die Kopierzeile ganz oben
+  und zeigt auf die neue RTF-Antwortdatei. Alle erwähnten Lesedokumente in der
+  aktiven TextEdit-Tabgruppe oder einer neuen gemeinsamen Gruppe öffnen.
+  Nie „Alle Fenster zusammenführen“ verwenden oder globale Tab-Einstellungen
+  ändern. Nur eindeutig selbst erzeugte leere Hilfstabs/-fenster entfernen;
+  fremde Gruppen und ungesicherte Nutzerdateien erhalten. Öffnung/Gruppierung
+  anhand des tatsächlichen UI-Zustands prüfen oder ausdrücklich offen melden.
+  Im vollständigen Skill steht die geprüfte Methode in `references/rtf-macos.md`;
+  diese eigenständige Vorlage setzt die Referenz nicht als installiert voraus.
 
 ### Abschluss und nächster Einstieg
 
