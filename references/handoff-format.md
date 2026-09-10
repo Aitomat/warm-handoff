@@ -60,3 +60,20 @@ prüfen. Vorhandene `sammlung-pruefen.sh`-Heuristik ist kein Vollständigkeitsbe
 auch Antworten außerhalb erkannter Abschnitte direkt abgleichen.
 Berichte mit echten Commit-/Push-Belegen und offenen Resten übergeben.
 RTF-Erstellung und Öffnen folgen [RTF/TextEdit](rtf-macos.md).
+
+## Zukunftsfaden bei dokumentengeführter Zusammenarbeit
+
+Wenn der Nutzer kommende Wellen im Handoff verfolgt, den „roten Faden“ aus den
+beiden Vorgängern und den referenzierten Plänen ausdrücklich abgleichen. Offene
+Zukunftspunkte nicht durch eine pauschale Roadmap-Verweisung ersetzen. Für die
+nächsten drei bis vier sinnvollen Arbeitspakete Ziel, konkrete Restpunkte,
+Abhängigkeiten und Status nennen: freigegeben, vorgeschlagen, Entscheidung offen
+oder erledigt mit Beleg. Frühere Wellennummern sind historische Planung; eine
+Umordnung samt Grund sichtbar erklären. Keine zusätzlichen Wellen erfinden, wenn
+nur weniger belegt sind. Entfernte oder vertagte Themen mit Grund erhalten.
+
+Den detaillierten Ausblick nahe dem Dokumentende vor der abschließenden Sammlung
+platzieren; je künftigem Paket ein optionales Antwortfeld für Ergänzungen und
+Prioritäten anbieten. Offene Produktentscheidungen einzeln weiterführen. Alte
+Freigaben, Modelle oder Wächterzahlen nicht aus der Zukunftsliste ableiten.
+Eine neue Idee bleibt Vorschlag, bis ihr Umfang zur Umsetzung freigegeben ist.

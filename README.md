@@ -2,6 +2,8 @@
 
 > **Current shared entry point:** [SKILL.md](SKILL.md) supports Codex and Claude Code through active [Codex](references/codex.md) and [Claude Code](references/claude-code.md) adapters. The detailed session arithmetic below records the workflow's history; it is not a universal current pricing, context or permission rule.
 
+> **Von Claude Code zu Codex wechseln?** Hier stehen [zwei kopierbare Start-Prompts und eine kurze Einführung](#6b-von-claude-code-zu-codex-zwei-kopierbare-einstiege) für cmux und andere Terminals.
+
 ## Current document workflow (W53)
 
 German documents, original answers preserved, copy line at the top: `Ich habe das Handoff beantwortet: /absolute/path/new.rtf`. After a completed user-relevant step, create a **new** editable RTF and open every mentioned reading document in the **active TextEdit tab group or one new common group**. Never merge unrelated windows, leave empty helper tabs/windows behind, or overwrite an existing answer file. See the [verified tab procedure and RTF limits](references/rtf-macos.md).
@@ -40,6 +42,7 @@ every rule in it started as a session that went wrong or a bill that looked odd.
 5. [What the skill makes visible: cost line, cost table, quota](#5-what-the-skill-makes-visible)
 6. [Install](#6-install)
 6a. [Use with Codex](#6a-use-with-codex)
+6b. [Claude → Codex: Einstieg und zwei Prompts (Deutsch)](#6b-von-claude-code-zu-codex-zwei-kopierbare-einstiege)
 7. [The scripts](#7-the-scripts)
 8. [Honest limits](#8-honest-limits)
 9. [The facts everything rests on](#9-the-facts-everything-rests-on)
@@ -713,6 +716,129 @@ instructed push; it neither authorizes publishing nor supplies GitHub credential
 These startup options cannot loosen an already imposed parent sandbox.
 [Configuration](https://learn.chatgpt.com/docs/config-file/config-reference) ·
 [Protected Git directories](https://learn.chatgpt.com/docs/config-file/config-advanced).
+
+## 6b. Von Claude Code zu Codex: zwei kopierbare Einstiege
+
+Du kannst ein bestehendes Projekt samt beantwortetem Handoff mit Codex weiterführen. **cmux ist optional**: Es organisiert Terminalfenster und Arbeitsbereiche; die folgenden Schritte funktionieren auch in einem anderen Terminal. Voraussetzung für Weg B: Codex CLI ist installiert, von dir angemeldet und im richtigen Projekt gestartet. Claude und Codex sollen nicht gleichzeitig dieselben Dateien bearbeiten.
+
+**Weg A** lässt die bisherige Claude-Session den Übergang vorbereiten. **Weg B** kann anschließend übernehmen – oder die Einrichtung direkt erledigen, wenn Claude nicht mehr verfügbar ist. Ersetze die beiden Pfadfelder; falls der Handoff-Pfad unbekannt ist, schreibe dort „im Projekt ermitteln“. Die Prompts erlauben die beschriebene lokale Einrichtung. Sie sind keine Freigabe für beliebige Produktänderungen oder Veröffentlichungen.
+
+### Vor dem ersten Start
+
+Falls Codex CLI noch fehlt, folge der [offiziellen Installation für dein Betriebssystem](https://learn.chatgpt.com/docs/codex/cli). Starte danach im gewünschten Projekt `codex` und melde dich selbst an. In cmux öffnest du dafür eine Terminalfläche; besondere cmux-Hooks sind für Warm Handoff nicht erforderlich. Zugangsdaten aus Claude werden nicht übertragen.
+
+### Was übertragen wird
+
+`CLAUDE.md` ist die vorhandene Claude-Arbeitsgrundlage; Codex verwendet `AGENTS.md` mit seiner eigenen Suchreihenfolge. Gemeinsam geltende Projektregeln werden bewusst übernommen, Claude-spezifische Hooks, Werkzeugnamen und Kostenformeln nicht blind kopiert. Eine neue `AGENTS.md` wird bei einem neuen Start automatisch geladen; die schon laufende Session soll Ergänzungen ausdrücklich lesen. [Codex-Projektanweisungen](https://learn.chatgpt.com/docs/agent-configuration/agents-md).
+
+Der Skill ist ein vollständiger Ordner mit `SKILL.md`, Referenzen und Skripten. Für diese Einrichtung bevorzugen wir den projektlokalen Ort `.agents/skills/warm-handoff`; vorhandene Installationen zuerst prüfen. Codex CLI bietet `/skills` beziehungsweise `$warm-handoff`. Ein Ablagepfad allein beweist noch nicht, dass der laufende Host den Skill gefunden hat. [Skills und Erkennung](https://learn.chatgpt.com/docs/build-skills).
+
+### Prompt A — an die bestehende Claude-Code-Session
+
+```text
+Bereite dieses Projekt für die Weiterarbeit mit Codex CLI vor.
+Projekt: <ABSOLUTER PROJEKTPFAD>
+Beantworteter Handoff: <ABSOLUTER HANDOFF-PFAD>
+Skill-Quelle: https://github.com/Aitomat/warm-handoff
+
+Ich beauftrage dich mit der lokalen Migrationsvorbereitung: passende
+Projektanweisungen ergänzen, Warm Handoff projektlokal einrichten und eine
+neue überprüfbare Übergabe schreiben. Keine neue Produktarbeit allein
+aus dieser Einrichtung ableiten.
+
+1. Prüfe Arbeitsordner, Branch, Änderungen und laufende Arbeiter lesend.
+Lies den Handoff samt Antworten, beide Vorgänger und referenzierte Pläne.
+Ungesicherte Editorantworten nur lesend erfassen; gelingt das nicht, die
+Lücke benennen. Alte Antwortdateien nicht speichern, schließen oder ersetzen.
+2. Lies vorhandene CLAUDE.md und AGENTS.md sowie den aktuellen vollständigen
+Warm-Handoff-Skill mit seinen aktiven Adaptern. Übernimm gültige gemeinsame
+Regeln in einen klar begrenzten AGENTS.md-Abschnitt oder eine dort ausdrücklich
+referenzierte Projektdatei. Erhalte den übrigen Inhalt. Kennzeichne Konflikte
+und historische Angaben; keine alten Wächterzahlen oder Freigaben erfinden.
+3. Nutze einen vollständigen geprüften Skill-Ordner unter
+.agents/skills/warm-handoff. Ist dort schon eine Installation, prüfe sie und
+verwende sie, sofern passend. Ersetze sie nicht still. Falls eine Aktualisierung
+nötig ist, bereite den Vergleich vor und benenne den gesonderten Updateumfang.
+Keine globale Konfiguration, keine fremden Skills oder Plugins ändern.
+4. Schreibe einen neuen Handoff mit Originalantworten, ihren Ergebnissen,
+konkreten offenen Tests, Agenten-/Worktree-Pfaden, belegtem Git-Stand und
+bestehenden Autorisierungen. Rekonstruiere den detaillierten Zukunftsfaden:
+Prioritäten, Abhängigkeiten, entschiedene und offene Fragen, vertagte Projekte.
+Verbrauch nur mit Messquelle und Umfang; fehlende Werte als nicht gemessen.
+5. Benenne genau eine aktive Sammlung für längeres Feedback. Kurze Korrekturen
+im Chat bleiben gültige Steuerung. Eine Zwischenrufe-Datei ist optional und
+kein zweiter zwingender Eingang. Auf macOS wünsche ich zusätzlich eine neue
+RTF in TextEdit, möglichst in derselben Tabgruppe; sonst Markdown im verfügbaren
+Editor. Fehlende Werkzeuge melden, nicht ungefragt installieren.
+6. Lies oder kopiere keine .env-, Authentifizierungs-, Schlüssel- oder
+Cookie-Dateien. Keine globalen Rechte ändern, keine App ersetzen, nichts
+veröffentlichen. Bereits autorisierte unkritische Einrichtungsschritte
+abschließen; echte technische Blockaden konkret erklären.
+
+Gib mir zum Schluss den absoluten neuen Handoff-Pfad und den passenden
+Codex-Startbefehl. Kennzeichne Einrichtung, Erkennungsprüfung und noch offene
+Schritte getrennt. Bewahre laufende Arbeit; vermeide konkurrierende Schreiber.
+```
+
+### Prompt B — direkt an den gestarteten Codex
+
+```text
+Richte Warm Handoff für dieses Projekt ein und übernimm die Weiterarbeit.
+Projekt: <ABSOLUTER PROJEKTPFAD>
+Beantworteter Handoff: <ABSOLUTER HANDOFF-PFAD>
+Skill-Quelle: https://github.com/Aitomat/warm-handoff
+
+Ich erlaube die folgende projektlokale Einrichtung. Codex ist bereits
+installiert und angemeldet; verändere weder Anmeldung noch globale Settings.
+
+Prüfe zuerst Ordner, Branch, Arbeitsbaum, bestehende AGENTS.md/CLAUDE.md,
+verfügbare Skill-Installation und laufende Agenten. Lies den beantworteten
+Handoff, beide Vorgänger und ihre Planverweise. Erhalte alle Nutzeroriginale;
+offene Antwortdateien niemals automatisch speichern, schließen oder neu erzeugen.
+
+Falls Warm Handoff fehlt, hole die vollständige Quelle, prüfe SKILL.md und den
+Codex-Adapter und installiere den vollständigen Ordner projektlokal unter
+.agents/skills/warm-handoff. Vorhandene Installation nicht überschreiben oder
+doppelt anlegen. Ergänze AGENTS.md gezielt um die Arbeitsvereinbarung oder
+einen verbindlichen Verweis; übrige Regeln erhalten. Claude-spezifische
+Werkzeuge und historische Preise nicht als Codex-Anweisungen übernehmen.
+Prüfe die Erkennung mit den verfügbaren Host-Mitteln. Ist ein Neustart nötig,
+sichere vorher den Stand und gib mir die genaue Fortsetzungszeile.
+
+Ordne jede Antwort einer Umsetzung, Abnahme, offenen Frage oder vertagten
+Idee zu. Erhalte den konkreten Zukunftsfaden. Führe bereits eindeutig
+autorisierte Aufgaben innerhalb der vorhandenen Rechte weiter; ein alter
+Roadmap-Eintrag allein ist kein Bauauftrag. Vor Änderungen Dateibesitz und
+Abnahme klären. Neue Ideen als Vorschläge führen. Keine unnötige erneute
+Bestätigung für bereits freigegebene Schritte.
+
+Nutze kurze Chatnachrichten für Steuerung und genau eine benannte Sammlung
+für längere Rückmeldungen; Zwischenrufe optional. Auf macOS wünsche ich neue
+RTF-Handoffs in TextEdit-Tabs, sonst Markdown im verfügbaren Editor. Prüfe
+Konverter/Links und tatsächliches Öffnen; fehlende Werkzeuge ehrlich melden.
+
+Lies oder kopiere keine Secrets, .env-, Auth- oder Cookie-Dateien. Keine
+globalen Konfigurationsänderungen, keine pauschale Rechteausweitung, keine
+Veröffentlichung oder App-Ersetzung aus diesem Setupauftrag ableiten.
+
+Erkläre mir knapp: Was ist eingerichtet? Welcher Handoff ist aktiv? Welche
+Aufgabe läuft als Nächstes? Zeige die verfügbare Status-/Kontingentprüfung,
+ohne Werte zu erfinden oder mich zum Cache-Warmhalten aufzufordern.
+```
+
+### Rechte und Überblick, ohne Zusatzbürokratie
+
+Zum Start genügt beispielsweise `codex -C /pfad/zum/projekt`. Lokal geprüft mit `codex-cli 0.153.4`; Versionen können abweichen. `/permissions` öffnet die Rechteauswahl. **Approve for me** prüft geeignete Ausnahmen automatisch, behält aber die Sandbox. **Full Access** entfernt wesentliche Datei-/Netzwerkgrenzen. Kein Prompt setzt Host-, Organisations- oder macOS-Berechtigungen außer Kraft. Bei einem einzelnen zusätzlichen Arbeitsordner ist eine gezielte Freigabe meist passender. [Sandbox](https://learn.chatgpt.com/docs/sandboxing), [Auto-review](https://learn.chatgpt.com/docs/sandboxing/auto-review).
+
+Mit `/status` prüfst du den Lauf. `/statusline` lässt dich die Fußzeile selbst konfigurieren; diese Auswahl wird gespeichert und ist deshalb bewusst dein Schritt. Sinnvoll sind Modell, Projekt/Branch, Kontext und Kontingent. **Kontextbelegung**, kumulierter **Tokenverbrauch** und verbleibendes **Nutzungskontingent** sind verschiedene Größen; Arbeiter können eigene Zähler haben. Tokens allein sind keine Rechnung. [CLI-Status und Statuszeile](https://learn.chatgpt.com/docs/developer-commands?surface=cli).
+
+Du brauchst keine Nachrichten zum Warmhalten: Der gespeicherte Handoff trägt die Fortsetzung. Cacheverhalten oder Anbieterwechsel garantieren weder bestimmte Kosten noch eine feste Antwortfrist. Lass dir Einrichtung und offene Grenzen zeigen – nicht versprechen, dass automatisch alles exakt wie bei einem anderen Nutzer funktioniert.
+
+### Chat oder Zwischenrufe?
+
+Kurze Korrekturen dürfen während der Arbeit in den Chat: Codex berücksichtigt zugestellte Nachrichten an möglichen Unterbrechungspunkten, nicht zwingend mitten in einem laufenden Werkzeugaufruf. Solche Nachrichten sind **nicht automatisch kostenlos**; Verarbeitung kann weitere Tokens und Kontingent verbrauchen. Schreiben in eine lokale Sammlung löst für sich keinen Modellaufruf aus; ihr späteres Lesen schon.
+
+Wähle genau eine aktive Sammlung: den Fußbereich des aktuellen Handoffs oder eine separate Zwischenrufe-Datei. Wenn die separate Datei vereinbart ist, nennt und öffnet der Agent sie zu Arbeitsbeginn und prüft sie vor Abschluss; Originaltext bleibt erhalten, Antworten stehen separat. Gibt es keine separate Datei, nennt er stattdessen den aktiven Handoff. Chatsteuerung bleibt in beiden Fällen gültig.
 
 ## 7. The scripts
 
