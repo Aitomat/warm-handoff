@@ -48,6 +48,14 @@ class RenderTests(unittest.TestCase):
         self.assertIn(self.document.as_uri(), self.output.read_text())
         self.assertIn(second.as_uri(), self.output.read_text())
 
+    def test_slash_in_german_prose_is_not_a_root_path(self):
+        original = 'Diagnose-/Altvertragskorrekturen, HTML-/RTF-Links, Geräte-/Fremd-App-Abnahme'
+        result = self.run_render(original + '\n[Dokument](<' + str(self.document) + '>)', '--project-root', str(self.root))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        text = subprocess.check_output(['textutil', '-convert', 'txt', '-stdout', str(self.output)], text=True)
+        self.assertIn(original, text)
+        self.assertIn(self.document.as_uri(), self.output.read_text())
+
     def test_existing_output_unchanged(self):
         original = b'original >>>Userantwort: unveraendert'
         self.output.write_bytes(original)

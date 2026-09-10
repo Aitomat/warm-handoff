@@ -51,7 +51,7 @@ TOKEN = re.compile(
     r'(?P<marker>⟦\s*(?P<kind>Screenshot|Bild|Datei|Dokument|Kopie|Video|Audio)\s*:\s*(?P<marked>.*?)\s*⟧)'
     r'|\[(?P<label>[^\]\n]+)\]\((?P<dest><[^>\n]+>|[^)\s]+)\)'
     r'|`(?P<code>[^`\n]+)`|https?://[^\s<>]+'
-    r'|(?<![\w/])(?:/|~/)[^\s<>`]+'
+    r'|(?<![\w/.-])(?:/|~/)[^\s<>`]+'
     r'|(?<![\w~/.-])(?:[\w.-]+/)*[\w.-]+\.(?:md|rtf|txt|sh|py|swift|json|csv|html|png|jpg|jpeg|pdf|plist|yml|yaml)(?![\w/])')
 
 
