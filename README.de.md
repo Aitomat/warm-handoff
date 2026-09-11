@@ -1,795 +1,126 @@
 # warm-handoff 🏄
 
-Yasin Akgün verantwortet Arbeitsablauf, Produktentscheidungen und Abnahme. An der historischen Entwicklung war [Claude Code](https://github.com/anthropics/claude-code) beteiligt; aktuelle Verbesserungen für beide Hosts, sichere Übergaben und Reviews entstanden mit [OpenAI Codex](https://github.com/openai/codex). Dies würdigt die tatsächliche werkzeuggestützte Arbeit und verspricht keine GitHub-Sidebar-Zuordnung.
+**Hauptsprache: Englisch · [Vollständige englische Fassung](README.md)**
 
-> **Aktueller gemeinsamer Einstieg:** [SKILL.md](SKILL.md) unterstützt Codex und Claude Code. Die aktiven Adapter stehen unter [Codex](references/codex.md) und [Claude Code](references/claude-code.md). Die folgenden ausführlichen Zahlen und Sitzungsbeispiele dokumentieren die Entstehung; sie sind keine aktuellen universellen Tarif-, Kontext- oder Berechtigungsregeln.
+Warm Handoff erhält Nutzereingaben und belegten Projektstand über Pausen hinweg. Außerdem definiert der Skill sichere, belegorientierte Arbeitswellen für Codex und Claude Code, ohne einen Host zum Kernablauf zu machen.
 
-## Aktueller Dokumentablauf (W53)
+<!-- section:SURFACES -->
+## Oberfläche wählen
 
-Deutsch, Originalantworten erhalten, Kopierzeile oben: `Ich habe das Handoff beantwortet: /absoluter/Pfad/neu.rtf`. Nach einem abgeschlossenen nutzerrelevanten Schritt eine **neue** RTF erzeugen und alle erwähnten Lesedokumente in der **aktiven TextEdit-Tabgruppe oder einer neuen gemeinsamen Gruppe** öffnen. Keine fremden Fenster zusammenführen, keine leeren Hilfstabs/-fenster zurücklassen und keine bestehende Antwortdatei überschreiben. Die [geprüfte Tabmethode und RTF-Grenzen](references/rtf-macos.md) beschreiben das Vorgehen.
+| Bedarf | Englisch | Deutsch | Installierbarer Einstieg |
+|---|---|---|---|
+| Routine mit wenig Kontext | [Kurzer Skill](SKILL.md) | [Installierbarer kurzer deutscher Skill](variants/compact-de/SKILL.md) | Paket `compact-en` oder `compact-de` |
+| Einführung, Schulung, Audit | [Vollständiger Skill](variants/full/SKILL.md) | [Installierbarer vollständiger deutscher Skill](variants/full-de/SKILL.md) | Paket `full-en` oder `full-de` |
+| Codex-Hostverhalten | [Codex-Adapter](references/codex.md) | [Codex-Adapter](references/codex.de.md) | bei Bedarf laden |
+| Claude-Code-Verhalten | [Claude-Adapter](references/claude-code.md) | [Claude-Adapter](references/claude-code.de.md) | bei Bedarf laden |
 
-Pasted Content und lange Diktate aus **Codex, cmux und Claude** als vollständige Eingänge lesen; ein Terminalplatzhalter ist kein Inhalt. Quellen und Nachträge abgleichen. Speichern ist die Übergabe: ganze gespeicherte Revisionen an natürlichen Kontrollpunkten prüfen, keine Live-Entwürfe oder Pollingpflicht. Autorisierte unabhängige Pakete gehen direkt an Arbeiter; Wächter nur bei internem Koordinationsbedarf. Kurze Briefe, isolierte Worktrees, Dateibesitz und tatsächliche Host-Ressourcen gelten. [Wellenregeln](references/wave-execution.md) und [Handoff-Format](references/handoff-format.md).
+Alle aktiven Dateien ohne Sprachzusatz sind Englisch. Jede aktive Anweisung hat eine semantische `.de.md`-Entsprechung in der [maschinenlesbaren Sprachmatrix](docs/language-matrix.json). Spanisch ist zurückgestellt. Audio, Video und Website-Material bleiben Zukunftsvorschläge.
+
+<!-- section:INSTALLATION -->
+## Eine Variante installieren
+
+Prüfe ein bestehendes Ziel zuerst und bewahre es getrennt. Mische keine Dateien in ein belegtes Skillverzeichnis.
+
+Wähle genau ein Paket aus `docs/language-matrix.json`. Kopiere dessen `entry` als `SKILL.md` in ein neues Ziel und dann nur die aufgeführten `resources` unter Erhalt ihrer relativen Pfade. Übliche Zielordner liegen unter `~/.codex/skills/` für Codex und `~/.claude/skills/` für Claude Code. Die vier Paket-IDs sind `compact-en`, `compact-de`, `full-en` und `full-de`; jedes installierte Paket hat einen eindeutigen Skillnamen.
+
+| Paket | Als `SKILL.md` kopierter Einstieg | Skillname | Codex-Aufruf | Claude-Code-Aufruf |
+|---|---|---|---|---|
+| `compact-en` | `SKILL.md` | `warm-handoff` | `$warm-handoff` | `/warm-handoff` |
+| `compact-de` | `variants/compact-de/SKILL.md` | `warm-handoff-de` | `$warm-handoff-de` | `/warm-handoff-de` |
+| `full-en` | `variants/full/SKILL.md` | `warm-handoff-full` | `$warm-handoff-full` | `/warm-handoff-full` |
+| `full-de` | `variants/full-de/SKILL.md` | `warm-handoff-full-de` | `$warm-handoff-full-de` | `/warm-handoff-full-de` |
+
+Kopiere nicht das gesamte Repository. Historische Belege, persönliche Helfer, Reviewartefakte, Tests und Dateien wie `docs/.sol-err`, `scripts/codex-limit.sh` oder `scripts/skills-uebersicht.sh` gehören nicht in ein aktives Paket. Das Paketmanifest enthält nur den gewählten Einstieg, dessen revisionsgleiche lokale Referenzen, die sicheren RTF-Rendererdateien und die passende Projektvereinbarung. Die Installation ändert keine globalen Einstellungen oder Projektanweisungsdateien.
+
+RTF-Unterstützung ist optional und nur für macOS. Sie benötigt Bash, Python 3 und `textutil`:
 
 ```sh
-scripts/handoff-rtf.sh /projekt/docs/neu.md /projekt/neu.rtf --project-root /projekt
+scripts/handoff-rtf.sh /projekt/docs/handoff.md /projekt/handoff.rtf --project-root /projekt
 python3 -m unittest discover -s tests -v
 ```
 
-Relative Links zeigen auf die Projektwurzel (explizit gesetzt oder nächste `.git`-Markierung), niemals auf einen temporären HTML-Ordner. Ohne Git gilt sonst das Markdown-Verzeichnis. Der Renderer prüft Text-Roundtrip und Hyperlink-Felder vor exklusiver Veröffentlichung; vorhandene Dateien und Symlinks werden verweigert. Komplexes Markdown kann als sichtbare Syntax bleiben; Viewer-Prüfung ist separat. Keine Installation wird durch einen Repository-Änderungsauftrag aktualisiert.
+<!-- section:CODEX-START -->
+## Mit Codex starten
 
+### Kurzes Englisch (`compact-en`)
 
-
-> **Hauptsprache des Repos ist Englisch: [README.md](README.md). Dies ist die deutsche Fassung.**
-
-**Ein Skill für verlustsichere Übergaben und autorisierte Arbeitswellen in Claude Code und Codex.**
-
-Autor: **Yasin Akgün** ([github.com/Aitomat](https://github.com/Aitomat)). Entstanden beim
-täglichen Bauen von [Aitomat](https://aitomat.ai) mit Claude Code — jede Regel im Skill war
-zuerst eine Sitzung, die schiefging, oder eine Rechnung, die seltsam aussah.
-
----
-
-## Inhalt
-
-0. [Die Moral in fünf Sätzen](#0-die-moral-in-fünf-sätzen)
-1. [Das Problem in drei Minuten](#1-das-problem-in-drei-minuten)
-2. [Die Kosten-Arithmetik mit echten Zahlen](#2-die-kosten-arithmetik-mit-echten-zahlen)
-3. [Der Wellen-Workflow](#3-der-wellen-workflow)
-3b. [Zwischenrufe-Datei und Sammlung für das nächste Handoff](#3b-zwischenrufe-datei-und-sammlung-für-das-nächste-handoff)
-3c. [Wer plant was — Hauptsitzung und Wächter](#3c-wer-plant-was--hauptsitzung-und-wächter-haben-verschiedene-aufgaben)
-3d. [Der RTF-Zwilling — das Handoff als Arbeitsdokument](#3d-der-rtf-zwilling--das-handoff-als-arbeitsdokument)
-4. [Subagenten-Ökonomie](#4-subagenten-ökonomie)
-5. [Was der Skill sichtbar macht: Kostenzeile, Kostentabelle, Kontingent](#5-was-der-skill-sichtbar-macht)
-6. [Installation](#6-installation)
-6a. [Mit Codex verwenden](#6a-mit-codex-verwenden)
-7. [Die Skripte](#7-die-skripte)
-8. [Ehrliche Grenzen](#8-ehrliche-grenzen)
-9. [Die Fakten, auf denen alles steht](#9-die-fakten-auf-denen-alles-steht)
-10. [Danksagung, Vorarbeiten, Lizenz](#10-danksagung-vorarbeiten-lizenz)
-
----
-
-**Leseschlüssel zur folgenden Historie:** „200k“ ist keine heutige Kontextgrenze.
-„Sammeln kostet nichts“ meinte: Tippen im Dokument löst selbst keine Modellanfrage
-aus; späteres Einlesen und Bearbeiten verbraucht Ressourcen. Die Claude-Schrittfolge
-beschreibt die Entstehung, während der heutige Dokumentablauf für Claude **und**
-Codex gilt. Alte Befehle zu Push, Einstellungen oder Editorzugriffen begründen keine
-Erlaubnis. Aktuelle Installation und Nutzung folgen in Abschnitt 6/6a.
-
-## 0. Die Moral in fünf Sätzen
-
-> **Historischer Abschnitt (August/September 2026).** Die damaligen Regeln und Rechnungen sind keine aktuelle Handlungsanweisung. Heute gelten [Skill-Einstieg](SKILL.md) und die aktiven [Claude-](references/claude-code.md)/[Codex-Adapter](references/codex.md).
-
-Wer nur eine Sache aus diesem Repo mitnimmt, dann diese:
-
-1. **Eine Session pro Welle.** Planen, Wächter starten, mergen, Handoff schreiben — alles in
-   einer Sitzung. Eine frische Sitzung kostet ihren Startaufbau von ~200k; erst jenseits von
-   ~200k Kontext lohnt sie sich.
-2. **Sammeln kostet nichts.** Testantworten, Einfälle, Kritik stundenlang in die
-   Handoff-Datei tippen. Null Anfragen. Jede Chat-Nachricht dagegen liest den ganzen Kontext
-   neu — bei 119k Kontext ≈ 12k pro Zwischenruf.
-3. **Wächter statt Pings.** Ein Wächter je Thema startet seine Arbeiter selbst; die
-   Hauptsitzung wird 5× geweckt statt 15×.
-4. **Unter 200k Kontext bleiben.** Die Hauptsitzung plant, mergt, liest Berichte. Alles
-   andere lebt in Agenten.
-5. **Handoff mit Kostentabelle** schließt die Welle ab — gemessene Zahlen, keine Gefühle.
-
-**Der größte Einzelhebel gegen unnötige Anfragen** ist Punkt 2 — und er hat inzwischen eine
-eigene Datei: die **Zwischenrufe-Datei** mit dem Block „Sammlung für das nächste Handoff"
-(→ [Abschnitt 3b](#3b-zwischenrufe-datei-und-sammlung-für-das-nächste-handoff)). Yasins
-Urteil beim ersten Einsatz: „was sehr, sehr cleveres". Die Rechnung ist simpel: jede
-Chat-Nachricht, die du schickst, während die Sitzung auf Agenten wartet, ist eine **volle
-Anfrage** — der ganze Kontext wird neu gelesen, bei 119k Kontext ≈ 12k Token für ein „mach
-den Knopf gelb". Dieselbe Zeile in die Zwischenrufe-Datei getippt kostet **null**, und die
-Sitzung liest sie beim nächsten Aufwachen ohnehin mit. Zehn Einfälle während einer Welle:
-zehn Anfragen gegen keine.
-
-**Belegt, nicht behauptet:** [`docs/evidenz.md`](docs/evidenz.md) rechnet aus dem Logbuch und
-den Handoff-Kostentabellen vor, dass diese Struktur gegenüber derselben Arbeit ohne sie
-**43–50 % der Anfragen und 43–48 % der Kosten** spart — und je erledigtem Auftrag gerechnet
-**73–79 %**. Jede Zahl dort ist gemessen, mit Quelle und Rechenweg.
-
-### So läuft eine Welle für Einsteiger — kopieren, dann kapieren
-
-1. **Sitzung starten.** Erste Nachricht: „Ich habe das Handoff beantwortet:
-   `/Users/…/projekt/_handoff-projekt-2026-08-30.md`". Claude liest die Datei und weiß alles.
-2. **Claude schreibt den Wellenplan als Datei** (`docs/reviews/JJJJ-MM-TT-welleN-plan.md`),
-   bevor irgendein Agent startet. Du liest ihn in Ruhe, bevor es losgeht.
-3. **Claude startet die Wächter** — einer je Thema, Themen nach *Dateien* geschnitten. Ab
-   jetzt läuft alles ohne dich.
-4. **Du testest parallel** und schreibst alles, was dir auffällt, unten in die Sammlung des
-   Handoff-Dokuments. Nicht in den Chat. ⌘S nicht vergessen.
-5. **Claude meldet sich einmal**, wenn alles gemergt, gebaut und gepusht ist — mit
-   Kostentabelle und neuem Handoff. Fertig; die nächste Welle beginnt mit Schritt 1.
-
-### Warum das Arbeiten über TextEdit-Dokumente entspannter ist
-
-Das Terminal frisst lange Eingaben zu `[pasted text]`. Ein Dokument nicht: du siehst alles,
-springst zwischen Testpunkten, ergänzt Notizen, lässt es zwei Tage liegen. Vor allem aber
-**unterbricht es die laufende Welle nicht**. Zehn Punkte im Dokument kosten genauso viel wie
-einer (nämlich nichts); zehn Punkte im Chat kosten zehn volle Anfragen und reißen den Agenten
-zehnmal aus der Arbeit. Der Nutzer muss sich nichts merken, nichts „schnell noch sagen", und
-es geht nichts verloren. Eine Regel dazu: **⌘S, bevor Claude die Datei lesen soll** —
-Ungespeichertes ist auf der Platte unsichtbar.
-
----
-
-## 1. Das Problem in drei Minuten
-
-> **Historischer Abschnitt (August/September 2026).** Die damaligen Regeln und Rechnungen sind keine aktuelle Handlungsanweisung. Heute gelten [Skill-Einstieg](SKILL.md) und die aktiven [Claude-](references/claude-code.md)/[Codex-Adapter](references/codex.md).
-
-Wer Claude Code benutzt, sieht eine Chat-Oberfläche. Was er nicht sieht:
-
-- **Jede Nachricht ist nicht eine Anfrage, sondern viele.** Claude liest eine Datei, sucht,
-  ändert, führt einen Befehl aus, liest das Ergebnis — jeder dieser Schritte ist eine
-  eigene Anfrage an das Modell, und **jede** dieser Anfragen schickt den gesamten bisherigen
-  Gesprächsverlauf mit. Eine harmlose Bitte wie „bau das bitte ein und teste es" kann 30
-  bis 150 Anfragen auslösen.
-- **Der Verlauf wächst und wird jedes Mal mitgeschickt.** Nach zwei Stunden Arbeit ist das
-  Gespräch 200.000–500.000 Token groß. Jeder der 150 Schritte trägt diesen Rucksack.
-- **Es gibt einen Cache, der das erträglich macht — aber nur im Zeitfenster.** Claude Code
-  legt den Gesprächsanfang (Prefix) in einen Prompt-Cache. Lesen aus dem Cache kostet ein
-  Zehntel. Auf Pro/Max hält dieser Cache **eine Stunde, gleitend** — jede Anfrage setzt die
-  Uhr zurück. Wer eine Stunde Pause macht, das Modell wechselt, den Effort verstellt oder
-  die CLAUDE.md editiert, baut den Cache neu auf: der gesamte Verlauf wird einmal zum
-  **doppelten** Preis geschrieben.
-- **Nichts davon steht irgendwo.** Kein Zähler zeigt die Kontextgröße, keiner die Zahl der
-  Anfragen, keiner, ob die letzte Runde teuer oder billig war. Also optimieren die Leute das
-  Falsche — sie tippen kürzere Nachrichten — während die eigentlichen Kosten in einer
-  Arbeitsschleife aus Dateizugriffen stecken, die sie nie sehen.
-
-Die Messung, die diesen Skill ausgelöst hat: Ein Abschnitt einer echten Sitzung — „Handoff
-beantwortet, bitte umsetzen" — kostete **147 Anfragen** bei 223k Kontext, umgerechnet
-**4.380k Token-Äquivalente**. Derselbe Arbeitsumfang, in Subagenten delegiert und gebündelt,
-braucht im Hauptkontext **14 Anfragen**. Das ist der Hebel, um den es hier geht: nicht
-kürzer schreiben, sondern **weniger Anfragen im fetten Kontext**.
-
-## 2. Die Kosten-Arithmetik mit echten Zahlen
-
-> **Historischer Abschnitt (August/September 2026).** Die damaligen Regeln und Rechnungen sind keine aktuelle Handlungsanweisung. Heute gelten [Skill-Einstieg](SKILL.md) und die aktiven [Claude-](references/claude-code.md)/[Codex-Adapter](references/codex.md).
-
-Alle Zahlen in diesem Skill sind auf „frische Eingabe = 1" normiert (Anthropic-Listenpreise,
-Opus-Verhältnis). Auf einem Abo zahlt niemand diese Summe in Dollar — sie misst, **was das
-Kontingent belastet**, und das ist auf Pro/Max die Währung, die knapp wird.
-
-| Posten | Faktor | Was das praktisch heißt |
-|---|---:|---|
-| Cache **lesen** | **×0,1** | Der warme Verlauf wird bei jeder Anfrage zum Zehntelpreis mitgelesen |
-| Cache **schreiben** (1-h-TTL) | **×2** | Neuer Text kommt einmal zum doppelten Preis in den Cache; ein Neuaufbau schreibt ALLES neu |
-| Eigene **Ausgabe** | **×5** | Jedes Wort, das Claude tippt, kostet fünffach — Erklärungen im Chat sind der teuerste Posten, den Claude allein zu verantworten hat |
-| Frische Eingabe | ×1 | Die Bezugsgröße |
-
-### Warum die Anzahl der Anfragen alles dominiert
-
-Eine Anfrage bei 220k Kontext kostet **220k × 0,1 = 22.000 Äquivalente** — nur fürs Lesen,
-bevor irgendetwas passiert. Bei 30k Kontext (ein frischer Subagent) sind es **3.000**.
-
-```
-Alles im Hauptkontext:   147 Schritte × 151k × 0,1              = 2.217k
-Delegiert:                14 Hauptanfragen × 345k × 0,1  =  483k
-                         147 Agentenschritte ×  30k × 0,1 =  441k
-                                                    Summe =  924k
+<!-- prompt:compact-en-codex -->
+```text
+$warm-handoff
+Lies die geltenden AGENTS.md-Dateien und das vollständige gespeicherte Handoff unter <ABSOLUTE_HANDOFF_PATH>. Erhalte Nutzeroriginale, prüfe aktuellen Git- und Teststand und arbeite nur innerhalb der genannten Autorisierung weiter. Nutze den Codex-Adapter und schreibe vor Abschluss den geforderten dauerhaften Bericht.
 ```
 
-**2,4× billiger für exakt dieselbe Arbeit** — nur weil jeder Schritt gegen den kleinen
-Kontext des Agenten rechnet statt gegen den fetten der Sitzung. Rechnet man die anderen
-Techniken dazu (Fertigmeldungen deckeln, nicht erzählen, was man gerade tut, Erklärungen
-ins Handoff statt in den Chat), lag der gemessene Abschnitt statt bei 4.380k bei
-**1.350–2.050k — rund 55–70 % Ersparnis**.
+### Kurzes Deutsch (`compact-de`)
 
-### Timing, nicht Kürze: wann eine Nachricht fast nichts kostet
-
-Die Frage, die jeder stellt: „Kostet meine Zwischenfrage jetzt auch?" Die Antwort hängt
-nicht von der Länge ab, sondern **vom Zeitpunkt**:
-
-| Lage | Was mit der Nachricht passiert | Kosten |
-|---|---|---|
-| Claudes eigener Werkzeug-Ablauf läuft (Datei lesen, Befehl, Agent starten) | wird an die nächste ohnehin fällige Anfrage angehängt | **fast null** (~140 Äquivalente für 50 Wörter) |
-| Subagenten rechnen, Claude selbst wartet | löst eine neue Anfrage aus | **volle 10 %** des Kontexts (22k bei 220k) |
-| Ruhezustand nach der Antwort | löst eine neue Anfrage aus | **volle 10 %** |
-
-Der Haken: Die Frage ist billig, **die Antwort nicht** — 300 Wörter Antwort sind ~2.000
-Äquivalente (×5). Deshalb hält der Skill Antworten auf Zwischenfragen kurz und schiebt
-Details ins Handoff, wo sie einfach statt fünffach kosten.
-
-### Was ein Neuaufbau kostet — und woran man ihn erkennt
-
-Eine Sitzung mit 287k Kontext, Start war 82k: Ein Modell- oder Effort-Wechsel mitten drin
-schreibt ~287k × 2 neu, **~574k Äquivalente** — für nichts. Deshalb warnt der Skill vor
-`/model`, `/effort`, CLAUDE.md-Änderungen und MCP-Neustarts, und er meldet einen Neuaufbau
-nur, wenn er die Ursache benennen kann (>1 h Pause, Wechsel, Prefix-Änderung) — sonst
-schweigt er, statt zu raten.
-
-Wichtiges Missverständnis, das der Skill aktiv ausräumt: **„147 Anfragen ≠ 147
-Neuaufbauten."** Innerhalb des Fensters laufen alle 147 gegen den warmen Cache. Die
-gemessene Cache-Trefferquote in den Sitzungen lag bei 1,6–3,3 % geschrieben — durchgehend
-warm.
-
-## 3. Der Wellen-Workflow
-
-> **Historischer Abschnitt (August/September 2026).** Die damaligen Regeln und Rechnungen sind keine aktuelle Handlungsanweisung. Heute gelten [Skill-Einstieg](SKILL.md) und die aktiven [Claude-](references/claude-code.md)/[Codex-Adapter](references/codex.md).
-
-Die Arithmetik belohnt einen bestimmten Rhythmus. Der Skill nennt ihn **Wellen**:
-
-```
-┌──────────────────────────────────────────────────────────────────────┐
-│  1. Nutzer schickt EINE gebündelte Nachricht (oder ein beantwortetes │
-│     Handoff): alles für die nächste Arbeitsstrecke                   │
-│                                                                      │
-│  2. Claude arbeitet die Welle ab — Subagenten für alles mit mehr     │
-│     als einer Handvoll Schritten; Zwischenfragen sind erlaubt        │
-│     und billig, solange Claude selbst gerade rattert                 │
-│                                                                      │
-│  3. Am Ende schreibt Claude ein HANDOFF-DOKUMENT statt im Chat       │
-│     auszulaufen: Geliefertes, offene Punkte, Fahrplan, Kostentabelle,│
-│     Kontingent-Stand, Fragen — und die Testliste mit Antwortzeilen   │
-│                                                                      │
-│  4. Nutzer öffnet das Handoff im Texteditor, beantwortet die Tests,  │
-│     sammelt neue Ideen im Sammelbereich — in seinem Tempo, auch      │
-│     über eine lange Pause hinweg. Kostet exakt null Anfragen.        │
-│                                                                      │
-│  5. Nächste Session startet NUR mit dem Handoff: kleiner Kontext,    │
-│     Cache einmal minimal aufgebaut, voll gebrieft                    │
-└──────────────────────────────────────────────────────────────────────┘
+<!-- prompt:compact-de-codex -->
+```text
+$warm-handoff-de
+Lies die geltenden AGENTS.md-Dateien und das vollständige gespeicherte Handoff unter <ABSOLUTE_HANDOFF_PATH>. Arbeite auf Deutsch, erhalte Nutzeroriginale und bleibe in der genannten Autorisierung. Nutze den Codex-Adapter und schreibe vor Abschluss den geforderten dauerhaften Bericht.
 ```
 
-### Warum ein Editor und nicht das Chatfenster
+### Vollständiges Englisch (`full-en`)
 
-Das Terminal klappt lange Eingaben zu `[pasted text]` zusammen — man verliert den
-Überblick. Im Editor (TextEdit, VS Code, egal) sieht man das ganze Dokument, kann zwischen
-Testpunkten springen, Notizen ergänzen, das Dokument zwei Tage liegen lassen. Und es
-kostet **keine Anfrage**, solange man sammelt. Regel: **⌘S, bevor man Claude bittet, die
-Datei zu lesen** — ungespeicherte Änderungen sind auf der Platte unsichtbar.
-
-### Wie ein Handoff aussieht
-
-```markdown
-> **Für die nächste Session — diese Zeile kopieren und einfügen:**
-> `Ich habe das Handoff beantwortet: /Users/…/projekt/_handoff-projekt-2026-08-27-b.md`
-
-# Handoff Projekt — 27.08.2026, 18:21
-
-## Deine Sammlung aus dem letzten Handoff (wörtlich kopiert)
-…
-
-## Kontingent
-Claude Code: 5-h-Fenster 34 % · Woche 61 % (reset Mo 09:00) · Codex: 10 %/7d (Messung 2 h alt)
-
-## Geliefert in dieser Welle
-- …
-
-## Erwartete Agenten-Ergebnisse
-- [ ] docs/reviews/2026-08-27-tageszeit-und-kontingente.md (Recherche-Agent, 17:02)
-
-## Offene Punkte / Fahrplan
-- Welle 19: …
-
-## Fragen an dich
-1. Soll der Papierkorb-Weg auch für Ordner gelten?
->>>Antwort:
-
-## Testliste v70
-## T1 — Tagfilter ohne Beachball
-Filter auf „Rechnung" setzen, 2.000 Einträge, darf nicht hängen.
->>>Antwort:
-
-## T2 — Hyperlink-Editor
-…
->>>Antwort:
-
-# Die Kostentabelle dieser Sitzung
-| # | Zeit | Worum es ging | Anfr. | Kontext | gelesen | geschr. | Ausgabe | Äquiv. |
-…
-
-## Gedächtnis (Memory-Block — Long-Term / Short-Term, je 4–6 Zeilen)
-
-## Sammlung für das nächste Handoff
->>>
+<!-- prompt:full-en-codex -->
+```text
+$warm-handoff-full
+Lies die geltenden AGENTS.md-Dateien und das vollständige gespeicherte Handoff unter <ABSOLUTE_HANDOFF_PATH>. Nutze den vollständigen englischen Ablauf, erhalte Nutzeroriginale und bleibe in der genannten Autorisierung. Nutze den Codex-Adapter und schreibe vor Abschluss den geforderten dauerhaften Bericht.
 ```
 
-Zwei Blöcke daraus werden oft übersehen, sind aber der Kern:
+### Vollständiges Deutsch (`full-de`)
 
-- **`## Gedächtnis`** — Long-Term (was dauerhaft gilt: Vorlieben, Entscheidungen, Verbote)
-  und Short-Term (was nur für die nächste Welle zählt), je 4–6 Zeilen. Der Name bleibt
-  deutsch, weil der Nutzer ihn so eingeführt hat; gemeint ist ein Memory-Block mit
-  Langzeit- und Kurzzeit-Teil.
-- **`## Deine Sammlung aus dem letzten Handoff (wörtlich kopiert)`** — alles, was der Nutzer
-  während der letzten Welle unten in die Sammlung geschrieben hat, wird **wörtlich** nach
-  oben in das neue Handoff übernommen. Nicht zusammenfassen, nicht kürzen, nichts weglassen.
-  Und: **vor dem Finalisieren die Sammlung noch einmal ansehen** — der Nutzer schreibt oft
-  weiter, während das Handoff schon entsteht (Welle 28, 16:39).
-
-Die Einzelheiten — Pfad ganz oben zum Kopieren, Projektname im Dateinamen, vorbereitete
-Antwortzeilen, was ins Handoff gehört und was nicht (Regeln übernommen von Matt Pococks
-`/handoff`) — stehen in `SKILL.md`, Abschnitt „The wave workflow".
-
-### Der Nutzer ist der Engpass
-
-Die neueste Regel im Skill (28.08.2026): Der Mensch kann nicht dauernd am Terminal sitzen.
-Jede Rückfrage, die eine Welle anhält, kostet Stunden Echtzeit. Deshalb werden Wellen so
-geschnitten, dass sie **ohne Rückfrage durchlaufen**: Vertretbare Annahmen werden getroffen
-und im Handoff markiert, Fragen **gesammelt** ins Handoff geschrieben statt einzeln in den
-Chat, **Wächter** bekommen ein ganzes Thema gebündelt und melden sich erst, wenn alles
-fertig ist. Agenten, die länger als eine Stunde brauchen, schreiben ihr Ergebnis in eine
-Datei (`docs/reviews/<datum>-<thema>.md`); das Handoff nennt die erwartete Datei, und die
-**nächste** Session prüft beim Lesen des Handoffs, ob sie da ist — das Fertigwerden kostet
-so keine eigene Anfrage und keinen Neuaufbau nach der Nachtpause.
-
-## 3b. Zwischenrufe-Datei und Sammlung für das nächste Handoff
-
-> **Historischer Abschnitt (August/September 2026).** Die damaligen Regeln und Rechnungen sind keine aktuelle Handlungsanweisung. Heute gelten [Skill-Einstieg](SKILL.md) und die aktiven [Claude-](references/claude-code.md)/[Codex-Adapter](references/codex.md).
-
-**Warum.** Während die Hauptsitzung auf Hintergrund-Agenten wartet, ist jede Chat-Nachricht,
-die du schickst, eine **volle Anfrage**: der gesamte Kontext wird noch einmal gelesen. Ein
-„kurz noch: mach den Knopf gelb" kostet genauso viel wie ein ausformulierter Auftrag. Kein
-Skill kann das verhindern — die Nachricht geht ab, sobald du Enter drückst. Bei zehn Einfällen
-während einer Welle sind das zehn Anfragen für Gedanken, die alle bis zum nächsten Aufwachen
-der Sitzung hätten warten können. Dazu kommt: Terminals klappen lange Eingaben zu
-„[Pasted text]" zusammen, du siehst also nicht einmal mehr, was du geschrieben hast.
-
-**Wie.** Eine Datei je Sitzung, zu Wellenbeginn angelegt und in TextEdit geöffnet:
-
-```
-<projekt>/_zwischenrufe-<projekt>-JJJJ-MM-TT-<a|b|c>.md
+<!-- prompt:full-de-codex -->
+```text
+$warm-handoff-full-de
+Lies die geltenden AGENTS.md-Dateien und das vollständige gespeicherte Handoff unter <ABSOLUTE_HANDOFF_PATH>. Nutze den vollständigen deutschen Ablauf, erhalte Nutzeroriginale und bleibe in der genannten Autorisierung. Nutze den Codex-Adapter und schreibe vor Abschluss den geforderten dauerhaften Bericht.
 ```
 
-Sie hat zwei Abschnitte:
+<!-- section:CLAUDE-START -->
+## Mit Claude Code starten
 
-- **„Zwischenrufe (für diese Session)"** — kurze Hinweise für die gerade laufende Welle:
-  ein Fehler, den du gerade siehst, eine Korrektur, ein Screenshot-Pfad.
-- **„Sammlung für das nächste Handoff"** — alles, was nicht dringend ist: Ideen, neue
-  Aufträge, Kritik, Wünsche. Dieser Block wandert beim nächsten Handoff wörtlich in die
-  Handoff-Datei. Die Handoff-Datei trägt darum kein eigenes Sammlungs-Banner mehr.
+### Kurzes Englisch (`compact-en`)
 
-Du schreibst deine Zwischenrufe als Zeilen, die mit `>>>` beginnen (oder mit Name + Uhrzeit).
-Das kostet nichts: Tippen in einer Datei ist keine Anfrage.
-
-**Marker und Antwort.** Die Hauptsitzung liest die Datei bei jedem Aufwachen zuerst — angehängt
-an einen Befehl, der ohnehin läuft, also wieder ohne Extra-Anfrage — und nimmt nur, was neu ist.
-Sie löscht nie etwas. Stattdessen hängt sie unter den letzten gelesenen Eintrag eine Markerzeile:
-
-```
-— übernommen bis hier, 18:42 —
-
-Antwort Claude, 03.09.2026-18:42:
-D6 ist umgesetzt (Tab-Rundung wie im Finder), E9 läuft noch.
-Den Screenshot habe ich gesehen — der Griff war hinter dem Rahmen.
-
-— ab hier wieder Zwischenrufe —
-
->>>
+<!-- prompt:compact-en-claude -->
+```text
+/warm-handoff
+Lies die geltenden CLAUDE.md-Dateien und das vollständige gespeicherte Handoff unter <ABSOLUTE_HANDOFF_PATH>. Erhalte Nutzeroriginale, prüfe aktuellen Git- und Teststand und arbeite nur innerhalb der genannten Autorisierung weiter. Nutze den Claude Code-Adapter und schreibe vor Abschluss den geforderten dauerhaften Bericht.
 ```
 
-So sehen beide Seiten, wo „neu" anfängt. **Die Antwort steht in derselben Datei** — derselbe
-Text, den du sonst im Chat gesehen hättest. Du liest die Datei, nicht das Terminal; eine
-Antwort, die nur im Chat landet, ist eine Antwort, die du suchen musst.
+### Kurzes Deutsch (`compact-de`)
 
-**Regeln für den Agenten.** Nie in die Datei schreiben, solange TextEdit ungespeicherte
-Änderungen hat: erst den Live-Text per `osascript` lesen, den zusammengeführten Text auf die
-Platte schreiben, dann schließen (`saving no`) und wieder öffnen — und nur, wenn TextEdit
-`modified = false` meldet. Eine neue Sitzung beginnt eine neue Datei (nächstes Datum, nächster
-Buchstabe); die alte bleibt offen, bis du sie schließt. `scripts/sammlung-pruefen.sh` prüft vor
-dem Handoff, dass keine Sammlung vergessen wurde.
-
-**Das Urteil des Nutzers beim ersten Einsatz** (02.09.2026, 19:57): „geniale Lösung — so sparen
-wir uns jedes Mal mindestens eine Anfrage."
-
-## 3c. Wer plant was — Hauptsitzung und Wächter haben verschiedene Aufgaben
-
-> **Historischer Abschnitt (August/September 2026).** Die damaligen Regeln und Rechnungen sind keine aktuelle Handlungsanweisung. Heute gelten [Skill-Einstieg](SKILL.md) und die aktiven [Claude-](references/claude-code.md)/[Codex-Adapter](references/codex.md).
-
-Die häufigste teure Verwechslung: ein Wächter soll sich „überlegen, was zu tun ist". Das ist
-nicht seine Aufgabe. Die Arbeitsteilung ist scharf:
-
-**Die HAUPTSITZUNG schreibt den Wellenplan** — als Datei, BEVOR ein Wächter existiert
-(`docs/reviews/JJJJ-MM-TT-welleNN-plan.md`). Darin steht **jeder einzelne Auftrag** mit
-seinen drei Angaben: **Was** (der ausformulierte Auftragstext samt Belegen, Screenshot-Pfaden
-und Nutzerzitat mit Uhrzeit), **Abnahme** (woran man sieht, dass es fertig ist — Test,
-Screenshot, grep) und **Modell** (Effort). Dazu die Strukturregeln, die für jeden Auftrag
-gelten, und die Aufteilung in Tabellen — je Tabelle ein Wächter, mit hartem Dateibesitz. Nur
-die Hauptsitzung hat den ganzen Kontext: das beantwortete Handoff, die Zwischenrufe-Datei,
-die Screenshots, den Themenspeicher. Nur sie kann deshalb entscheiden, was diese Welle
-überhaupt soll.
-
-**Der WÄCHTER erfindet keine Aufträge.** Er bekommt eine Tabelle und tut genau fünf Dinge:
-er zerlegt sie in Arbeiter, **reicht den Auftragstext weiter** (wörtlich, nicht
-nacherzählt — der Plan ist die Quelle), baut seriell mit Build-Schloss, mergt per
-`git merge --squash`, lässt Codex prüfen und schreibt den Bericht. Findet er unterwegs etwas
-Neues, gehört das in den Bericht — nicht in einen selbst erfundenen Auftrag.
-
-**Warum das die Modellwahl der Hauptsitzung wichtig macht.** Wenn die Hauptsitzung die
-Auftragstexte schreibt, hängt die Qualität ALLER Unteragenten-Prompts an ihrem Modell. Ein
-Wächter kann einen schlechten Auftrag nicht reparieren, er kann ihn nur ausführen. Ein
-unscharfes „mach das Fenster schöner" kostet drei Anläufe; ein Auftrag mit Belegzitat,
-Screenshot-Pfad und Abnahmekriterium kostet einen. Die Ersparnis eines billigeren
-Hauptsitzungs-Modells kann also an anderer Stelle mehrfach wieder verloren gehen.
-
-**Offener Messpunkt (Yasin, 03.09.2026, 18:38):** bisher lief die Hauptsitzung auf Opus. Die
-nächste Sitzung wird **Fable/medium als Hauptsitzung** testen und über die Logbuchzeile
-verglichen — Anfragen, Token, Wanduhr und vor allem: wie viele Aufträge im zweiten Anlauf
-landeten. Bis diese Zeile existiert, ist die Frage offen; sie wird gemessen, nicht geraten.
-
-## 3d. Der RTF-Zwilling — das Handoff als Arbeitsdokument
-
-> **Historischer Abschnitt (August/September 2026).** Die damaligen Regeln und Rechnungen sind keine aktuelle Handlungsanweisung. Heute gelten [Skill-Einstieg](SKILL.md) und die aktiven [Claude-](references/claude-code.md)/[Codex-Adapter](references/codex.md).
-
-Ein Handoff ist kein Ausdruck, sondern der Ort, an dem der Nutzer antwortet. Markdown in
-einem einfachen Editor macht das mühsam: Überschriften sehen aus wie normale Zeilen,
-Screenshot-Pfade mit Leerzeichen sind toter Text, und die lange Kopierzeile oben bricht um.
-Deshalb bekommt **jedes Handoff einen RTF-Zwilling**, erzeugt direkt nach der `.md` durch
-`scripts/handoff-rtf.sh` (Markdown → HTML → `textutil -convert rtf`, ein macOS-Bordmittel —
-keine zusätzliche Abhängigkeit):
-
-- **18 pt** Grundschrift, fette Überschriften, `>>>`-Zeilen gelb — Struktur wird sichtbar.
-- **Klickbare Links für jeden Pfad und jede URL** — Screenshot-Pfade mit Leerzeichen werden zu
-  `file://`-Links mit prozent-codierten Leerzeichen
-  (`…/ScreenshotY%202026-09-03%20um%2021.10.04.jpg`), ein Klick öffnet das Bild, um das es im
-  Absatz geht.
-- **Die Kopf-Kopierzeile bleibt einzeilig** — sie wird in die nächste Sitzung kopiert, und ein
-  zerrissener Pfad ist ein kaputter Pfad.
-- **Der Nutzer schreibt die Antworten in die RTF**, unter die `>>>Userantwort:`-Marker, die
-  das Handoff unter jeder Frage und jedem Testpunkt schon vorbereitet.
-
-Der Agent liest die Antworten mit einem Befehl zurück:
-
-```bash
-textutil -convert txt -stdout _handoff-projekt-2026-09-03-v.rtf
+<!-- prompt:compact-de-claude -->
+```text
+/warm-handoff-de
+Lies die geltenden CLAUDE.md-Dateien und das vollständige gespeicherte Handoff unter <ABSOLUTE_HANDOFF_PATH>. Arbeite auf Deutsch, erhalte Nutzeroriginale und bleibe in der genannten Autorisierung. Nutze den Claude Code-Adapter und schreibe vor Abschluss den geforderten dauerhaften Bericht.
 ```
 
-Arbeitsteilung: Die `.md` ist die Quelle für das, was der Agent schreibt (dort ändern, dann
-den Zwilling neu erzeugen), die `.rtf` trägt das, was der Nutzer schreibt, und wird wörtlich
-in die Sammlung des nächsten Handoffs übernommen.
+### Vollständiges Englisch (`full-en`)
 
-## 4. Subagenten-Ökonomie
-
-> **Historischer Abschnitt (August/September 2026).** Die damaligen Regeln und Rechnungen sind keine aktuelle Handlungsanweisung. Heute gelten [Skill-Einstieg](SKILL.md) und die aktiven [Claude-](references/claude-code.md)/[Codex-Adapter](references/codex.md).
-
-Subagenten sind im Skill **der Standardweg, nicht die Ausnahme** — alles mit mehr als einer
-Handvoll Schritten geht in einen Agenten. Die Gründe, in Zahlen:
-
-| | Hauptkontext (220k) | Subagent (~30k) |
-|---|---:|---:|
-| Kosten je Arbeitsschritt (×0,1) | 22.000 | 3.000 |
-| Cache-TTL | 1 h gleitend | 5 min (immer, auch auf Max) |
-| Startkosten | — | 1–3 Anfragen + Auftragstext |
-| Bericht zurück in den Hauptkontext | — | wird zum ×2-Cache-Schreiben — **deckeln!** |
-
-Drei Dinge, die man dabei wissen muss:
-
-1. **Subagenten-Tokens sind nicht gratis.** Sie belasten dasselbe Wochenkontingent. Was sie
-   NICHT belasten, ist der Hauptkontext — der bleibt klein, schnell und antwortfähig.
-2. **Die Ersparnis lässt sich reinvestieren.** Ein Agent arbeitet gründlicher, als man es
-   nebenbei täte: aus 147 Schritten werden 600. Dann ist die Rechnung wieder ausgeglichen —
-   aber es ist **viermal so viel erledigt**. Das ist „Token-Maximierung": mehr Arbeit fürs
-   gleiche Kontingent, nicht weniger Ausgabe.
-3. **Der Bericht ist die versteckte Kostenstelle — und zwar genau so.** Ein Agentenbericht
-   wird **zweimal bezahlt, auf zwei verschiedene Arten**:
-   - **Einmal mit ×2:** In dem Moment, in dem der Bericht ankommt, wird er an den
-     Hauptkontext angehängt und in den Cache geschrieben. Das ist ein einmaliges
-     Cache-Schreiben mit ×2 — es wiederholt sich nicht.
-   - **Danach immer mit ×0,1:** Ab dieser Anfrage gehört der Bericht zum warmen Prefix und
-     wird bei **jeder** weiteren Anfrage mitgelesen, zu ×0,1. Zehn weitere Anfragen in der
-     Sitzung = zehnmal derselbe Text zu ×0,1.
-
-   Ein 4k-Bericht kostet also einmalig 8k **plus** 0,4k × jede verbleibende Anfrage der
-   Sitzung — nach 20 Anfragen sind das 8k + 8k = 16k, also **das Vierfache seiner eigenen
-   Länge**. Nicht das ×2 ist die teure Hälfte, sondern der endlose ×0,1-Schwanz.
-
-   (Der 5-Minuten-Cache-TTL des Subagenten ist eine andere Sache und geht in diese Rechnung
-   nicht ein: er bestimmt, was der Agent *innerhalb* seiner eigenen Schleife zahlt, nicht,
-   was sein Bericht im Hauptkontext kostet.)
-
-   Daher die Berichtsgrenze („≤ 300 Wörter, keine Diffs" — dieselbe Zahl wie der Berichtsvertrag in `SKILL.md`) und lange Ergebnisse in Dateien:
-   ein Dateipfad sind 60 Zeichen im Prefix, die Datei selbst kostet nichts, bis jemand sie
-   liest.
-
-### Wie eine Welle wirklich aufgebaut ist (Wellen 25–28)
-
-Die Form, die am besten gemessen hat: **ein Wächter je disjunktem Thema**, jeder mit 4–6
-Arbeitern, jeder mergt in seinen eigenen Integrationsbranch — dann EIN Merge-Wächter für den
-einen Build, die Vollsuite, das Bundle und den QA-Durchgang. Die Hauptsitzung wird einmal je
-Thema geweckt statt einmal je Arbeiter.
-
-| Welle | Struktur | Anfragen | Äquivalent | Fertigmeldungen | Wanduhr |
-|---|---|---:|---:|---:|---:|
-| 24 | 1 Wächter, 12 Arbeiter, alle bauend | 62 | 3.143k | 1 + 12 | 2 Std. 10 |
-| 25 | 3 Themen-Wächter + Merge-Wächter, 15 Arbeiter | 29 | 1.192k | 5 | 64 min |
-| 26 | 3 Themen-Wächter + Merge-Wächter + Skill-Agent, 17 Aufträge | 34 | 1.159k | 5 | 53 min |
-| 27 | 4 Themen-Wächter + Merge + Skill-Agent, 19 Aufträge | 41 | 1.160k | 7 | 78 min |
-| 28 | 2 Themen-Wächter **nach Dateien geschnitten** + Merge + Skill, 11 Aufträge + Skill | 33 | 1.080k | 5 | 57 min |
-
-Wellen 27 und 28 liefern Decke und Korrektur: ein *vierter* Wächter brachte nichts (gleiche
-Token, 25 Minuten mehr, die ersten Merge-Konflikte), während **zwei streng nach DATEIEN
-geschnittene Wächter** die günstigste gemessene Welle ergaben — und null Konflikte. Themen
-nach Dateien schneiden, nicht nach Worten. Vollständige Rechnung:
-[`docs/evidenz.md`](docs/evidenz.md).
-
-Vier Regeln, die der Nutzer am 30.08.2026 beim Zusehen ergänzt hat:
-
-1. **Der Wellenplan ist eine Datei, kein Satz Prompts.** Bevor irgendetwas startet, schreibt
-   die Hauptsitzung `docs/reviews/<datum>-welleN-plan.md` — Strukturregeln oben, dann eine
-   Tabelle je Thema (ID · Auftrag · Akzeptanz · Modell/Effort) —, committet ihn, öffnet ihn im
-   Editor und startet erst dann alle Wächter in EINER Nachricht, jeder Auftrag nur mit Verweis
-   auf die Datei. So kann der Nutzer die Welle ansehen, solange Ändern noch billig ist.
-2. **Modell und Effort ins Label, auch bei Arbeitern**: `Modell/Effort · ID Kurzname`, z. B.
-   `Fable/low · A1 Aufnahme-Rot`. Der Nutzer liest die Agentenliste unten am Bildschirm.
-   Codex ist ein Shell-Befehl, kein Agent — er taucht dort nie auf; das dazusagen.
-3. **Der Push gehört zum Auftrag.** Wächter und Skill-Agenten pushen ihren Branch, bevor sie
-   fertig melden, und nennen den gepushten Hash. Ein nur lokaler Branch ist nicht geliefert.
-4. **Codex als Qualitätsmanager.** Bei frischem Codex-Kontingent lässt jeder Themen-Wächter
-   seinen Integrationsbranch reviewen, bevor er den Abschlussbericht schreibt, und fixt die
-   P1 selbst. In Welle 26 fand das 4 P1-Befunde in drei Fable-Aufträgen.
-
-### Was wir gemessen haben
-
-- Themen-Wächter halbieren Anfragen und Wanduhr gegenüber einem Wächter mit 12 Arbeitern
-  (62 / 2 Std. 10 → 29 / 64 min → 34 / 53 min).
-- Der Start-Cacheaufbau (≈ 200k, einmalig) ist der größte Einzelposten einer kurzen Sitzung —
-  deshalb schlägt Weiterarbeiten in derselben Sitzung eine frische, solange Kontext < 200k.
-- Der Kontext blieb über eine ganze Welle flach bei ~114k, weil alle Arbeit in Agenten lag.
-- Fertigmeldungen sind der Kostentreiber der Hauptsitzung: 5 statt 13.
-- Jeder Wächter braucht einen eigenen Worktree; am Build-Schloss wird aktiv gewartet, nie
-  angehalten und gemeldet (beides Welle 28).
-- Eine Pause > 60 min kostet einen Neuaufbau (≈ Kontext × 2) — bei 114k ≈ 230k, immer noch
-  weniger als eine frische Sitzung mit Startaufbau plus Neu-Briefing.
-
-Modellwahl (aus der Tabelle im Skill): Dateien finden, Umbenennen, Log-Sichtung, Tests nach
-Muster → **schnell/billig, Effort low** (bei Fable 5 als Agent: immer low). Design-
-entscheidungen, Sicherheits-Review → starkes Modell, hoher Effort, oder ein anderes Modell
-(Codex/GPT) als Zweitmeinung. Modell und Effort stehen sichtbar in der Agentenbeschreibung
-(`"Fable/low · Testdateien umbenennen"`), damit der Nutzer im Terminal sieht, wer arbeitet.
-
-Parallel vs. sequenziell: **parallel für Tempo, sequenziell für Wärme** — Agenten cachen
-separat mit 5 Minuten; wer fünf Agenten gleichzeitig startet, hat fünf kalte Caches.
-
-## 5. Was der Skill sichtbar macht
-
-> **Historischer Abschnitt (August/September 2026).** Die damaligen Regeln und Rechnungen sind keine aktuelle Handlungsanweisung. Heute gelten [Skill-Einstieg](SKILL.md) und die aktiven [Claude-](references/claude-code.md)/[Codex-Adapter](references/codex.md).
-
-### Der Zeitstempel
-
-Unter jeder Antwort steht Datum und Uhrzeit — frisch aus `date`, nie aus einer früheren
-Antwort hochgerechnet. So sieht der Nutzer selbst, wie lange die letzte Anfrage her ist
-und ob das Fenster noch offen ist.
-
-### Die Kostenzeile
-
-Unter substanziellen Antworten (`ctx.sh`, ans ohnehin laufende `date` angehängt, damit die
-Messung selbst keine Anfrage kostet):
-
-```
-Letzte gemessene Anfrage: 366k gelesen (×0,1) + 0,4k geschrieben (×2) + 2,9k Ausgabe (×5) ≈ 52k ·
-Sitzung bisher: 265 Anfragen, 9.520k
+<!-- prompt:full-en-claude -->
+```text
+/warm-handoff-full
+Lies die geltenden CLAUDE.md-Dateien und das vollständige gespeicherte Handoff unter <ABSOLUTE_HANDOFF_PATH>. Nutze den vollständigen englischen Ablauf, erhalte Nutzeroriginale und bleibe in der genannten Autorisierung. Nutze den Claude Code-Adapter und schreibe vor Abschluss den geforderten dauerhaften Bericht.
 ```
 
-Und ein Hinweis, wenn etwas teuer war: „Das waren 12 Anfragen, weil ich drei Agenten
-gestartet und ihre Berichte gelesen habe — 4.600k."
+### Vollständiges Deutsch (`full-de`)
 
-### Die Kostentabelle je Sitzung
-
-Am Ende jeder Welle im Handoff (`session-costs.sh --markdown`). Die Zeile ist bewusst der
-**Abschnitt zwischen zwei Nutzernachrichten** — die Einheit, die ein Mensch erlebt („ich
-habe was gesagt, dann ist etwas passiert"), nicht die einzelne Modellanfrage.
-
-| # | Zeit | Worum es ging | Anfr. | Kontext | gelesen | geschr. | Ausgabe | Äquiv. |
-|---:|---|---|---:|---:|---:|---:|---:|---:|
-| 1 | 17:00 | Handoff gelesen, neun Agenten gestartet | 36 | 148k | 4130k | 282k | 110k | 1529k |
-| 2 | 17:35 | *(gebündelt)* | 0 | — | 0 | 0 | 0 | **0** |
-| 3 | 17:35 | Deine Kostenfragen | 6 | 156k | 906k | 11k | 19k | 208k |
-| 4 | 17:38 | `/context all` ausgewertet | 10 | 180k | 1706k | 43k | 8k | 298k |
-| 5 | 17:48 | Timing und Bündeln erklärt | 5 | 188k | 907k | 11k | 9k | 159k |
-| 6 | 18:15 | *(gebündelt — sechs Fragen)* | 0 | — | 0 | 0 | 0 | **0** |
-| 7 | 18:21 | Restarbeit, Bauen, Handoff | 20 | 220k | 4080k | 59k | 41k | 729k |
-| **Σ** | | **7 Abschnitte** | **82** | **220k** | **12671k** | **416k** | **200k** | **3102k** |
-
-Wie man sie liest:
-
-- **Äquiv.** = gelesen × 0,1 + geschrieben × 2 + Ausgabe × 5 — alle drei Posten auf einen
-  Preis gebracht und addiert. Zeile 1: 4130 × 0,1 + 282 × 2 + 110 × 5 = 413 + 564 + 550 ≈ 1529k.
-- **Kontext addiert sich NICHT.** „180k" in Zeile 4 heißt: So dick war das Gespräch am Ende
-  dieses Abschnitts — nicht, dass der Abschnitt 180k gekostet hätte.
-- **Zwei Zeilen stehen bei null.** Das ist kein Rundungsfehler: Die Nachrichten kamen an,
-  während Claude arbeitete, und wurden in die laufende Runde gebündelt.
-- **Ausgabe 200k × 5 = 1.000k — ein Drittel der Gesamtkosten.** Der einzige Posten, den
-  Claude allein zu verantworten hat. Lehre: weniger reden, mehr ins Dokument schreiben.
-- **82 Anfragen im Hauptkontext für neun Arbeitspakete** — die über 500 Arbeitsschritte
-  liefen in den Agenten. Im Hauptkontext hätten sie ~7.500k statt 3.102k gekostet.
-
-### Der Kontingent-Block
-
-Ganz oben im Handoff steht, was vom bezahlten Kontingent noch da ist — Claude Codes
-eigenes 5-Stunden- und Wochenfenster (aus der Statuszeile in eine Datei geparkt, weil
-Claude seine Prozentzahlen sonst nicht sehen kann) und Codex/GPT (`codex-limit.sh`,
-aus dem `rate_limits`-Block der letzten Codex-Session, mit Alter der Messung). Der Sinn:
-Wer monatlich bezahlt, sollte das Kontingent **ausnutzen** — der Skill schlägt vor, was
-man mit dem Rest noch machen könnte („Woche zu 61 %, Reset Montag: reicht für die
-Codex-Zweitmeinung zu Welle 19"). Mehr dazu in `SKILL.md`, „Was noch im Tank ist".
-
-Nebenbefund aus einem Review vom 27.08.2026 (`docs/reviews` im Aitomat-Projekt): Die
-frühere „Peak-Hours"-Kürzung des Kontingents bei Claude Code Pro/Max wurde am 06.05.2026
-abgeschafft; Tageszeit spielt für Preis und Kontingent heute keine Rolle mehr — nur für
-529-Überlastfehler. Und die Skill-Liste selbst ist auf ~2.000 Token gedeckelt; ein
-405k-Sitzungsstart kommt nicht von 89 installierten Skills, sondern aus etwas anderem
-(`/context all` verrät, woraus).
-
-## 6. Installation
-
-Den vollständigen Repository-Ordner in einen **neuen, noch nicht belegten**
-Skill-Zielordner des gewählten Hosts kopieren: `SKILL.md`, `references/` und
-`scripts/` gehören zusammen. Für Claude Code ist der bisherige Ablageort
-`~/.claude/skills/warm-handoff` vorgesehen; einen vorhandenen Skill zuerst separat
-prüfen und bewahren. Kein Download nur der SKILL.md und kein Verteilen einzelner
-Skripte nach `~/.claude/`: der RTF-Wrapper benötigt seine Python-Nachbardateien.
-
-Manuell in Claude `/warm-handoff`, in einem unterstützenden Codex-Host
-`$warm-handoff` aufrufen. Eine automatische Projektvereinbarung ist optional;
-bestehende `CLAUDE.md`/`AGENTS.md` und globale Einstellungen nicht beiläufig ändern.
-Codex-Alternative ohne Skill-Installation: Abschnitt 6a.
-
-RTF benötigt macOS, Bash, Python 3 und `textutil`. Historische Messskripte behalten
-ihre jeweiligen Voraussetzungen; vor Nutzung Datenquelle und Nebenwirkungen
-prüfen. `zwischenrufe-antwort.sh` ist ein alter Editor-verändernder Helfer und
-wird vom aktuellen sicheren Ablauf nicht aufgerufen: Quittungen in neue Dateien.
-
-## 6a. Mit Codex verwenden
-
-Codex unterstützt Skills und `AGENTS.md`. Für diesen Ablauf die
-[AGENTS.md-Vorlage](templates/AGENTS-warm-handoff.md) (Astras Arbeitsvereinbarung)
-als `docs/warm-handoff.md` ins eigene Projekt legen. Den Quellpfad durch den
-Pfad des vollständigen geprüften Checkouts ersetzen. Im Projektordner:
-
-```sh
-mkdir -p docs
-cp -n /pfad/zum/warm-handoff/templates/AGENTS-warm-handoff.md docs/warm-handoff.md
+<!-- prompt:full-de-claude -->
+```text
+/warm-handoff-full-de
+Lies die geltenden CLAUDE.md-Dateien und das vollständige gespeicherte Handoff unter <ABSOLUTE_HANDOFF_PATH>. Nutze den vollständigen deutschen Ablauf, erhalte Nutzeroriginale und bleibe in der genannten Autorisierung. Nutze den Claude Code-Adapter und schreibe vor Abschluss den geforderten dauerhaften Bericht.
 ```
 
-`cp -n` überschreibt keine vorhandene Datei. Ist das Ziel bereits belegt, einen
-neuen Zielnamen wählen und den Verweis unten entsprechend ändern. In die
-vorhandene Projekt-`AGENTS.md` diesen kurzen verbindlichen Abschnitt ergänzen;
-ihre übrigen Regeln erhalten:
+<!-- section:REFERENCES -->
+## Kernreferenzen
 
-```markdown
-## Arbeitsweise (warm-handoff)
+- [Handoff-Format](references/handoff-format.de.md)
+- [Autorisierte Arbeitswellen](references/wave-execution.de.md)
+- [RTF unter macOS](references/rtf-macos.de.md)
+- [Optionaler Context Mode](references/context-mode.de.md)
+- [Modellrouting](references/model-routing.de.md)
+- [Beleggrenzen](references/evidence-scope.de.md)
 
-Lies bei Sessionstart und vor jeder Übergabe `docs/warm-handoff.md` und befolge
-seine Arbeitsvereinbarung im Rahmen des Auftrags und der Host-Berechtigungen.
-- Dauerhaften Stand und längeres Feedback im Handoff festhalten.
-- Die benannte Zwischenrufe-Datei lesen; Nutzertext unverändert erhalten.
-- Erlaubte Builds/Tests mit dem gemeinsamen Projekt-Bau-Lock serialisieren.
-- Ein Commit je Auftrag, nur zugeteilte Pfade stagen; Push nur bei Auftrag.
-- Abschlussbericht als Datei schreiben und mit geprüftem Status verlinken.
-```
+Plattform- und Cacheaussagen sind in den Adaptern und der Modellrouting-Referenz datiert und belegt. API-Spezifikationen, wirksame Hostgrenzen und gemessene Sitzungswerte bleiben getrennt.
 
-Danach eine neue Sitzung im Projekt starten: `codex -C /pfad/zum/projekt`.
-Eine beliebige Markdown-Datei allein wird nicht automatisch geladen. Codex liest
-zuerst `~/.codex/AGENTS.override.md` oder `AGENTS.md`, danach Projektanweisungen
-von der Repo-Wurzel bis zum Arbeitsordner. Am selben Ort gewinnt die Override-Datei;
-das gemeinsame Budget beträgt standardmäßig 32 KiB.
-[Anweisungskette](https://learn.chatgpt.com/docs/agent-configuration/agents-md).
+## Danksagung und Lizenz
 
-**Ein Skill ist für diesen Einbau optional.** Die ursprüngliche Codex-Vorlage
-dokumentiert Ablageorte unter
-anderem `~/.agents/skills`, `.agents/skills` im Repo, `/etc/codex/skills` und
-mitgelieferte Skills. Sie verwenden `SKILL.md`; ein installierter Skill kann mit
-`$warm-handoff` aufgerufen werden. Auf dem geprüften Rechner stellt dieser
-Codex-Host außerdem eine eigene Fassung unter `~/.codex/skills/warm-handoff`
-bereit. Daraus folgt keine Garantie für andere Clients und kein automatischer
-Import von `~/.claude/skills`. Claude-Werkzeugnamen, Hooks, Einstellungen und
-Kostenskripte vor Wiederverwendung prüfen.
-[Skill-Unterstützung](https://learn.chatgpt.com/docs/build-skills).
-
-**Cache-Fenster:** Claudes Stunden-Annahme nicht übertragen. API-Angaben zur
-Cache-Dauer sind keine gemessene Codex-Abo-Garantie. Der aktuelle Host und das
-gewählte Modell bestimmen die verfügbaren Messwerte; fehlende Werte bleiben
-„nicht gemessen“. Vor längerer Pause den Stand speichern; keine Warmhalte-Pings,
-universellen Kontextgrenzen oder Claude-Preisfaktoren.
-[Prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching).
-
-**Arbeiter und Sandbox:** Einen ausdrücklich beauftragten CLI-Arbeiter über
-`codex exec` starten, statt Claudes `Agent`-Werkzeug zu übernehmen. Manche
-Codex-Hosts bieten auch native Unteragenten; dieser Einbau benötigt sie nicht.
-Mit vorbereiteter Auftragsdatei und Berichtspfad:
-
-```sh
-codex --ask-for-approval on-request exec -C /pfad/zum/projekt \
-  --sandbox workspace-write \
-  -c 'sandbox_workspace_write.writable_roots=["/pfad/zum/projekt/.git"]' \
-  -c sandbox_workspace_write.network_access=false \
-  -o /pfad/zum/projekt/bericht.md - < /pfad/zum/projekt/auftrag.txt
-```
-
-`workspace-write` erlaubt Änderungen im Arbeitsordner. `writable_roots` fordert
-zusätzliche Schreiborte an, einschließlich der für Commits nötigen Git-Metadaten.
-Bei Worktrees mit `git rev-parse --absolute-git-dir` und
-`git rev-parse --path-format=absolute --git-common-dir` beide echten absoluten
-Pfade ermitteln und eintragen. Verwaltete Profile können `.git` trotzdem nur
-lesbar halten: Blockade melden und die autorisierte Hauptsitzung committen lassen.
-`--ask-for-approval never` beseitigt Rückfragen, keine Grenzen. Details in der Vorlage.
-
-`network_access=true` erlaubt ausgehendes Shell-Netzwerk für einen beauftragten
-Push; es ersetzt weder die Veröffentlichungserlaubnis noch die GitHub-Anmeldung.
-Die Startoptionen lockern keine bereits vorgegebene Sandbox der Elternsitzung.
-[Konfiguration](https://learn.chatgpt.com/docs/config-file/config-reference) ·
-[Git-Schutz](https://learn.chatgpt.com/docs/config-file/config-advanced).
-
-## 7. Die Skripte
-
-| Skript | Status und Zweck | Verwendung |
-|---|---|---|
-| `scripts/handoff-rtf.sh` | Aktueller Renderer: Markdown → deterministische RTF, Text-Roundtrip und Hyperlink-Prüfung vor exklusiver Veröffentlichung. Bestehende Ziele bleiben erhalten. | `scripts/handoff-rtf.sh quelle.md neu.rtf --project-root /projekt` · [Grenzen und Viewer-Abnahme](references/rtf-macos.md) |
-| `scripts/ctx.sh` | Historischer Claude-Helfer mit damaligen Preisfaktoren; kein heutiger Abo-Kostennachweis. | Nur nach Prüfung einer ausdrücklich identifizierten Sessionquelle. |
-| `scripts/session-costs.sh` | Historische Sitzungstabelle; Standardauswahl der neuesten Session und alte Rechenfaktoren vor Nutzung prüfen. | Eine konkrete `.jsonl` statt einer geratenen Session zuordnen. |
-| `scripts/codex-limit.sh` | Historischer Kontingenthelfer mit automatischer Sessionsuche und Cachedatei unter `~/.claude`; kein Verbrauchsnachweis dieses Auftrags. | Aktuelle Host-Telemetrie bevorzugen; Nebenwirkungen und Messalter vor Nutzung prüfen. |
-| `scripts/zwischenrufe-antwort.sh` | Alter Editor-verändernder Helfer. | Im aktuellen sicheren Ablauf nicht verwenden; Quittungen als neue Dateien. |
-
-Historische Statuszeilen- und „Aufwach-Ping“-Beispiele sind keine aktuelle
-Empfehlung. Der Skill erzeugt keine Messanfragen zum Warmhalten und verändert
-keine globalen Dateien für eine frischere Anzeige. Die vollständigen
-Skript-Nachbardateien im Skill-Ordner erhalten.
-
-## 8. Ehrliche Grenzen
-
-> **Historischer Abschnitt (August/September 2026).** Die damaligen Regeln und Rechnungen sind keine aktuelle Handlungsanweisung. Heute gelten [Skill-Einstieg](SKILL.md) und die aktiven [Claude-](references/claude-code.md)/[Codex-Adapter](references/codex.md).
-
-- Die Messungen stammen aus echten Sitzungen eines Entwicklers auf einem Abo mit
-  1-Stunden-Cache, in einem Projekt (Swift/macOS). Andere Projekte, andere Verhältnisse —
-  deshalb liegen die Skripte bei, nicht nur die Ergebnisse.
-- Die Ersparnis je Technik ist eine Schätzung, die ein zweites Modell (Codex/GPT) über
-  dieselben Sitzungsdaten gerechnet hat. Die Posten überlappen und dürfen nicht addiert
-  werden.
-- Die „Äquivalente" sind Listenpreis-Verhältnisse. Auf Pro/Max zahlt niemand diese Summe;
-  sie misst die Belastung des Kontingents, und die Umrechnung des Kontingents in Tokens ist
-  von Anthropic nicht dokumentiert.
-- Ein Neuaufbau wird nur gemeldet, wenn eine Ursache herleitbar ist. Ohne Ursache sagt der
-  Skill lieber nichts.
-- Der Skill schult ausdrücklich: „Erst die Zahl, dann die Regel." Wenn eine frühere
-  Erklärung im Skill falsch war (das kam vor — „fast die Hälfte gespart" waren nachgerechnet
-  ein Drittel), wird sie korrigiert und die Korrektur bleibt lesbar.
-
-## 9. Die Fakten, auf denen alles steht
-
-> **Historischer Abschnitt (August/September 2026).** Die damaligen Regeln und Rechnungen sind keine aktuelle Handlungsanweisung. Heute gelten [Skill-Einstieg](SKILL.md) und die aktiven [Claude-](references/claude-code.md)/[Codex-Adapter](references/codex.md).
-
-| Regel | Wert |
-|---|---|
-| Pro/Max Cache-TTL | 1 Stunde, **gleitend** — jede Anfrage setzt sie zurück |
-| Über Plan-Limit (bezahlte Credits) | fällt automatisch auf 5 Minuten |
-| Subagenten | immer 5 Minuten, auch auf Max |
-| Cache lesen / schreiben / eigene Ausgabe | ×0,1 / ×2 (1-h-TTL) / ×5 |
-| Umgebungsvariablen | `ENABLE_PROMPT_CACHING_1H=1`, `FORCE_PROMPT_CACHING_5M=1` |
-| Skill-Liste im Kontext | gedeckelt (`skillListingBudgetFraction`, ~2.000 Token) |
-
-Quellen: [How Claude Code uses prompt caching](https://code.claude.com/docs/en/prompt-caching),
-[Usage limit best practices](https://support.claude.com/en/articles/9797557-usage-limit-best-practices),
-[Extend Claude with skills](https://docs.claude.com/en/docs/claude-code/skills). Stand 27.08.2026.
-
-## 10. Danksagung, Vorarbeiten, Lizenz
-
-- [Matt Pococks /handoff-Skill](https://www.aihero.dev/skills-handoff)
-  ([mattpocock/skills](https://github.com/mattpocock/skills)) — das klarste Denken darüber,
-  *wie* man ein Handoff schreibt. Übernommen: auf abgeschlossene Dokumente verweisen statt
-  sie zu kopieren, Geheimnisse schwärzen, Skills für den nächsten Agenten vorschlagen.
-  Bewusst anders: Unsere Handoffs leben *im Projekt* als datierte, vom Nutzer annotierte
-  Arbeitsdokumente; bei einer notwendigen Übergabe bleibt der geprüfte Stand
-  unabhängig vom aktuellen Gespräch erhalten.
-- Weitere Handoff-Implementierungen: [392fyc](https://github.com/392fyc/claude-handoff),
-  [REMvisual](https://github.com/REMvisual/claude-handoff),
-  [willseltzer](https://github.com/willseltzer/claude-handoff),
-  [ykdojo](https://github.com/ykdojo/claude-code-tips/blob/main/skills/handoff/SKILL.md).
-- Zweitmeinungen zu den Rechnungen: Codex/GPT-5.6 und Ox Alpha (OpenRouter).
-- Tatsächliche Mitwirkung: Yasin Akgün entwickelte den ursprünglichen Ablauf
-  im täglichen Arbeiten mit Claude Code. Codex (GPT-6 Astra) überarbeitete in W53
-  den gemeinsamen Einstieg, die aktiven Adapter, den sicheren RTF-Renderer und
-  dessen Regressionstests; Codex-Reviews ergänzten die Marker- und Tabgruppenfälle.
-  Konzeption, Nutzerentscheidungen und Abnahme bleiben Yasin zugeordnet.
-
-Issues, Messungen aus eigenen Sitzungen und Pull Requests sind willkommen — auf
-Deutsch oder Englisch. `SKILL.md` ist der gemeinsame englische Einstieg;
-`SKILL.de.md` bietet die deutsche Orientierung, keine vollständige Übersetzung
-des alten Langtexts. Die aktiven Detailreferenzen und Nutzerdokumente sind deutsch.
-Die vollständigen früheren Claude-Fassungen bleiben in
-[Englisch](references/claude-workflow-history.md) und
-[Deutsch](references/claude-workflow-history.de.md) erhalten; die deutsche
-[Historie](references/historie.md) dokumentiert ihre Herkunft.
-
-Lizenz: MIT.
+Entwickelt von Yasin Akgün in der täglichen Arbeit an Aitomat. Die Handoff-Struktur baut auf [Matt Pococks `/handoff`](https://www.aihero.dev/skills-handoff) und verwandten öffentlichen Umsetzungen auf. Beiträge auf Englisch oder Deutsch sind willkommen. Siehe [LICENSE](LICENSE).

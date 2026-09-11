@@ -1,49 +1,48 @@
 ---
 name: warm-handoff
-description: Preserve original user feedback and verified work state across pauses; prepare or resume a handoff and plan or execute an authorized work wave from collected answers.
+description: Preserve user input and verified work across pauses, resume safely, and execute explicitly authorized work waves with provider-neutral evidence and file ownership.
 ---
 
 # Warm Handoff
 
-Keep the user's intent, original answers and verified state available for the next
-session. Use German for this workflow unless the user chooses another language.
-Distinguish reading/collecting, planning, executing and handing off. Reading ideas
-does not itself authorize implementation; existing authorization carries forward.
+Use this compact entry point for routine work. Read only the reference needed for the current action. Use the separately installed `warm-handoff-full` variant when teaching, adopting, or auditing the entire workflow.
 
-For a handoff or resume, read [handoff format](references/handoff-format.md).
-Use the previous document's structure, retain every original answer and recheck
-all agreed saved sources, including RTF, Zwischenrufe, chat and late additions.
-Saving submits input: compare whole saved revisions at natural work steps and
-before handoff, without polling or importing unsaved drafts by default. Missing
-agreed saved sources mean incomplete import. Keep interpretation separate from input.
+<!-- rule:WH-01 -->
+## 1. Establish scope
 
-Read the active host adapter: [Codex](references/codex.md) or
-[Claude Code](references/claude-code.md). Both support the same document-led cycle:
-answered handoff → concrete plan → authorized work → verified next handoff.
-No global configuration, model switch, publishing, Goal or monitoring is implied.
+Treat the user's latest saved handoff and later messages as one ordered input stream. Read project instructions first, identify the named source and feedback files, and record the authorized scope, prohibited actions, file ownership, and required evidence. A handoff records intent; it does not grant permissions that the user did not give.
 
-For delegated waves read [wave execution](references/wave-execution.md).
-The main agent writes the concrete plan. Small connected work stays local;
-authorized independent packets go directly to workers in isolated worktrees.
-Use a guardian only when internal coordination is needed; preserve actual host
-slots for workers. Briefs stay short and self-contained, with original evidence,
-authorization, ownership and acceptance. Prefer delivered completion events over
-repeated short status polls; follow host communication and waiting limits.
+Select one host adapter: [Codex](references/codex.md) or [Claude Code](references/claude-code.md). Keep the core rules provider-neutral.
 
-For the chosen RTF/TextEdit workflow, read [RTF safety and tab groups](references/rtf-macos.md).
-The copy line belongs at the top and points at the new editable answer document.
-Open all mentioned user-facing documents in the active TextEdit tab group or one
-new common group. Never merge unrelated windows, overwrite an existing answer
-file, or leave a newly created empty helper tab/window behind. Verify UI results;
-when tools are unavailable, report exactly which documents remain unopened.
+<!-- rule:WH-02 -->
+## 2. Resume without loss
 
-Pasted Content / [pasted text] applies to Codex and cmux as well as Claude:
-use the actual supplied content or referenced file, never infer it from a collapsed
-placeholder. Preserve long dictation in the agreed document and short steering in
-chat. Follow the host's communication rules while work continues.
+Read the complete saved source, including embedded or appended user text. Preserve user originals verbatim and put interpretations or answers in separate sections. Compare late additions before acting. Verify repository state and completed claims from files, Git state, tests, or other direct evidence; label anything else unknown.
 
-Report completed, pending and running work with evidence and the next action.
-Telemetry needs source, age and scope; missing values are “nicht gemessen”.
-Cache expiration is not memory loss. No artificial keepalive work or universal
-context/cost assumptions. [Historical evidence](references/historie.md) preserves
-provenance without overriding the current user or host.
+For the document contract and required sections, read [handoff format](references/handoff-format.md).
+
+<!-- rule:WH-03 -->
+## 3. Work inside authorization
+
+Make progress until the authorized outcome is complete. Split independent work only when the host and assignment allow it. Give each worker exclusive paths and acceptance criteria; never exceed actual concurrency. Guardians are optional coordination roles, not a default layer. Keep builds and shared resources serialized.
+
+For execution details, read [wave execution](references/wave-execution.md). For model selection and changing platform facts, read [model routing](references/model-routing.md) and [evidence scope](references/evidence-scope.md).
+
+<!-- rule:WH-04 -->
+## 4. Preserve document safety
+
+Never overwrite a user's answered handoff. Write a new Markdown source and, when requested on macOS, a new editable RTF twin. Verify plain-text roundtrip and link fields before publishing. Renderer verification does not prove TextEdit continuation behavior or application paste behavior; test those separately.
+
+Read [RTF on macOS](references/rtf-macos.md) before rendering or opening documents.
+
+<!-- rule:WH-05 -->
+## 5. Use optional helpers deliberately
+
+[Context Mode](references/context-mode.md) can reduce large command and file output. Treat package installation, MCP availability, and hook operation as separate states. Never install it without permission.
+
+<!-- rule:WH-06 -->
+## 6. Close with evidence
+
+Before completion, reread the designated feedback source, inspect status, run the required targeted checks, and confirm only owned paths changed. Report completed, pending, and running work with evidence and the next action. Write the requested durable report before returning a short chat response.
+
+Spanish localization is deferred. Audio, video, and website material are outside this skill.

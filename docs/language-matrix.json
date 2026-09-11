@@ -1,0 +1,97 @@
+{
+  "version": 1,
+  "canonical_language": "en",
+  "complete_languages": ["en", "de"],
+  "deferred_languages": ["es"],
+  "manual_semantic_review": {
+    "status": "implementation_self_review_complete",
+    "reviewed_on": "2026-09-12",
+    "reviewed_pairs": 12,
+    "scope": "All active English/German pairs, stable rule IDs, README section IDs, and both start prompts.",
+    "limitation": "Automated checking of IDs, links, and prompt contracts detects structural drift but does not prove semantic equivalence; independent human review remains welcome."
+  },
+  "packages": {
+    "compact-en": {
+      "entry": "SKILL.md",
+      "resources": [
+        "references/handoff-format.md",
+        "references/wave-execution.md",
+        "references/rtf-macos.md",
+        "references/codex.md",
+        "references/claude-code.md",
+        "references/context-mode.md",
+        "references/model-routing.md",
+        "references/evidence-scope.md",
+        "scripts/handoff-rtf.sh",
+        "scripts/render_rtf.py",
+        "scripts/handoff_common.py",
+        "templates/AGENTS-warm-handoff.md"
+      ]
+    },
+    "compact-de": {
+      "entry": "variants/compact-de/SKILL.md",
+      "resources": [
+        "references/handoff-format.de.md",
+        "references/wave-execution.de.md",
+        "references/rtf-macos.de.md",
+        "references/codex.de.md",
+        "references/claude-code.de.md",
+        "references/context-mode.de.md",
+        "references/model-routing.de.md",
+        "references/evidence-scope.de.md",
+        "scripts/handoff-rtf.sh",
+        "scripts/render_rtf.py",
+        "scripts/handoff_common.py",
+        "templates/AGENTS-warm-handoff.de.md"
+      ]
+    },
+    "full-en": {
+      "entry": "variants/full/SKILL.md",
+      "resources": [
+        "references/handoff-format.md",
+        "references/wave-execution.md",
+        "references/rtf-macos.md",
+        "references/codex.md",
+        "references/claude-code.md",
+        "references/context-mode.md",
+        "references/model-routing.md",
+        "references/evidence-scope.md",
+        "scripts/handoff-rtf.sh",
+        "scripts/render_rtf.py",
+        "scripts/handoff_common.py",
+        "templates/AGENTS-warm-handoff.md"
+      ]
+    },
+    "full-de": {
+      "entry": "variants/full-de/SKILL.md",
+      "resources": [
+        "references/handoff-format.de.md",
+        "references/wave-execution.de.md",
+        "references/rtf-macos.de.md",
+        "references/codex.de.md",
+        "references/claude-code.de.md",
+        "references/context-mode.de.md",
+        "references/model-routing.de.md",
+        "references/evidence-scope.de.md",
+        "scripts/handoff-rtf.sh",
+        "scripts/render_rtf.py",
+        "scripts/handoff_common.py",
+        "templates/AGENTS-warm-handoff.de.md"
+      ]
+    }
+  },
+  "pairs": [
+    {"en": "README.md", "de": "README.de.md"},
+    {"en": "SKILL.md", "de": "SKILL.de.md", "rule_prefix": "WH"},
+    {"en": "variants/full/SKILL.md", "de": "variants/full/SKILL.de.md", "rule_prefix": "WH"},
+    {"en": "references/handoff-format.md", "de": "references/handoff-format.de.md", "rule_prefix": "HF"},
+    {"en": "references/wave-execution.md", "de": "references/wave-execution.de.md", "rule_prefix": "WV"},
+    {"en": "references/rtf-macos.md", "de": "references/rtf-macos.de.md", "rule_prefix": "RT"},
+    {"en": "references/codex.md", "de": "references/codex.de.md", "rule_prefix": "CDX"},
+    {"en": "references/claude-code.md", "de": "references/claude-code.de.md", "rule_prefix": "CLA"},
+    {"en": "references/context-mode.md", "de": "references/context-mode.de.md", "rule_prefix": "CM"},
+    {"en": "references/model-routing.md", "de": "references/model-routing.de.md", "rule_prefix": "MR"},
+    {"en": "references/evidence-scope.md", "de": "references/evidence-scope.de.md", "rule_prefix": "EV"},
+    {"en": "templates/AGENTS-warm-handoff.md", "de": "templates/AGENTS-warm-handoff.de.md", "rule_prefix": "AG"}
+  ]
+}

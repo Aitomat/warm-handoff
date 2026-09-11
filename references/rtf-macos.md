@@ -1,113 +1,33 @@
-# RTF und TextEdit — Antwortdateien erhalten, Tabgruppe gezielt nutzen
+# RTF on macOS
 
-## Neue RTF sicher erzeugen
+<!-- rule:RT-01 -->
+## Safe generation
 
-RTF ist die editierbare Nutzerquelle. Speichern ist das Übergabesignal; vor der
-nächsten Version die gesamte gespeicherte Revision nach [Handoff-Format](handoff-format.md)
-abgleichen und Originale wörtlich erhalten. Ungespeicherte Entwürfe bleiben ohne
-ausdrücklich gewählten Live-Modus außerhalb des Eingangs; keinen Editor-Live-Read ausführen.
-Niemals offene oder andere bestehende Nutzerdateien überschreiben, speichern,
-schließen oder verschieben. Der Renderer verweigert jedes vorhandene Ziel,
-einschließlich Symlinks. Er steuert keinen Editor und ändert keine Einstellungen.
+RTF is an optional editable twin of an agent-authored Markdown handoff. It requires macOS, Python 3, Bash, and `textutil`.
 
 ```sh
-scripts/handoff-rtf.sh /projekt/docs/handoff-neu.md /projekt/handoff-neu.rtf --project-root /projekt
+scripts/handoff-rtf.sh /project/docs/handoff.md /project/handoff.rtf --project-root /project
 ```
 
-Python 3 und macOS `textutil` sind nötig; kein pandoc, HTML oder Netzwerkzugriff.
-Die Projektwurzel explizit angeben, wenn bekannt. Ohne Option gilt die nächste
-übergeordnete `.git`-Markierung (Verzeichnis oder Worktree-Datei), ansonsten das
-Markdown-Verzeichnis. Relative **explizite Links und nackte Dokumentpfade** werden
-gegen diese Basis absolut aufgelöst, nie gegen einen temporären Konverterordner.
-Bei quellrelativen Links ausdrücklich `--project-root` auf das Quellverzeichnis
-setzen. Mehrdeutige Basen nicht erraten. Lokale explizite Linkziele müssen existieren;
-die exakt gerade erzeugte neue RTF darf sich in der Kopierzeile selbst verlinken.
+The output path must be new. The renderer refuses existing files and symlinks, writes through a temporary file, verifies plain text and hyperlink fields, and publishes exclusively. Relative links resolve from `--project-root`, otherwise the nearest `.git` marker, otherwise the Markdown directory. Explicit missing Markdown links and local paths fail instead of becoming dead links.
 
-Pfade mit Leerzeichen als `[Label](<docs/Fragen an Yasin.md>)`, in Backticks oder
-als `⟦Screenshot: /absoluter/Pfad mit Leerzeichen.png⟧` schreiben. Prozentkodierte
-`file:///`-URIs funktionieren. Web-Links bleiben Web-Links; andere Schemes und
-entfernte file-Hosts werden abgewiesen. Nicht existierende nackte relative Namen
-bleiben Text; für beabsichtigte Dokumentverweise explizite Links verwenden.
-`⟦Kopie: „beliebiger zitierter Text“⟧` bleibt wortgetreu; nur ein gültiges Webziel
-oder tatsächlich vorhandenes Dateiziel wird verlinkt. Dokumentmarker wie
-`⟦Dokument: RG.pdf — ~/Downloads/RG.pdf⟧` verlinken den Pfad nach dem Trenner,
-während der vollständige Marker sichtbar unverändert bleibt.
+<!-- rule:RT-02 -->
+## Verbatim input and links
 
-Der konservative Markdown-Umfang umfasst Überschriften, Listen-/Tabellenzeilen,
-Codeblöcke, Inline-Code, Links und Antwortmarker. Zeilen und Unicode bleiben
-lesbar; komplexe Markdown-Formatierung kann als sichtbare Syntax stehen bleiben.
-Codeblöcke werden nicht als Dateiverweise interpretiert. 18 pt Grundschrift,
-größere fette Überschriften, goldener Hintergrund der `>>>`-Antwortabsätze. Die Kopierzeile ist eine logische
-Zeile; ihre optische Breite hängt vom Fenster ab. Originalquellen bleiben erhalten.
+Wrap preserved user text in `<!-- user-original:start -->` and `<!-- user-original:end -->`. Its visible text stays literal. Markdown links, supported document markers, URLs, paths in inline code, and real absolute paths remain link candidates. Slash compounds such as `root-/worker usage` or `token-/cost telemetry` are prose and must not be parsed as root paths.
 
-Erst nach erfolgreichem `textutil`-Textroundtrip und Prüfung aller erzeugten
-HYPERLINK-Felder wird die vollständige Datei atomar veröffentlicht. Ein Fehler
-hinterlässt kein neues Ziel. Tests: `python3 -m unittest discover -s tests -v`.
-Diese Checks beweisen noch keine UI-Bedienbarkeit: Lesbarkeit, Linkklicks,
-Kopierzeile und Antwortspeicherung im Viewer zusätzlich prüfen oder offen nennen.
-Ein Dokument ohne lokale Links ist zulässig; `grep -c file://` ist keine Abnahme.
+<!-- rule:RT-03 -->
+## Gold answer continuation
 
-## Alle Lesedokumente in einer passenden Tabgruppe öffnen
+Lines beginning with `>>>` are gold, 18-point answer paragraphs. The blank paragraph immediately after a marker receives the same style. Typing there, pressing Return, saving, and reopening must keep the continued user text gold and 18 pt. A later agent paragraph must have no answer background.
 
-Im vereinbarten Dokumentablauf alle im Bericht/Handoff erwähnten nutzerseitigen
-Lesedokumente öffnen, nicht nur den Handoff. Nicht-textuelle Belege bei Bedarf
-im passenden Viewer; keine Binärdateien als Text öffnen. Existierende Dokumente
-anhand voller Pfade und sichtbarem Zustand zuordnen, nie nur nach Dateinamen.
+The automated AppKit test covers this storage and save/reload behavior. A manual TextEdit check remains distinct because launching or focusing the editor can disturb the user's desktop.
 
-1. Vorhandene TextEdit-Fenster/-Tabs und aktive Gruppe lesend erfassen. Die aktive
-   Gruppe des Auftrags nutzen. Falls keine passende Gruppe existiert, eine neue
-   gemeinsame Gruppe für die Auftragsdokumente herstellen. Fremde Gruppen erhalten.
-2. Vorhandene verlässliche Tab-Öffnungsfunktion des aktuellen Hosts bevorzugen;
-   sichtbare UI nach jedem abhängigen Schritt abwarten. Nicht voraussetzen, dass
-   mehrere `open`-Aufrufe automatisch derselben Gruppe beitreten.
-3. **Am 10.09.2026 durch die Hauptsession per CUA geprüft:** Im Ziel-Einzelfenster
-   `Darstellung → Tableiste einblenden`, sichtbares `+` / „Neuer Tab“ anklicken.
-   Dies erzeugt einen eigenen leeren Hilfstab in dieser Gruppe. Von dort `⌘O`,
-   `⇧⌘G`; auf das sichtbare Pfadfeld warten und dessen Wert vollständig setzen
-   (`setValue` des beobachteten Feldes). Return, auf aktualisierten Öffnen-Dialog
-   warten, „Öffnen“ anklicken. Die Datei erschien als dritter Tab neben Plan und
-   Hilfstab in derselben Gruppe. Für weitere Dokumente Zustand neu prüfen.
-4. Den eindeutig selbst erzeugten Hilfstab **zuerst auswählen**, seine leere
-   Textansicht prüfen und erst dann `⌘W` drücken. Ein Klick auf den Schließen-Knopf
-   ohne Auswahl entfernte ihn im Versuch nicht zuverlässig. Die Hauptsession
-   bestätigte danach fünf echte Dokumente gemeinsam, ohne leeren Rest.
-   Keine Nutzerfenster oder unsicheren/ungesicherten Dokumente schließen.
-   Falls ein eigener leerer Fensterrest entstanden ist, nur diesen nach eindeutiger
-   Zuordnung entfernen. Kein neuer leerer Tab/Fensterrest darf unbemerkt bleiben.
-5. Erfolg am tatsächlichen Zustand prüfen: erwartete Dokumentpfade/-tabs gemeinsam,
-   fremde Gruppen unverändert, kein eigener leerer Rest. Aktuellen Host-Tools folgen;
-   die Schritte sind ein geprüfter Fallback, keine Garantie jeder TextEdit-Version.
+<!-- rule:RT-04 -->
+## Three evidence scopes
 
-**Nie „Alle Fenster zusammenführen“ / `mergeAllWindows` verwenden.** Dies würde
-fremde Gruppen einsammeln. Kein blindes `⌘⌥N`: im beobachteten Fall entstand ein
-leeres Fenster. Direktes `typeText` nach `⇧⌘G` verlor im Versuch den Pfadpräfix;
-deshalb sichtbares Feld abwarten und gezielt vollständig befüllen. Keine globalen
-`defaults write`-Änderungen. Ist Gruppierung oder UI-Steuerung nicht verfügbar,
-Dateien liefern und exakt die offene Gruppierung/Viewer-Prüfung dokumentieren.
+- Renderer roundtrip: generated text and hyperlink fields.
+- TextEdit/AppKit continuation: typing and paragraph style after save/reload.
+- Application paste: behavior in the target application.
 
-## Goldene Antwortflächen
-
-Im vereinbarten Aitomat-Profil bezeichnet Gold den Absatzhintergrund von
-Nutzerantworten, nicht die Schriftfarbe. Normal große, lesbare Schrift erhalten.
-Mehrzeilige Originale vollständig hervorheben, Agentenantworten getrennt lassen.
-Vor Rendereränderungen vorhandene Formatierung prüfen; diese Regel ist kein
-Beleg, dass jede bestehende Vorlage bereits alle Folgeabsätze korrekt hervorhebt.
-Rendererformatierung und interaktives Einfügen in TextEdit separat an einer neuen
-Datei oder wegwerfbaren Probe prüfen. Bloße RTF-Steuercodes beweisen keine behobene
-Viewer-Störung. Keine bestehende Antwortdatei pauschal umfärben oder überschreiben.
-
-### Cocoa-Roundtrip und wörtliche Antwortblöcke (W55-R6)
-
-Der Renderer setzt `\cb1` zusätzlich zu `\cbpat1\highlight1`: Im isolierten
-Cocoa-RTF-Roundtrip vom 11.09.2026 verschwanden Hintergründe mit ausschließlich
-`highlight`/`cbpat`; `cb` blieb beim erneuten Speichern erhalten. Ein reiner
-TXT-Roundtrip erkennt diesen Formatverlust nicht. Die Regression prüft deshalb
-RTF → RTF → Cocoa-HTML auf Hintergrundfarbe, 18-Punkt-Schrift und eine ungefärbte
-Agentenantwort. Das ersetzt keine native Eingabe-/Paste-Abnahme in TextEdit.
-
-Mehrzeilige Nutzeroriginale mit alleinstehenden `<!-- user-original:start -->`
-und `<!-- user-original:end -->` einschließen. Die Marker erscheinen nicht im
-RTF; jede eingeschlossene Zeile bleibt wörtlich und erhält Goldhintergrund,
-auch bei Markdownzeichen und vermeintlichen Dateilinks. Agentenantworten stehen
-außerhalb. Unvollständige oder verschachtelte Blöcke brechen ohne Veröffentlichung
-ab. Innerhalb eines normalen Codeblocks sind die Marker nur Beispieltext.
+Do not claim one scope from evidence in another. Opening files, merging tabs, or manipulating TextEdit windows is allowed only when the user authorized UI control. Never overwrite the user's answered RTF.

@@ -1,109 +1,30 @@
-# Handoff erstellen und fortsetzen
+# Handoff Format
 
-Deutsch ist das vereinbarte Profil; eine ausdrückliche andere Sprachwahl geht vor.
-Die erste nutzbare Zeile lautet ohne manuellen Zeilenumbruch:
-`Ich habe das Handoff beantwortet: /absoluter/Pfad/zum/neuen-handoff.rtf`.
-Titel, gemessene Zeit samt Zeitzone und Vorgänger folgen. Ein optischer Umbruch
-bei schmalem Fenster darf die kopierte Zeile nicht verändern.
+<!-- rule:HF-01 -->
+## New revision, clear entry point
 
-## Eingänge verlustsicher übernehmen
+Create a new dated file for every handoff. Never overwrite an answered source. Put a copyable first line with the absolute path of the new file. Include project, date, and revision in the title.
 
-Explizit den bezeichneten Handoff, beide Vorgänger soweit vorhanden, RTF-Antworten,
-Zwischenrufe, Chat-Steuerung und referenzierten Pasted Content lesen. Keine Quelle
-anhand des neuesten Änderungsdatums erraten. Quelle, gelesene Revision/Hash und
-Zeitpunkt festhalten. Originale unverändert in eine neue Datei übernehmen;
-Interpretation, Antwort und Umsetzung separat zuordnen. Wiederholungen und
-Widersprüche bleiben erkennbar. Jede frühere Testantwort einzeln verfolgen.
+<!-- rule:HF-02 -->
+## Required sections
 
-Speichern ist das bewusste Übergabesignal. An natürlichen Kontrollpunkten der
-laufenden Arbeit und vor der Übergabe die gesamte gespeicherte Dokumentrevision
-abgleichen; Antworten können unter jeder Überschrift stehen. Änderungen anhand
-ihres Inhalts als aktuelle Frage/Steuerung oder Sammlung für später einordnen
-und ihre Freigabegrenzen erhalten. Ungespeicherte Entwürfe standardmäßig weder
-lesen noch importieren; ihr bewusster Ausschluss ist keine Eingabelücke.
-Nur ein ausdrücklich gewählter Live-Eingang erlaubt das getrennte Archivieren
-von Live-Text samt verifizierter Dokumentidentität und Lesezeit. Kein automatisches
-Speichern, Schließen oder Neuladen der Nutzerdatei. Speichern begründet weder
-einen sofortigen Hintergrundlauf noch eine Pollingpflicht. Gespeichertes RTF mit
-`textutil -convert txt -stdout DATEI.rtf` lesen. Quittungen separat schreiben.
+1. **Preserved user input:** the complete verbatim collection from the previous revision, without interpretation.
+2. **Objective and authorization:** desired outcome, allowed and prohibited actions, and file ownership.
+3. **Verified state:** branch or HEAD, changed files, passing checks, and evidence paths.
+4. **Running and pending:** started work, dependencies, unknown state, and real blockers.
+5. **Decisions and questions:** only points requiring user choice; put `>>>User answer:` and one blank gold answer paragraph under each question.
+6. **Acceptance:** short reproducible steps, expected result, and manual checks that remain unverified.
+7. **Memory:** a few durable rules and session-specific next steps, kept separate.
+8. **Collection for the next handoff:** a distinct verbatim user area at the end.
 
-`[Pasted text]` oder `Pasted Content` in Claude, Codex oder cmux ist kein Ersatz
-für den tatsächlichen Text. Zugehörige Datei/Anlage öffnen und Originale übernehmen.
-Fehlt sie, den betreffenden Eingang ausdrücklich offenlassen. Lange Diktate gehören
-in die vereinbarte Sammlung; kurze Steuerung darf im Chat bleiben.
+<!-- rule:HF-03 -->
+## Separate originals from interpretation
 
-## Gliederung für die nächste neue Version
+Use `<!-- user-original:start -->` and `<!-- user-original:end -->` when the renderer must protect a verbatim block. Change neither spelling nor order inside it. Put agent replies, decisions, and summaries outside. A byte archive may additionally preserve the unchanged source; the readable snapshot does not replace it.
 
-Den Vorgänger aktualisieren; für den ersten Einstieg dienen diese Pflichtblöcke:
+<!-- rule:HF-04 -->
+## Completion requires evidence
 
-1. Kopierzeile oben, Titel/Zeit/Vorgänger, Hinweise auf `>>>Userantwort:`.
-2. **Der Stand in drei Sätzen**: Ziel, überprüfter Stand, nächste Aktion;
-   Modus Zwischenstand / fortsetzbar / abgeschlossen und gültige Autorisierung.
-3. **Was noch im Tank ist**: Messquelle/-alter/-umfang oder „nicht gemessen“.
-4. **Erwartete Agenten-Ergebnisse**: IDs, Besitzer, beobachteter Status,
-   Worktree/Branch/Basis, Berichtspfad und bekannte Laufzeitgrenzen.
-5. **Deine Sammlung aus dem letzten Handoff (wörtlich kopiert)** und
-   **Was ich daraus gemacht habe**: Zuordnung jedes Originals zu Status/Beleg.
-6. **Vorige Testantworten — was daraus wurde** und **Testliste vN**:
-   durchgeführt / fehlgeschlagen / manuell offen, Schritte und Erwartung,
-   leere `>>>Userantwort:`-Felder. Kein offener Test gilt als bestanden.
-7. **Fragen an dich** mit `>>>Antwort:` und klarer Trennung von optionalen
-   Fragen und Entscheidungen, die den nächsten Schritt tatsächlich sperren.
-8. **Der rote Faden**, **Hauptdokumente**, **Weitere Dokumente**, **Aktive
-   Werkzeuge dieses Projekts**: echte Pfade und tatsächliche Verfügbarkeit.
-9. **Gedächtnis**: je vier bis sechs konkrete Langzeit- und Kurzzeitpunkte.
-10. **Kostentabelle**: Quelle, Alter, Haupt-/Arbeiteranteile und Messlücken;
-    eine Zeile im vereinbarten Projektlogbuch, keine globale Datei ungefragt ändern.
-11. Ganz zuletzt **SAMMLUNG FÜR DAS NÄCHSTE HANDOFF**, Ursprungspfad und `>>>`.
+Call work complete only when an artifact, commit, status, or test proves the result. “Started,” file existence, and agent reports are not final evidence. For an open manual check, name the exact remaining step.
 
-Genau einen aktiven Sammlungseingang benennen: RTF-Fußbereich oder vereinbarte
-Zwischenrufe-Datei. Am anderen Ort darauf verlinken. Vor Übergabe alle Quellen
-auf Nachträge prüfen, Originale Punkt für Punkt abgleichen und lokale Links
-prüfen. Vorhandene `sammlung-pruefen.sh`-Heuristik ist kein Vollständigkeitsbeweis;
-auch Antworten außerhalb erkannter Abschnitte direkt abgleichen.
-Berichte mit echten Commit-/Push-Belegen und offenen Resten übergeben.
-RTF-Erstellung und Öffnen folgen [RTF/TextEdit](rtf-macos.md).
-
-## Zukunftsfaden bei dokumentengeführter Zusammenarbeit
-
-Wenn der Nutzer kommende Wellen im Handoff verfolgt, den „roten Faden“ aus den
-beiden Vorgängern und den referenzierten Plänen ausdrücklich abgleichen. Offene
-Zukunftspunkte nicht durch eine pauschale Roadmap-Verweisung ersetzen. Für die
-nächsten drei bis vier sinnvollen Arbeitspakete Ziel, konkrete Restpunkte,
-Abhängigkeiten und Status nennen: freigegeben, vorgeschlagen, Entscheidung offen
-oder erledigt mit Beleg. Frühere Wellennummern sind historische Planung; eine
-Umordnung samt Grund sichtbar erklären. Keine zusätzlichen Wellen erfinden, wenn
-nur weniger belegt sind. Entfernte oder vertagte Themen mit Grund erhalten.
-
-Den detaillierten Ausblick nahe dem Dokumentende vor der abschließenden Sammlung
-platzieren; je künftigem Paket ein optionales Antwortfeld für Ergänzungen und
-Prioritäten anbieten. Offene Produktentscheidungen einzeln weiterführen. Alte
-Freigaben, Modelle oder Wächterzahlen nicht aus der Zukunftsliste ableiten.
-Eine neue Idee bleibt Vorschlag, bis ihr Umfang zur Umsetzung freigegeben ist.
-
-## Bytearchiv getrennt vom lesbaren Snapshot
-
-Für neue Sicherungen bevorzugt den optionalen externen Modus verwenden:
-
-```sh
-python3 scripts/handoff-inputs.py snapshot --output eingang.json --archive-dir originale /absoluter/pfad/handoff.rtf
-python3 scripts/handoff-inputs.py verify eingang.json
-python3 scripts/handoff-inputs.py ledger eingang.json punkte.json
-```
-
-Die gespeicherten Originalbytes werden unverändert unter ihrem SHA-256 plus
-Dateiendung abgelegt. JSON-Version 2 enthält Ursprungspfad, Bytehash, lesbaren
-Klartext mit eigenem Hash und `archive_path` relativ zum Snapshot. Snapshot und
-Archivordner gemeinsam erhalten/verschieben; der Ursprungspfad bleibt absolut.
-`verify` prüft Archiv und Klartext sowie die unveränderte gespeicherte Quelle.
-`ledger` prüft exakte Textspannen im archivierten Klartext, auch wenn die Quelle
-inzwischen weiterbearbeitet wurde; semantische Vollständigkeit bleibt zusätzlich
-abzugleichen. RTF-Klartext benötigt macOS `textutil`.
-
-Bestehende Base64-Snapshots (Version 1) bleiben lesbar. Ohne `--archive-dir` bleibt
-das bisherige Ausgabeformat erhalten; alte Archive weder umschreiben noch löschen.
-Vorhandene Ausgabedateien werden abgelehnt, vorhandene Bytearchive nur bei exakt
-identischem Inhalt wiederverwendet. Ein abgebrochener Mehrquellenlauf kann bereits
-veröffentlichte Originalkopien hinterlassen; sie werden nicht automatisch entfernt.
-Für Modellkontext gezielt Klartext und Metadaten auswerten, keine Byteblöcke ausgeben.
-Separates Speichern allein beweist keine Token- oder Kontingentersparnis.
+See also [wave execution](wave-execution.md), [evidence scope](evidence-scope.md), and [RTF on macOS](rtf-macos.md).
