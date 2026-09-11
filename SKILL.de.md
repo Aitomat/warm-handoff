@@ -23,3 +23,21 @@ Der vollständige frühere deutsche Text bleibt als
 [historische Quelle](references/claude-workflow-history.de.md) erhalten.
 Aktuelle Aufträge und Host-Rechte gelten vor historischen Anweisungen; es folgt
 keine globale Installation oder Veröffentlichung allein aus dem Laden des Skills.
+
+## Yasins gewähltes Wellenprofil
+
+Für seine komplexen Wellen gilt ausdrücklich Chef → Wächter/Integrator → Arbeiter.
+Der Chef bewahrt Auftrag/Freigaben und erhält konsolidierte Abschlüsse oder echte
+Blockaden; laufende Koordination bleibt beim Wächter. Ergänzung 11.09.2026,
+21:08–21:10: spätestens nach 25 Minuten ein gebündelter tatsächlicher Lagecheck,
+dazwischen nur Wichtiges; kein Minutenpolling. Host-Kommunikations-/Timergrenzen
+beachten, keine Cache- oder pünktliche Hintergrundmeldung garantieren.
+Modellwunsch, präzisiert am 11.09.2026 um 21:27: grundsätzlich höchstens Astra Low,
+einfache Arbeit Sol/Terra; höheren Effort erst, wenn die Sache trotz Bearbeitung
+damit nicht funktioniert. Spark nur wenn tatsächlich verfügbar und ein Wechsel
+erlaubt ist; kein unsichtbarer Modellwechsel.
+Bei vier Host-Slots: Chef + ein ausführender Wächter + zwei Arbeiter, keine
+zusätzlichen untätigen Wächter. Details und Hostgrenzen im
+[Codex-Profil](references/codex.md#yasins-ausdrücklich-gewähltes-chef-wächterprofil).
+Die allgemeine flache Delegation bleibt für andere Aufträge möglich; diese
+Nutzerpräferenz ist keine gemessene Einspargarantie.

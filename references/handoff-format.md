@@ -80,3 +80,30 @@ platzieren; je künftigem Paket ein optionales Antwortfeld für Ergänzungen und
 Prioritäten anbieten. Offene Produktentscheidungen einzeln weiterführen. Alte
 Freigaben, Modelle oder Wächterzahlen nicht aus der Zukunftsliste ableiten.
 Eine neue Idee bleibt Vorschlag, bis ihr Umfang zur Umsetzung freigegeben ist.
+
+## Bytearchiv getrennt vom lesbaren Snapshot
+
+Für neue Sicherungen bevorzugt den optionalen externen Modus verwenden:
+
+```sh
+python3 scripts/handoff-inputs.py snapshot --output eingang.json --archive-dir originale /absoluter/pfad/handoff.rtf
+python3 scripts/handoff-inputs.py verify eingang.json
+python3 scripts/handoff-inputs.py ledger eingang.json punkte.json
+```
+
+Die gespeicherten Originalbytes werden unverändert unter ihrem SHA-256 plus
+Dateiendung abgelegt. JSON-Version 2 enthält Ursprungspfad, Bytehash, lesbaren
+Klartext mit eigenem Hash und `archive_path` relativ zum Snapshot. Snapshot und
+Archivordner gemeinsam erhalten/verschieben; der Ursprungspfad bleibt absolut.
+`verify` prüft Archiv und Klartext sowie die unveränderte gespeicherte Quelle.
+`ledger` prüft exakte Textspannen im archivierten Klartext, auch wenn die Quelle
+inzwischen weiterbearbeitet wurde; semantische Vollständigkeit bleibt zusätzlich
+abzugleichen. RTF-Klartext benötigt macOS `textutil`.
+
+Bestehende Base64-Snapshots (Version 1) bleiben lesbar. Ohne `--archive-dir` bleibt
+das bisherige Ausgabeformat erhalten; alte Archive weder umschreiben noch löschen.
+Vorhandene Ausgabedateien werden abgelehnt, vorhandene Bytearchive nur bei exakt
+identischem Inhalt wiederverwendet. Ein abgebrochener Mehrquellenlauf kann bereits
+veröffentlichte Originalkopien hinterlassen; sie werden nicht automatisch entfernt.
+Für Modellkontext gezielt Klartext und Metadaten auswerten, keine Byteblöcke ausgeben.
+Separates Speichern allein beweist keine Token- oder Kontingentersparnis.

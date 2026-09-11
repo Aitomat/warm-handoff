@@ -1,5 +1,20 @@
 # Autorisierte Wellen: direkte Arbeiter, Wächter nach Bedarf
 
+**Ausdrücklich gewähltes Profil geht vor:** Yasins komplexe Wellen nutzen
+Chef → ausführender Wächter/Integrator → Arbeiter. Der Wächter übernimmt Planung
+im freigegebenen Umfang, laufende Koordination, Integration und Nachweise; der Chef
+behält Auftrag/Freigaben und erhält fertige konsolidierte Berichte oder echte
+Blockaden. Nach der Ergänzung vom 11.09.2026, 21:08–21:10 wünscht er außerdem
+spätestens nach 25 Minuten einen gebündelten echten Lagecheck, dazwischen nur
+Wichtiges. Keine minütlichen Statusabfragen; Host-Kommunikations- und Timergrenzen
+gehen vor, keine Cache-/Timinggarantie. Modellpräferenz, präzisiert um 21:27:
+grundsätzlich höchstens Astra Low, einfache Arbeit Sol/Terra; höheren Effort erst,
+wenn die Sache trotz Bearbeitung damit nicht funktioniert. Spark nur bei
+tatsächlicher Verfügbarkeit und erlaubtem Override.
+Bei vier Slots: Chef, ein Wächter, zwei Arbeiter. Das [Codex-Profil](codex.md#yasins-ausdrücklich-gewähltes-chef-wächterprofil)
+begrenzt diese konkrete Nutzerwahl; die folgenden allgemeinen Regeln für direkte
+Delegation bleiben für andere Aufträge gültig. Keine Einspargarantie ableiten.
+
 Der Oberchef liest die vollständigen Eingänge und schreibt den Plan als Datei,
 bevor er delegiert: ID, vollständiger Auftrag mit Originalbelegen, Abnahme,
 Modell/Effort, Basiscommit, Dateibesitz, Worktree/Branch, Abhängigkeiten,

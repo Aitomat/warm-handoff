@@ -64,3 +64,44 @@ zuvor gemessener Ortszeit samt Zeitzone beginnen, etwa `18:05 CEST —`.
 Keine alte Uhrzeit wiederverwenden; bei fehlendem Uhrzugriff „Zeit nicht gemessen“.
 Der Zeitstempel beschreibt die Meldung, keinen exakten API- oder Abrechnungsvorgang.
 Keine Zusatzmeldungen nur für Zeitstempel erzeugen; Host-Kommunikationsregeln gelten.
+
+## Yasins ausdrücklich gewähltes Chef-/Wächterprofil
+
+Für Yasins vereinbarte komplexe Arbeitswellen gilt seit seiner Steuerung vom
+11.09.2026 (20:38/20:43) das Profil Chef → Wächter/Integrator → Arbeiter.
+Der Chef bewahrt Auftrag und Freigaben und überwacht die Ergebnisse. Der Wächter
+koordiniert die Arbeiter, integriert und prüft ihre Artefakte und liefert dem Chef
+einen konsolidierten fertigen Bericht, eine echte Blockade oder den unten
+vereinbarten Lagecheck. Routinemäßige
+Zwischenstände und Rückfragen gehen zwischen Arbeitern und Wächter direkt hin
+und her, ohne den Chef für jede Einzelentscheidung aufzuwecken.
+
+Automatisch zugestellte Abschluss-/Blockademeldungen verwenden; kein minütliches
+Statuspolling. Ergänzung vom 11.09.2026, 21:08–21:10: Der Nutzer wünscht spätestens
+25 Minuten nach der letzten gebündelten Rückmeldung einen tatsächlichen Lagecheck.
+Dazu beim Wächter Fortschritt, Unterbrechungen und nötige nächste Schritte prüfen
+und eine knappe gemeinsame Rückmeldung geben; dazwischen nur wichtige Ergebnisse
+oder Blockaden gebündelt melden. Unterbrochene Arbeiter nur innerhalb ihres noch
+gültigen Auftrags fortsetzen lassen.
+
+Diese 25 Minuten sind eine Nutzerpräferenz innerhalb der tatsächlichen Host-
+Kommunikations-, Timer- und Wartegrenzen. Ohne verfügbaren Timer oder laufende
+Ausführung keine pünktliche Hintergrundmeldung versprechen. Strengere
+Kommunikationspflichten des Hosts einhalten. Der gewünschte Lagecheck ist reale
+Koordination; keine zusätzlichen inhaltsleeren Pings zum „Cachewarmhalten“.
+Weder eine Cache-Haltedauer noch Token-/Abonnement-Einsparungen garantieren.
+
+Modellpräferenz, präzisiert am 11.09.2026 um 21:27: grundsätzlich höchstens
+Astra mit Low Effort; einfache klar begrenzte Arbeit mit Sol oder Terra bearbeiten.
+Höheren Effort erst einsetzen, wenn eine Sache trotz Bearbeitung mit dieser
+Vorgabe nicht funktioniert. Spark ist gewünscht, wenn tatsächlich angeboten. Vor Delegation verfügbare Modelle und erlaubte
+Overrides prüfen. Spark war in der Werkzeugliste dieser Welle nicht verfügbar;
+nicht durch einen unsichtbaren Wechsel oder einen anderen Modellnamen ersetzen.
+Die Präferenz ist keine Behauptung über das bereits laufende Modell. Abweichende
+konkrete Qualitätsaufträge und Hostbeschränkungen weiterhin beachten.
+
+Bei vier Gesamtslots ist hier Chef + ein ausführender Wächter/Integrator + zwei
+Arbeiter die passende Belegung. Zusätzliche Themen staffeln; keine wartenden
+Wächter ohne Arbeiterslots und keine Umgehung durch zusätzliche CLI-Läufe.
+Für andere Nutzer/Aufträge bleibt die allgemeine direkte Delegation aus
+[Wellen](wave-execution.md) verfügbar.

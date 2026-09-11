@@ -129,7 +129,24 @@ def render(source, output, project_root=None):
     lines = source.read_text(encoding='utf-8').splitlines()
     body, visible, links = [], [], []
     fence = None
+    user_original = False
     for line in lines:
+        # Originalblöcke erhalten jede Zeile wörtlich, auch Markdown und Pfadangaben.
+        # Marker in normalen Codeblöcken bleiben dagegen sichtbare Beispiele.
+        if fence is None and line == '<!-- user-original:start -->':
+            if user_original:
+                raise ValueError('Nested user-original block')
+            user_original = True
+            continue
+        if fence is None and line == '<!-- user-original:end -->':
+            if not user_original:
+                raise ValueError('Unmatched user-original end')
+            user_original = False
+            continue
+        if user_original:
+            body.append('{\\pard \\fs36\\cb1\\cbpat1\\highlight1 ' + rtf(line) + '\\par}\n')
+            visible.append(line)
+            continue
         boundary = re.match(r'^\s*(`{3,}|~{3,})(.*)$', line)
         if boundary and fence is None:
             fence = boundary.group(1)
@@ -158,11 +175,13 @@ def render(source, output, project_root=None):
             encoded, plain = inline(line, base, links, future)
         style = '\\fs48\\b ' if heading else '\\fs36 '
         if line.startswith('>>>'):
-            style += '\\highlight1 '
+            style += '\\cb1\\cbpat1\\highlight1 '
         body.append('{\\pard ' + style + encoded + '\\par}\n')
         visible.append(plain)
+    if user_original:
+        raise ValueError('Unclosed user-original block')
     data = ('{\\rtf1\\ansi\\deff0\\uc1{\\fonttbl{\\f0 Helvetica;}}'
-            '{\\colortbl;\\red255\\green242\\blue0;}\\f0\n' + ''.join(body) + '}').encode('ascii')
+            '{\\colortbl;\\red255\\green231\\blue153;}\\f0\n' + ''.join(body) + '}').encode('ascii')
     fields = re.findall(rb'\\fldinst HYPERLINK "([^"\r\n]+)"', data)
     if [f.decode('ascii') for f in fields] != links:
         raise ValueError('RTF hyperlink field verification failed')

@@ -95,3 +95,19 @@ Beleg, dass jede bestehende Vorlage bereits alle Folgeabsätze korrekt hervorheb
 Rendererformatierung und interaktives Einfügen in TextEdit separat an einer neuen
 Datei oder wegwerfbaren Probe prüfen. Bloße RTF-Steuercodes beweisen keine behobene
 Viewer-Störung. Keine bestehende Antwortdatei pauschal umfärben oder überschreiben.
+
+### Cocoa-Roundtrip und wörtliche Antwortblöcke (W55-R6)
+
+Der Renderer setzt `\cb1` zusätzlich zu `\cbpat1\highlight1`: Im isolierten
+Cocoa-RTF-Roundtrip vom 11.09.2026 verschwanden Hintergründe mit ausschließlich
+`highlight`/`cbpat`; `cb` blieb beim erneuten Speichern erhalten. Ein reiner
+TXT-Roundtrip erkennt diesen Formatverlust nicht. Die Regression prüft deshalb
+RTF → RTF → Cocoa-HTML auf Hintergrundfarbe, 18-Punkt-Schrift und eine ungefärbte
+Agentenantwort. Das ersetzt keine native Eingabe-/Paste-Abnahme in TextEdit.
+
+Mehrzeilige Nutzeroriginale mit alleinstehenden `<!-- user-original:start -->`
+und `<!-- user-original:end -->` einschließen. Die Marker erscheinen nicht im
+RTF; jede eingeschlossene Zeile bleibt wörtlich und erhält Goldhintergrund,
+auch bei Markdownzeichen und vermeintlichen Dateilinks. Agentenantworten stehen
+außerhalb. Unvollständige oder verschachtelte Blöcke brechen ohne Veröffentlichung
+ab. Innerhalb eines normalen Codeblocks sind die Marker nur Beispieltext.
