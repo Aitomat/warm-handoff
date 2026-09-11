@@ -12,8 +12,10 @@ does not itself authorize implementation; existing authorization carries forward
 
 For a handoff or resume, read [handoff format](references/handoff-format.md).
 Use the previous document's structure, retain every original answer and recheck
-all agreed sources, including RTF, Zwischenrufe, chat and late additions. Missing
-or unsaved sources mean incomplete import. Keep interpretation separate from input.
+all agreed saved sources, including RTF, Zwischenrufe, chat and late additions.
+Saving submits input: compare whole saved revisions at natural work steps and
+before handoff, without polling or importing unsaved drafts by default. Missing
+agreed saved sources mean incomplete import. Keep interpretation separate from input.
 
 Read the active host adapter: [Codex](references/codex.md) or
 [Claude Code](references/claude-code.md). Both support the same document-led cycle:
@@ -21,10 +23,12 @@ answered handoff → concrete plan → authorized work → verified next handoff
 No global configuration, model switch, publishing, Goal or monitoring is implied.
 
 For delegated waves read [wave execution](references/wave-execution.md).
-The Oberchef writes the complete plan; guardians coordinate assigned packets;
-workers implement them in isolated worktrees. Delegate only when authorized and
-within actual host slots/resources. At most four guardians; this is a ceiling,
-not a reason to fill slots. Small connected work stays local.
+The main agent writes the concrete plan. Small connected work stays local;
+authorized independent packets go directly to workers in isolated worktrees.
+Use a guardian only when internal coordination is needed; preserve actual host
+slots for workers. Briefs stay short and self-contained, with original evidence,
+authorization, ownership and acceptance. Prefer delivered completion events over
+repeated short status polls; follow host communication and waiting limits.
 
 For the chosen RTF/TextEdit workflow, read [RTF safety and tab groups](references/rtf-macos.md).
 The copy line belongs at the top and points at the new editable answer document.

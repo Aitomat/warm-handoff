@@ -1,4 +1,4 @@
-# Autorisierte Wellen: Oberchef → Wächter → Arbeiter
+# Autorisierte Wellen: direkte Arbeiter, Wächter nach Bedarf
 
 Der Oberchef liest die vollständigen Eingänge und schreibt den Plan als Datei,
 bevor er delegiert: ID, vollständiger Auftrag mit Originalbelegen, Abnahme,
@@ -6,17 +6,21 @@ Modell/Effort, Basiscommit, Dateibesitz, Worktree/Branch, Abhängigkeiten,
 Ressourcen-/Bauzuständigkeit und Berichtspfad. Der Plan bleibt für den Nutzer
 in der vereinbarten TextEdit-Gruppe lesbar. Keine zusätzlichen Aufträge erfinden.
 
-Ein Wächter erhält seine abgegrenzte Tabelle und reicht vollständige Briefe an
-Arbeiter weiter. Er koordiniert, integriert, prüft Belege und schreibt einen
-kurzen Bericht. Neue Befunde gehören als offene Punkte in den Bericht. Der
-Oberchef integriert die geprüften Ergebnisse und führt den Gesamtabgleich durch.
-Kleine zusammenhängende Arbeit braucht keinen zusätzlichen Wächter.
+Kleine zusammenhängende Aufgaben lokal erledigen, unabhängige Pakete bei
+vorhandener Autorisierung direkt an Arbeiter vergeben. Ein Wächter ist nur
+sinnvoll, wenn ein Paket zusätzliche interne Koordination benötigt. Die tatsächlichen
+Host-Slots bestimmen die Parallelität; Slots für ausführende Arbeiter freihalten.
+Jeder Brief bleibt kurz und selbstständig verständlich: Originalbelege, Freigabe,
+Basis, Dateibesitz, Grenzen, Abnahme und Berichtspfad. Vererbten Gesamtverlauf nur
+nutzen, wenn er erforderlich ist. Der Hauptagent prüft Artefakte und Gesamtergebnis.
+Keine Shell-Agenten als Umgehung einer Host-Begrenzung starten.
 
-Höchstens vier Wächter zugleich; die tatsächliche Gesamtzahl von Hauptsession,
-Wächtern und Arbeitern muss in Host-Slots und Rechnerressourcen passen. Beispiel:
-bei vier gesamten Slots können Oberchef + ein Wächter + zwei Arbeiter laufen;
-Oberchef + drei wartende Wächter hätten keinen Arbeiterslot. Zusätzliche Themen
-werden gestaffelt. Keine Shell-Agenten als Umgehung einer Host-Begrenzung starten.
+Automatisch zugestellte Agentenmeldungen bevorzugen. Währenddessen unabhängige
+Arbeit erledigen; sonst einen vom Host unterstützten ereignisbezogenen Wartevorgang
+innerhalb seiner Kommunikations- und Wartegrenzen nutzen. Keine kurzen wiederholten
+Statusabfragen ohne neuen Entscheidungsanlass. Fehlende Artefakte, Fehler oder
+Unterbrechungen können eine gezielte Zustandsprüfung erfordern.
+
 Modelle/Effort aus dem Auftrag verwenden und sichtbar benennen, nicht wechseln,
 um Kontingent aufzubrauchen. Echte Nutzungswerte je Lauf separat erfassen.
 

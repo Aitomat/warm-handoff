@@ -15,9 +15,10 @@ und Nachträge lesen. Deutsche Nutzeroriginale erhalten; frühere Testantworten
 wörtlich übernehmen und jede Umsetzung/Zurückstellung belegen. Kurze Steuerung
 im Chat berücksichtigen, ohne die autorisierte Welle zu vergessen.
 
-Der Oberchef plant die vollständigen Arbeitspakete. Ein Wächter je geeignetem
-abgegrenztem Thema koordiniert seine Arbeiter; höchstens vier Wächter, begrenzt
-zusätzlich durch tatsächliche Host-Slots und Rechnerressourcen. Alle schreibenden
+Der Oberchef plant die vollständigen Arbeitspakete. Unabhängige Pakete gehen
+direkt an Arbeiter; ein Wächter koordiniert nur bei
+zusätzlichem internem Bedarf. Kurze selbstständige Briefe und tatsächliche
+Host-Slots/Rechnerressourcen bestimmen die Ausführung. Alle schreibenden
 Rollen bekommen isolierte Worktrees und Dateibesitz. Modell/Effort aus Yasins
 aktuellem Profil in Brief und sichtbarer Rollenbezeichnung festhalten. Vorliegende
 Claude-Agent- und Fortsetzungsfunktionen verwenden, keine versionsfremde API
@@ -30,7 +31,10 @@ durch die dafür benannte Rolle. Das Hauptrepo wechselt keinen Branch. Ein Commi
 je Auftrag; nur die beauftragte Rolle veröffentlicht bei bestehender Erlaubnis.
 Langläufer mit ID und Berichtspfad im Zwischenstand erhalten, nicht vergessen.
 
-Zwischenrufe regelmäßig und vor Handoff erneut lesen. Rückmeldungen gehen in eine
+Gespeicherte Zwischenrufe an natürlichen Kontrollpunkten und vor Handoff erneut lesen.
+Speichern ist das Übergabesignal; ungespeicherte Entwürfe gemäß
+[Handoff-Format](handoff-format.md) standardmäßig nicht lesen oder importieren.
+Rückmeldungen gehen in eine
 neue Antwort-/Quittungsdatei mit Quellenrevision und Zeitpunkt und anschließend
 in den nächsten Handoff. Der alte `zwischenrufe-antwort.sh` ist ein Legacy-Helfer,
 der offene Dokumente speichern/schließen kann: im aktuellen sicheren Ablauf nicht

@@ -1,5 +1,7 @@
 # warm-handoff 🏄
 
+Yasin Akgün defines the workflow, product intent and acceptance. Historical development involved [Claude Code](https://github.com/anthropics/claude-code); current shared-host, handoff-safety and review improvements were developed with [OpenAI Codex](https://github.com/openai/codex). These are acknowledgments of actual tool-assisted work, not a promise of GitHub sidebar attribution.
+
 > **Current shared entry point:** [SKILL.md](SKILL.md) supports Codex and Claude Code through active [Codex](references/codex.md) and [Claude Code](references/claude-code.md) adapters. The detailed session arithmetic below records the workflow's history; it is not a universal current pricing, context or permission rule.
 
 > **Von Claude Code zu Codex wechseln?** Hier stehen [zwei kopierbare Start-Prompts und eine kurze Einführung](#6b-von-claude-code-zu-codex-zwei-kopierbare-einstiege) für cmux und andere Terminals.
@@ -8,7 +10,7 @@
 
 German documents, original answers preserved, copy line at the top: `Ich habe das Handoff beantwortet: /absolute/path/new.rtf`. After a completed user-relevant step, create a **new** editable RTF and open every mentioned reading document in the **active TextEdit tab group or one new common group**. Never merge unrelated windows, leave empty helper tabs/windows behind, or overwrite an existing answer file. See the [verified tab procedure and RTF limits](references/rtf-macos.md).
 
-Read complete Pasted Content and long dictation from **Codex, cmux and Claude**; a collapsed terminal placeholder is not its content. Reconcile sources and late additions. Authorized waves retain Oberchef → guardian → worker, with **at most four guardians**, isolated worktrees, file ownership and actual host/machine capacity. See [wave rules](references/wave-execution.md) and [handoff format](references/handoff-format.md).
+Read complete Pasted Content and long dictation from **Codex, cmux and Claude**; a collapsed terminal placeholder is not its content. Reconcile sources and late additions. Saving submits input: check whole saved revisions at natural work steps, without reading live drafts or polling. Authorized independent packets go directly to workers; guardians serve internal coordination when needed. Use short briefs, isolated worktrees, file ownership and actual host/machine capacity. See [wave rules](references/wave-execution.md) and [handoff format](references/handoff-format.md).
 
 ```sh
 scripts/handoff-rtf.sh /project/docs/new.md /project/new.rtf --project-root /project

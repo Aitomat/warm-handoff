@@ -15,14 +15,17 @@ Zeitpunkt festhalten. Originale unverändert in eine neue Datei übernehmen;
 Interpretation, Antwort und Umsetzung separat zuordnen. Wiederholungen und
 Widersprüche bleiben erkennbar. Jede frühere Testantwort einzeln verfolgen.
 
-Vor Dateizugriffen vorhandene Editorinformationen berücksichtigen: gespeichertes
-RTF mit `textutil -convert txt -stdout DATEI.rtf` lesen; bekannte ungesicherte
-Änderungen sind damit nicht gelesen. Falls zugänglich Live-Text lesend erfassen,
-sonst die Eingabelücke markieren und unabhängige Arbeit fortsetzen. Niemals die
-Antwortdatei zum Einlesen automatisch speichern, schließen oder neu erzeugen.
-Zwischenrufe vor Ergänzungen, nach neuen Nachrichten, bei natürlichen Wartephasen
-und spätestens nach zehn Minuten aktiver Arbeit erneut lesen. Quittungen separat
-neu anlegen; keine konkurrierenden Schreibzugriffe auf den aktiven Eingang.
+Speichern ist das bewusste Übergabesignal. An natürlichen Kontrollpunkten der
+laufenden Arbeit und vor der Übergabe die gesamte gespeicherte Dokumentrevision
+abgleichen; Antworten können unter jeder Überschrift stehen. Änderungen anhand
+ihres Inhalts als aktuelle Frage/Steuerung oder Sammlung für später einordnen
+und ihre Freigabegrenzen erhalten. Ungespeicherte Entwürfe standardmäßig weder
+lesen noch importieren; ihr bewusster Ausschluss ist keine Eingabelücke.
+Nur ein ausdrücklich gewählter Live-Eingang erlaubt das getrennte Archivieren
+von Live-Text samt verifizierter Dokumentidentität und Lesezeit. Kein automatisches
+Speichern, Schließen oder Neuladen der Nutzerdatei. Speichern begründet weder
+einen sofortigen Hintergrundlauf noch eine Pollingpflicht. Gespeichertes RTF mit
+`textutil -convert txt -stdout DATEI.rtf` lesen. Quittungen separat schreiben.
 
 `[Pasted text]` oder `Pasted Content` in Claude, Codex oder cmux ist kein Ersatz
 für den tatsächlichen Text. Zugehörige Datei/Anlage öffnen und Originale übernehmen.

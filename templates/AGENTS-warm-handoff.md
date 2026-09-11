@@ -94,10 +94,15 @@ Preisfaktoren und absoluten Kontextgrenzen darf deshalb nicht unverändert
   schreibende Lauf erhält einen eigenen Worktree mit geprüftem Basis-Commit;
   niemals im Hauptrepo den Branch wechseln. Parallelität nach Dateibesitz und
   Rechnerkapazität begrenzen; gemeinsame Dateien gehören einem Verantwortlichen.
-- Hierarchie: Oberchef → Wächter → Arbeiter. Höchstens vier Wächter gleichzeitig,
-  zusätzlich begrenzt durch echte Host-Slots und Rechnerressourcen. Bei vier
-  gesamten Slots etwa Oberchef + ein Wächter + zwei Arbeiter; weitere Themen
-  staffeln. Keine CLI-Läufe zur Umgehung von Host-Limits starten.
+- Kleine zusammenhängende Aufgaben lokal erledigen, unabhängige Pakete bei
+  vorhandener Autorisierung direkt an Arbeiter vergeben. Ein Wächter ist nur
+  sinnvoll, wenn ein Paket zusätzliche interne Koordination benötigt. Die tatsächlichen
+  Host-Slots bestimmen die Parallelität; Slots für ausführende Arbeiter freihalten.
+  Jeder Brief bleibt kurz und selbstständig verständlich: Originalbelege, Freigabe,
+  Basis, Dateibesitz, Grenzen, Abnahme und Berichtspfad. Vererbten Gesamtverlauf nur
+  nutzen, wenn er erforderlich ist. Der Hauptagent prüft Artefakte und Gesamtergebnis.
+  Keine Shell-Agenten als Umgehung einer Host-Begrenzung starten.
+
 - Arbeiter über `codex exec` starten. Auftrag aus einer Datei übergeben,
   Prozess-/Session-ID und erwarteten Bericht festhalten, Exitstatus abwarten.
   Bei Fehlern erst Arbeitsbaum, Bericht und Prozesszustand prüfen; keinen
@@ -117,8 +122,8 @@ Preisfaktoren und absoluten Kontextgrenzen darf deshalb nicht unverändert
 
 - Der Nutzer sammelt längere Antworten, Ideen und Kritik mit `>>>` oder
   Zeitstempel im Handoff; kurze Steuerung kann im Chat bleiben. Während der
-  Arbeit die Zwischenrufe nach neuen Nachrichten, vor Ergänzungen und bei
-  längeren Wartephasen lesen, spätestens nach zehn Minuten aktiver Arbeit.
+  Arbeit gespeicherte Zwischenrufe an natürlichen Kontrollpunkten und vor der
+  Übergabe lesen; keine festen Leseintervalle oder wiederholten Statuspolls.
   Fortschrittsmeldungen nach den Kommunikationsregeln des Hosts geben.
 - Nutzertext unverändert erhalten. Jeden gelesenen Punkt mit Zeit/Beleg
   einer Antwort, Umsetzung oder ausdrücklich offenen Entscheidung zuordnen.
@@ -128,10 +133,18 @@ Preisfaktoren und absoluten Kontextgrenzen darf deshalb nicht unverändert
 - Pasted Content / `[pasted text]` gilt auch für Codex und cmux: vollständigen
   zugehörigen Inhalt oder die referenzierte Datei lesen. Ein eingeklappter
   Terminalplatzhalter ersetzt das Original nicht. Fehlende Eingänge offenhalten.
-- Vor Dateizugriffen klären, ob ein offener Editor ungesicherte Änderungen
-  enthält. Falls zugänglich, Live-Text lesen und als Eingabe berücksichtigen;
-  sonst eine neue Datei verwenden und die Unsicherheit benennen. Offene
-  Nutzerdateien weder überschreiben noch ungefragt schließen oder archivieren.
+- Speichern ist das bewusste Übergabesignal. An natürlichen Kontrollpunkten der
+  laufenden Arbeit und vor der Übergabe die gesamte gespeicherte Dokumentrevision
+  abgleichen; Antworten können unter jeder Überschrift stehen. Änderungen anhand
+  ihres Inhalts als aktuelle Frage/Steuerung oder Sammlung für später einordnen
+  und ihre Freigabegrenzen erhalten. Ungespeicherte Entwürfe standardmäßig weder
+  lesen noch importieren; ihr bewusster Ausschluss ist keine Eingabelücke.
+  Nur ein ausdrücklich gewählter Live-Eingang erlaubt das getrennte Archivieren
+  von Live-Text samt verifizierter Dokumentidentität und Lesezeit. Kein automatisches
+  Speichern, Schließen oder Neuladen der Nutzerdatei. Speichern begründet weder
+  einen sofortigen Hintergrundlauf noch eine Pollingpflicht. Gespeichertes RTF mit
+  `textutil -convert txt -stdout DATEI.rtf` lesen. Quittungen separat schreiben.
+
 - Wenn der Nutzer im RTF antwortet, auch diese Antworten berücksichtigen;
   auf macOS lässt sich gespeichertes RTF mit `textutil -convert txt -stdout`
   lesen. RTF niemals neu erzeugen, bevor vorhandene Nutzerantworten gesichert

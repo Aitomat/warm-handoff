@@ -2,8 +2,10 @@
 
 ## Neue RTF sicher erzeugen
 
-RTF ist die editierbare Nutzerquelle. Vor der nächsten Version gespeicherte und
-zugängliche ungesicherte Antworten berücksichtigen, Originale wörtlich erhalten.
+RTF ist die editierbare Nutzerquelle. Speichern ist das Übergabesignal; vor der
+nächsten Version die gesamte gespeicherte Revision nach [Handoff-Format](handoff-format.md)
+abgleichen und Originale wörtlich erhalten. Ungespeicherte Entwürfe bleiben ohne
+ausdrücklich gewählten Live-Modus außerhalb des Eingangs; keinen Editor-Live-Read ausführen.
 Niemals offene oder andere bestehende Nutzerdateien überschreiben, speichern,
 schließen oder verschieben. Der Renderer verweigert jedes vorhandene Ziel,
 einschließlich Symlinks. Er steuert keinen Editor und ändert keine Einstellungen.
@@ -35,7 +37,7 @@ Der konservative Markdown-Umfang umfasst Überschriften, Listen-/Tabellenzeilen,
 Codeblöcke, Inline-Code, Links und Antwortmarker. Zeilen und Unicode bleiben
 lesbar; komplexe Markdown-Formatierung kann als sichtbare Syntax stehen bleiben.
 Codeblöcke werden nicht als Dateiverweise interpretiert. 18 pt Grundschrift,
-größere fette Überschriften, gelbe `>>>`-Felder. Die Kopierzeile ist eine logische
+größere fette Überschriften, goldener Hintergrund der `>>>`-Antwortabsätze. Die Kopierzeile ist eine logische
 Zeile; ihre optische Breite hängt vom Fenster ab. Originalquellen bleiben erhalten.
 
 Erst nach erfolgreichem `textutil`-Textroundtrip und Prüfung aller erzeugten
@@ -82,3 +84,14 @@ leeres Fenster. Direktes `typeText` nach `⇧⌘G` verlor im Versuch den Pfadpr�
 deshalb sichtbares Feld abwarten und gezielt vollständig befüllen. Keine globalen
 `defaults write`-Änderungen. Ist Gruppierung oder UI-Steuerung nicht verfügbar,
 Dateien liefern und exakt die offene Gruppierung/Viewer-Prüfung dokumentieren.
+
+## Goldene Antwortflächen
+
+Im vereinbarten Aitomat-Profil bezeichnet Gold den Absatzhintergrund von
+Nutzerantworten, nicht die Schriftfarbe. Normal große, lesbare Schrift erhalten.
+Mehrzeilige Originale vollständig hervorheben, Agentenantworten getrennt lassen.
+Vor Rendereränderungen vorhandene Formatierung prüfen; diese Regel ist kein
+Beleg, dass jede bestehende Vorlage bereits alle Folgeabsätze korrekt hervorhebt.
+Rendererformatierung und interaktives Einfügen in TextEdit separat an einer neuen
+Datei oder wegwerfbaren Probe prüfen. Bloße RTF-Steuercodes beweisen keine behobene
+Viewer-Störung. Keine bestehende Antwortdatei pauschal umfärben oder überschreiben.

@@ -1,12 +1,14 @@
 # warm-handoff 🏄
 
+Yasin Akgün verantwortet Arbeitsablauf, Produktentscheidungen und Abnahme. An der historischen Entwicklung war [Claude Code](https://github.com/anthropics/claude-code) beteiligt; aktuelle Verbesserungen für beide Hosts, sichere Übergaben und Reviews entstanden mit [OpenAI Codex](https://github.com/openai/codex). Dies würdigt die tatsächliche werkzeuggestützte Arbeit und verspricht keine GitHub-Sidebar-Zuordnung.
+
 > **Aktueller gemeinsamer Einstieg:** [SKILL.md](SKILL.md) unterstützt Codex und Claude Code. Die aktiven Adapter stehen unter [Codex](references/codex.md) und [Claude Code](references/claude-code.md). Die folgenden ausführlichen Zahlen und Sitzungsbeispiele dokumentieren die Entstehung; sie sind keine aktuellen universellen Tarif-, Kontext- oder Berechtigungsregeln.
 
 ## Aktueller Dokumentablauf (W53)
 
 Deutsch, Originalantworten erhalten, Kopierzeile oben: `Ich habe das Handoff beantwortet: /absoluter/Pfad/neu.rtf`. Nach einem abgeschlossenen nutzerrelevanten Schritt eine **neue** RTF erzeugen und alle erwähnten Lesedokumente in der **aktiven TextEdit-Tabgruppe oder einer neuen gemeinsamen Gruppe** öffnen. Keine fremden Fenster zusammenführen, keine leeren Hilfstabs/-fenster zurücklassen und keine bestehende Antwortdatei überschreiben. Die [geprüfte Tabmethode und RTF-Grenzen](references/rtf-macos.md) beschreiben das Vorgehen.
 
-Pasted Content und lange Diktate aus **Codex, cmux und Claude** als vollständige Eingänge lesen; ein Terminalplatzhalter ist kein Inhalt. Quellen und Nachträge abgleichen. Oberchef → Wächter → Arbeiter bleibt der autorisierte Wellenablauf, mit **höchstens vier Wächtern**, isolierten Worktrees, Dateibesitz und tatsächlich verfügbaren Host-/Rechnerressourcen. [Wellenregeln](references/wave-execution.md) und [Handoff-Format](references/handoff-format.md).
+Pasted Content und lange Diktate aus **Codex, cmux und Claude** als vollständige Eingänge lesen; ein Terminalplatzhalter ist kein Inhalt. Quellen und Nachträge abgleichen. Speichern ist die Übergabe: ganze gespeicherte Revisionen an natürlichen Kontrollpunkten prüfen, keine Live-Entwürfe oder Pollingpflicht. Autorisierte unabhängige Pakete gehen direkt an Arbeiter; Wächter nur bei internem Koordinationsbedarf. Kurze Briefe, isolierte Worktrees, Dateibesitz und tatsächliche Host-Ressourcen gelten. [Wellenregeln](references/wave-execution.md) und [Handoff-Format](references/handoff-format.md).
 
 ```sh
 scripts/handoff-rtf.sh /projekt/docs/neu.md /projekt/neu.rtf --project-root /projekt

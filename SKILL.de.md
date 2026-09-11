@@ -9,11 +9,12 @@ Der gemeinsame Einstieg ist [SKILL.md](SKILL.md). Er gilt für Codex und Claude
 Code; Dokumente und Antworten sind in diesem Arbeitsablauf deutsch.
 
 - [Handoff-Format](references/handoff-format.md): Originale vollständig erhalten,
-  Quellen samt Nachträgen lesen, Antwortfelder und Kopierzeile oben.
+  ganze gespeicherte Revisionen an natürlichen Kontrollpunkten lesen; Speichern
+  ist die Übergabe, keine Live-Entwürfe oder Pollingpflicht. Antwortfelder und Kopierzeile oben.
 - [Codex](references/codex.md) und [Claude Code](references/claude-code.md): aktive,
   getrennte Host-Anleitungen mit demselben gelebten Dokumentablauf.
-- [Wellen](references/wave-execution.md): Oberchef → Wächter → Arbeiter, isolierte
-  Dateiverantwortung, höchstens vier Wächter und echte Ressourcenbegrenzung.
+- [Wellen](references/wave-execution.md): direkte Arbeiter, Wächter nur nach Bedarf,
+  kurze Briefe, isolierte Dateiverantwortung und echte Ressourcenbegrenzung.
 - [RTF und TextEdit](references/rtf-macos.md): neue Dateien, alle erwähnten
   Lesedokumente in der aktiven oder einer neuen gemeinsamen Tabgruppe,
   keine fremden Fenster zusammenführen, keine leeren Hilfsfenster hinterlassen.
