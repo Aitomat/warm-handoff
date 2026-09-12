@@ -31,17 +31,18 @@ class DocumentDefaultTests(unittest.TestCase):
     def test_header_sets_gold_18pt_as_document_default(self):
         output = self.render('# Titel\n\nAgententext.\n\n>>>Userantwort:')
         header = output.read_text().splitlines()[0]
-        self.assertIn('\\f0\\fs36\\cb1\\cbpat1\\highlight1', header)
-        self.assertIn('{\\stylesheet{\\s0\\f0\\fs36\\cb1\\cbpat1\\highlight1 Normal;}}',
+        self.assertIn('\\f0\\fs36\\cb1\\cbpat1\\chshdng0\\chcbpat1\\highlight1\\cf2', header)
+        self.assertIn('{\\stylesheet{\\s0\\f0\\fs36\\cb1\\cbpat1\\chshdng0'
+                      '\\chcbpat1\\highlight1\\cf2 Normal;}}',
                       header)
 
     def test_agent_paragraphs_reset_with_plain_not_cb0(self):
         # \cb0 waere in Cocoa schwarz; \plain ist der einzige saubere Reset.
         rtf = self.render('# Titel\n\nAgententext.\n\n```\ncode\n```\n').read_text()
         self.assertNotIn('\\cb0', rtf)
-        self.assertIn('{\\pard\\plain\\f0\\fs36 Agententext.\\par}', rtf)
-        self.assertIn('{\\pard\\plain\\f0\\fs48\\b Titel\\par}', rtf)
-        self.assertIn('{\\pard\\plain\\f0\\fs30 code\\par}', rtf)
+        self.assertIn('{\\pard\\plain\\f0\\cf2\\fs36 Agententext.\\par}', rtf)
+        self.assertIn('{\\pard\\plain\\f0\\cf2\\fs48\\b Titel\\par}', rtf)
+        self.assertIn('{\\pard\\plain\\f0\\cf2\\fs30 code\\par}', rtf)
 
     def test_cocoa_import_gives_gold_18pt_answer_and_clean_agent_text(self):
         output = self.render('# Titel\n\nAgententext.\n\n>>>Userantwort:')

@@ -48,11 +48,16 @@ def target(raw, base, future=None):
 
 
 # Gold-Steuerwoerter der Antwortfelder und zugleich des Dokumentstandards.
-# Cocoa/TextEdit liest \\highlight nicht; dort faerbt nur \\cb/\\cbpat.
-GOLD = '\\cb1\\cbpat1\\highlight1'
+# Cocoa/TextEdit liest \\highlight nicht; dort faerbt nur \\cb/\\cbpat, und fuer
+# die Zeichenebene (das, was getippter Text erbt) nur \\chshdng0\\chcbpat.
+# \\cf2 ist ausdruecklich Schwarz: ohne es erbt eingefuegter Text irgendeine
+# geerbte Vordergrundfarbe -- Yasin, 13.09.2026: "es wird gelbe Schrift
+# eingefuegt, und kleiner, nicht schwarze Schrift mit gelbem Hintergrund".
+GOLD = '\\cb1\\cbpat1\\chshdng0\\chcbpat1\\highlight1\\cf2'
 # \\cb0 waere in Cocoa schwarz; \\plain ist der einzige saubere Reset auf
 # "kein Hintergrund" fuer Agententext, Ueberschriften und Codebloecke.
-RESET = '\\plain\\f0'
+# \\cf2 haelt die Schrift auch dort ausdruecklich schwarz.
+RESET = '\\plain\\f0\\cf2'
 
 
 TOKEN = re.compile(
@@ -163,7 +168,7 @@ def render(source, output, project_root=None):
             user_original = False
             continue
         if user_original:
-            body.append('{\\pard \\fs36' + GOLD + ' ' + rtf(line) + '\\par}\n')
+            body.append('{\\pard' + RESET + '\\fs36' + GOLD + ' ' + rtf(line) + '\\par}\n')
             visible.append(line)
             continue
         boundary = re.match(r'^\s*(`{3,}|~{3,})(.*)$', line)
@@ -196,7 +201,9 @@ def render(source, output, project_root=None):
         is_answer_marker = line.startswith('>>>')
         is_answer = is_answer_marker or (continuation_for_line and not heading)
         if is_answer:
-            style = ' ' + style + GOLD + ' '
+            # Auch Antwortzeilen starten mit \plain: sonst leckt Fettdruck einer
+            # vorangegangenen Ueberschrift in das Antwortfeld.
+            style = RESET + style + GOLD + ' '
         else:
             style = RESET + style
         body.append('{\\pard' + style + encoded + '\\par}\n')
@@ -210,7 +217,7 @@ def render(source, output, project_root=None):
     # der RTF-Urstandard 12 pt ohne Hintergrund (Yasin, 12.09.2026, 21:03:
     # "wenn ich Cmd-V mache und Text eingebe ... kleine Schrift und ohne gelb").
     data = ('{\\rtf1\\ansi\\deff0\\uc1{\\fonttbl{\\f0 Helvetica;}}'
-            '{\\colortbl;\\red255\\green231\\blue153;}'
+            '{\\colortbl;\\red255\\green231\\blue153;\\red0\\green0\\blue0;}'
             '{\\stylesheet{\\s0\\f0\\fs36' + GOLD + ' Normal;}}'
             '\\f0\\fs36' + GOLD + '\n' + ''.join(body) + '}').encode('ascii')
     fields = re.findall(rb'\\fldinst HYPERLINK "([^"\r\n]+)"', data)
