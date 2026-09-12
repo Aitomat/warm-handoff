@@ -15,6 +15,29 @@ Read the host's actual agent inventory and machine constraints. Never promise mo
 
 Direct workers suit independent packets. Guardians suit packets that need worker coordination, review, or integration. Do not add a guardian layer merely for labels.
 
+Label each agent the same way in the plan and in the report: `A · Topic · Model/effort`.
+
+Expensive builds and tests run behind a shared project lock held by the role the
+plan names. A directory lock is atomic; the PID inside it makes an orphaned lock
+recognizable after a crash without anyone removing a live foreign lock:
+
+```sh
+L=/tmp/project-build.lock
+while ! mkdir $L 2>/dev/null; do
+  P=$(cat $L/pid 2>/dev/null); [ -n "$P" ] && ! kill -0 $P 2>/dev/null && rmdir $L 2>/dev/null; sleep 30
+done; echo $$ > $L/pid
+… build/tests …; rm -f $L/pid; rmdir $L
+```
+
+**Waiting means waiting, never reporting.** Whoever is queued on the lock does
+not file a "blocked" interim note and does not start a second attempt alongside.
+Run tests through the project's own test script rather than the raw toolchain
+command, and set `TMPDIR=/tmp`. **One build per topic guardian, at the very end —
+not one per worker:** the guardian collects the worker results and builds once
+over the integrated state. Guardians end their own wait loops and background
+processes before writing the report; a report filed next to a still-running
+background run of one's own is not a report.
+
 Projects may explicitly opt into **guardian mode**. In that mode, substantive research, analysis, implementation, QA, visual inspection, reports, and handoff writing go through a guardian and its workers. The main session limits itself to concise coordination, necessary decisions, and batched acceptance; it does not duplicate detail work in parallel. Use short self-contained briefs and automatic result delivery. Do not ask for status before 25 minutes unless there is a real blocker. If slots are unavailable, report the host limit and queue or reduce the wave instead of doing duplicate work.
 
 <!-- rule:WV-04 -->

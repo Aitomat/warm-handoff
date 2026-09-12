@@ -30,7 +30,10 @@ class GoldLineTests(unittest.TestCase):
             for line in lines:
                 if 'Agent' in line:
                     self.assertNotIn('cbpat1', line)
-            self.assertEqual(sum('cbpat1' in line for line in lines), 11)
+            # Elf goldene Absaetze plus die Kopfzeile, die den Dokumentstandard
+            # (18 pt Gold fuer eingefuegten und getippten Text) setzt.
+            self.assertIn('cbpat1', lines[0])
+            self.assertEqual(sum('cbpat1' in line for line in lines[1:]), 11)
 
 
 if __name__ == '__main__':

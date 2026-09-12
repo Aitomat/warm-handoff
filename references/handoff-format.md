@@ -5,6 +5,15 @@
 
 Create a new dated file for every handoff. Never overwrite an answered source. Put a copyable first line with the absolute path of the new file. Include project, date, and revision in the title.
 
+**Read only the saved state.** Saving is the user's release; text left unsaved in
+an editor has not been read. Ask for the save, or mark the gap explicitly as a
+gap — never save, close, or recreate the user's answer file in order to read it.
+
+**Keep exactly one active collection inbox**, the single place where the user
+answers and interjects: either the answer file's collection section or the agreed
+interjections file. The other location only links to it. Two parallel inboxes lose
+answers.
+
 <!-- rule:HF-02 -->
 ## Required sections
 

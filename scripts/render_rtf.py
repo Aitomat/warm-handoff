@@ -47,6 +47,14 @@ def target(raw, base, future=None):
     return path.resolve(strict=True).as_uri()
 
 
+# Gold-Steuerwoerter der Antwortfelder und zugleich des Dokumentstandards.
+# Cocoa/TextEdit liest \\highlight nicht; dort faerbt nur \\cb/\\cbpat.
+GOLD = '\\cb1\\cbpat1\\highlight1'
+# \\cb0 waere in Cocoa schwarz; \\plain ist der einzige saubere Reset auf
+# "kein Hintergrund" fuer Agententext, Ueberschriften und Codebloecke.
+RESET = '\\plain\\f0'
+
+
 TOKEN = re.compile(
     r'(?P<marker>⟦\s*(?P<kind>Screenshot|Bild|Datei|Dokument|Kopie|Video|Audio)\s*:\s*(?P<marked>.*?)\s*⟧)'
     r'|\[(?P<label>[^\]\n]+)\]\((?P<dest><[^>\n]+>|[^)\s]+)\)'
@@ -149,7 +157,7 @@ def render(source, output, project_root=None):
             user_original = False
             continue
         if user_original:
-            body.append('{\\pard \\fs36\\cb1\\cbpat1\\highlight1 ' + rtf(line) + '\\par}\n')
+            body.append('{\\pard \\fs36' + GOLD + ' ' + rtf(line) + '\\par}\n')
             visible.append(line)
             continue
         boundary = re.match(r'^\s*(`{3,}|~{3,})(.*)$', line)
@@ -160,7 +168,7 @@ def render(source, output, project_root=None):
             fence = None
             continue
         if fence:
-            body.append('{\\pard \\fs30 ' + rtf(line) + '\\par}\n')
+            body.append('{\\pard' + RESET + '\\fs30 ' + rtf(line) + '\\par}\n')
             visible.append(line)
             continue
         heading = re.match(r'^(#{1,6})\s+(.*)', line)
@@ -182,14 +190,23 @@ def render(source, output, project_root=None):
         is_answer_marker = line.startswith('>>>')
         is_answer = is_answer_marker or (continuation_for_line and not heading)
         if is_answer:
-            style += '\\cb1\\cbpat1\\highlight1 '
-        body.append('{\\pard ' + style + encoded + '\\par}\n')
+            style = ' ' + style + GOLD + ' '
+        else:
+            style = RESET + style
+        body.append('{\\pard' + style + encoded + '\\par}\n')
         visible.append(plain)
         answer_continuation = is_answer and bool(line.strip())
     if user_original:
         raise ValueError('Unclosed user-original block')
+    # Dokumentstandard: 18 pt Gold. Alles, was ausserhalb der erzeugten
+    # Absatzgruppen entsteht -- ein neuer Absatz hinter \par, per Cmd-V
+    # eingefuegter Klartext, getippter Text -- erbt diesen Zustand. Ohne ihn galt
+    # der RTF-Urstandard 12 pt ohne Hintergrund (Yasin, 12.09.2026, 21:03:
+    # "wenn ich Cmd-V mache und Text eingebe ... kleine Schrift und ohne gelb").
     data = ('{\\rtf1\\ansi\\deff0\\uc1{\\fonttbl{\\f0 Helvetica;}}'
-            '{\\colortbl;\\red255\\green231\\blue153;}\\f0\n' + ''.join(body) + '}').encode('ascii')
+            '{\\colortbl;\\red255\\green231\\blue153;}'
+            '{\\stylesheet{\\s0\\f0\\fs36' + GOLD + ' Normal;}}'
+            '\\f0\\fs36' + GOLD + '\n' + ''.join(body) + '}').encode('ascii')
     fields = re.findall(rb'\\fldinst HYPERLINK "([^"\r\n]+)"', data)
     if [f.decode('ascii') for f in fields] != links:
         raise ValueError('RTF hyperlink field verification failed')

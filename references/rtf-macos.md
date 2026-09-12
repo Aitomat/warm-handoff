@@ -23,6 +23,17 @@ Lines beginning with `>>>` and all subsequent nonempty continuation lines are go
 
 The automated AppKit test covers this storage and save/reload behavior. A manual TextEdit check remains distinct because launching or focusing the editor can disturb the user's desktop.
 
+The **document default** carries the same 18 pt gold, so pasted plain text and
+typed text inherit it instead of falling back to the RTF built-in 12 pt with no
+background. The header therefore sets a `Normal` stylesheet entry and the same
+character state before the first paragraph; agent paragraphs, headings and code
+blocks reset with `\pard\plain\f0`. Cocoa and TextEdit ignore `\highlight`
+entirely — only `\cb`/`\cbpat` paint a background there — and `\cb0` reads as
+black rather than "no background", so `\plain` is the only clean reset. Verify
+with `textutil -convert html -stdout FILE.rtf`: the answer class carries an
+18 px font and the gold background, agent text carries no background. The same
+gold rule applies to the Zwischenrufe RTF, not only to the handoff.
+
 <!-- rule:RT-04 -->
 ## Three evidence scopes
 

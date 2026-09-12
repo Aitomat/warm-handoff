@@ -23,6 +23,17 @@ Zeilen, die mit `>>>` beginnen, und alle folgenden nichtleeren Fortsetzungszeile
 
 Der automatisierte AppKit-Test deckt diesen Ablauf beim Speichern und Neuladen ab. Eine manuelle TextEdit-Prüfung bleibt getrennt, weil Start oder Fokus des Editors den Desktop des Nutzers stören können.
 
+Der **Dokumentstandard** trägt dasselbe 18 pt Gold, damit eingefügter Klartext
+und getippter Text es erben und nicht auf den RTF-Urstandard 12 pt ohne
+Hintergrund zurückfallen. Der Kopf setzt dafür einen `Normal`-Stylesheet-Eintrag
+und denselben Zeichenzustand vor dem ersten Absatz; Agentenabsätze, Überschriften
+und Codeblöcke setzen mit `\pard\plain\f0` zurück. Cocoa und TextEdit lesen
+`\highlight` überhaupt nicht — dort färbt nur `\cb`/`\cbpat` —, und `\cb0` wird
+als Schwarz gelesen statt als „kein Hintergrund"; `\plain` ist deshalb der
+einzige saubere Reset. Beleg über `textutil -convert html -stdout DATEI.rtf`: die
+Antwortklasse trägt 18 px Schrift und den goldenen Hintergrund, Agententext
+keinen. Dieselbe Goldregel gilt für die Zwischenrufe-RTF, nicht nur den Handoff.
+
 <!-- rule:RT-04 -->
 ## Drei Belegbereiche
 

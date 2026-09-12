@@ -5,6 +5,16 @@
 
 Erzeuge für jede Übergabe eine neue datierte Datei. Überschreibe nie eine beantwortete Quelle. Setze eine kopierbare erste Zeile mit dem absoluten Pfad der neuen Datei. Nenne Projekt, Datum und Revision im Titel.
 
+**Lies nur den gespeicherten Stand.** Das Speichern ist die Freigabe des Nutzers;
+ungespeicherter Text in einem Editor ist nicht gelesen. Bitte um das Speichern
+oder benenne die Lücke ausdrücklich als Lücke — speichere, schließe oder erzeuge
+die Antwortdatei des Nutzers niemals neu, nur um sie einzulesen.
+
+**Halte genau einen aktiven Sammlungseingang**, den einen Ort, an dem der Nutzer
+antwortet und dazwischenruft: entweder den Sammlungsabschnitt der Antwortdatei
+oder die vereinbarte Zwischenrufe-Datei. Der andere Ort verweist nur darauf. Zwei
+parallele Eingänge verlieren Antworten.
+
 <!-- rule:HF-02 -->
 ## Pflichtabschnitte
 

@@ -15,6 +15,30 @@ Lies die tatsächliche Agentenübersicht des Hosts und die Maschinengrenzen. Ver
 
 Direkte Arbeiter eignen sich für unabhängige Pakete. Wächter eignen sich für Pakete mit Koordination, Review oder Integration. Füge keine Wächterschicht nur für Bezeichnungen hinzu.
 
+Bezeichne jeden Agenten im Plan und im Bericht gleich: `A · Thema · Modell/Effort`.
+
+Teure Builds und Tests laufen hinter einem gemeinsamen Projekt-Lock, gehalten von
+der im Plan benannten Rolle. Ein Verzeichnis-Lock ist atomar; die PID darin macht
+ein verwaistes Lock nach einem Absturz erkennbar, ohne dass jemand ein fremdes
+laufendes Lock entfernt:
+
+```sh
+L=/tmp/project-build.lock
+while ! mkdir $L 2>/dev/null; do
+  P=$(cat $L/pid 2>/dev/null); [ -n "$P" ] && ! kill -0 $P 2>/dev/null && rmdir $L 2>/dev/null; sleep 30
+done; echo $$ > $L/pid
+… build/tests …; rm -f $L/pid; rmdir $L
+```
+
+**Warten heißt warten, nie melden.** Wer am Lock hängt, schreibt keinen
+Zwischenbericht „blockiert" und startet keinen zweiten Versuch daneben. Tests
+laufen über das Testskript des Projekts, nicht als roher Toolchain-Aufruf;
+`TMPDIR=/tmp` setzen. **Ein Build je Themen-Wächter, ganz am Ende — nicht je
+Arbeiter:** der Wächter sammelt die Arbeiterergebnisse ein und baut einmal über
+den integrierten Stand. Wächter beenden ihre eigenen Warteschleifen und
+Hintergrundprozesse, bevor sie den Bericht schreiben; ein Bericht neben einem
+noch laufenden eigenen Hintergrundlauf ist kein Bericht.
+
 Projekte können ausdrücklich den **Wächtermodus** wählen. Dann laufen substanzielle Recherche, Analyse, Umsetzung, QA, Sichtprüfung, Berichte und Handoff-Erstellung über einen Wächter mit seinen Arbeitern. Die Hauptsession beschränkt sich auf knappe Koordination, notwendige Entscheidungen und gebündelte Abnahme; sie dupliziert keine Detailarbeit parallel. Nutze kurze eigenständige Briefe und automatische Ergebniszustellung. Frage nicht vor 25 Minuten nach Status, außer es gibt einen echten Blocker. Fehlen Plätze, nenne die Hostgrenze und stelle die Arbeit an oder verkleinere die Welle, statt Doppelarbeit zu leisten.
 
 <!-- rule:WV-04 -->
