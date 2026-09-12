@@ -1,8 +1,8 @@
-# Claude workflow before W53 — historical source
+# Claude-Arbeitsablauf vor W53 — historische Quelle
 
-Preserved verbatim below for provenance. Current executable guidance is in
-[Claude Code](claude-code.md), [handoff format](handoff-format.md), and
-[RTF/TextEdit](rtf-macos.md). Historical commands and pricing claims are not current authorization.
+Der folgende historische Text bleibt als Herkunftsbeleg erhalten. Aktuelle Handlungsanweisungen stehen in
+[Claude Code](claude-code.de.md), [Handoff-Format](handoff-format.de.md) und
+[RTF/TextEdit](rtf-macos.de.md). Historische Kommandos und Preisangaben sind keine aktuelle Autorisierung.
 
 ---
 name: warm-handoff

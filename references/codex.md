@@ -14,6 +14,8 @@ Use the narrowest available tool that completes the action. Read-only inspection
 
 Write required plans and reports before claiming completion. Verify persisted files by rereading or hashing them when installation or exact preservation matters.
 
+For every RTF handoff, invoke `scripts/handoff-rtf.sh SOURCE NEW_OUTPUT` from the skill directory; follow [RTF safety](rtf-macos.md). Never generate the final RTF directly with `textutil`: it is only a reader/verification tool in this workflow.
+
 <!-- rule:CDX-03 -->
 ## Agents and guardian mode
 

@@ -14,6 +14,8 @@ Nutze das engste verfügbare Werkzeug, das die Aktion erledigt. Reine Leseprüfu
 
 Schreibe geforderte Pläne und Berichte, bevor du Abschluss meldest. Lies oder hashe gespeicherte Dateien erneut, wenn Installation oder exakte Erhaltung entscheidend ist.
 
+Rufe für jedes RTF-Handoff `scripts/handoff-rtf.sh QUELLE NEUE_AUSGABE` aus dem Skill-Verzeichnis auf; beachte [RTF-Sicherheit](rtf-macos.de.md). Erzeuge das endgültige RTF nie direkt mit `textutil`: Es dient in diesem Ablauf nur zum Lesen und Prüfen.
+
 <!-- rule:CDX-03 -->
 ## Agenten und Wächtermodus
 

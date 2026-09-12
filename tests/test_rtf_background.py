@@ -36,7 +36,7 @@ class BackgroundTests(unittest.TestCase):
         return style.group(1)
 
     def test_answer_background_survives_cocoa_save_without_coloring_agent_reply(self):
-        result = self.render('>>>Userantwort: Antwort\nAgentenantwort')
+        result = self.render('>>>Userantwort: Antwort\n<!-- answer:end -->\nAgentenantwort')
         self.assertEqual(result.returncode, 0, result.stderr)
         html = self.cocoa_html()
         answer = self.paragraph_style(html, '&gt;&gt;&gt;Userantwort: Antwort')

@@ -19,7 +19,7 @@ Wrap preserved user text in `<!-- user-original:start -->` and `<!-- user-origin
 <!-- rule:RT-03 -->
 ## Gold answer continuation
 
-Lines beginning with `>>>` are gold, 18-point answer paragraphs. The blank paragraph immediately after a marker receives the same style. Typing there, pressing Return, saving, and reopening must keep the continued user text gold and 18 pt. A later agent paragraph must have no answer background.
+Lines beginning with `>>>` and all subsequent nonempty continuation lines are gold, 18-point answer paragraphs. A blank line also receives gold and ends the answer; a heading, code fence, or `<!-- answer:end -->` ends it before the next paragraph. Always separate agent text using one of these boundaries. For user text spanning blank lines or containing literal Markdown, use a `user-original` block: every line in it is gold. Typing in a gold paragraph, pressing Return, saving, and reopening must keep continued user text gold and 18 pt. A later agent paragraph must have no answer background.
 
 The automated AppKit test covers this storage and save/reload behavior. A manual TextEdit check remains distinct because launching or focusing the editor can disturb the user's desktop.
 

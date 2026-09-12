@@ -10,6 +10,8 @@ Copy only the rules the project adopts. Replace bracketed placeholders. This tem
 - Read `[feedback path]` completely at natural checkpoints and immediately before completion.
 - Preserve user originals verbatim; put agent replies and interpretations in separate sections.
 
+- Generate every RTF handoff with `scripts/handoff-rtf.sh` from the skill directory, following [RTF safety](../references/rtf-macos.md); never substitute direct `textutil` generation.
+
 <!-- rule:AG-02 -->
 ## Scope and ownership
 

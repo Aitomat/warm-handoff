@@ -10,6 +10,8 @@
 - Lies `[Feedbackpfad]` an natürlichen Kontrollpunkten und direkt vor Abschluss vollständig.
 - Erhalte Nutzeroriginale wörtlich; schreibe Agentenantworten und Deutungen in getrennte Abschnitte.
 
+- Erzeuge jedes RTF-Handoff mit `scripts/handoff-rtf.sh` aus dem Skill-Verzeichnis gemäß [RTF-Sicherheit](../references/rtf-macos.de.md); ersetze dies nie durch direkte Erzeugung mit `textutil`.
+
 <!-- rule:AG-02 -->
 ## Umfang und Besitz
 

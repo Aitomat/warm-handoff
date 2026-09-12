@@ -134,6 +134,8 @@ def render(source, output, project_root=None):
     for line in lines:
         continuation_for_line = answer_continuation
         answer_continuation = False
+        if fence is None and not user_original and line == '<!-- answer:end -->':
+            continue
         # Originalblöcke erhalten jede Zeile wörtlich, auch Markdown und Pfadangaben.
         # Marker in normalen Codeblöcken bleiben dagegen sichtbare Beispiele.
         if fence is None and line == '<!-- user-original:start -->':
@@ -178,11 +180,12 @@ def render(source, output, project_root=None):
             encoded, plain = inline(line, base, links, future)
         style = '\\fs48\\b ' if heading else '\\fs36 '
         is_answer_marker = line.startswith('>>>')
-        if is_answer_marker or (continuation_for_line and not line):
+        is_answer = is_answer_marker or (continuation_for_line and not heading)
+        if is_answer:
             style += '\\cb1\\cbpat1\\highlight1 '
         body.append('{\\pard ' + style + encoded + '\\par}\n')
         visible.append(plain)
-        answer_continuation = is_answer_marker
+        answer_continuation = is_answer and bool(line.strip())
     if user_original:
         raise ValueError('Unclosed user-original block')
     data = ('{\\rtf1\\ansi\\deff0\\uc1{\\fonttbl{\\f0 Helvetica;}}'

@@ -3,6 +3,15 @@
   "canonical_language": "en",
   "complete_languages": ["en", "de"],
   "deferred_languages": ["es"],
+  "language_audit": {
+    "date": "2026-09-12",
+    "report": "docs/2026-09-12-sprachpruefung.md",
+    "complete_languages_scope": "Active packages only; historical sources are not fully localized.",
+    "historical_exceptions": [
+      {"en": "references/claude-workflow-history.md", "de": "references/claude-workflow-history.de.md", "status": "mixed_language_archive_translation_deferred"},
+      {"en": "references/historie.md", "de": null, "status": "mixed_language_archive_missing_german_counterpart"}
+    ]
+  },
   "manual_semantic_review": {
     "status": "implementation_self_review_complete",
     "reviewed_on": "2026-09-12",

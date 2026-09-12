@@ -19,9 +19,9 @@ Umschließe erhaltenen Nutzertext mit `<!-- user-original:start -->` und `<!-- u
 <!-- rule:RT-03 -->
 ## Goldene Antwortfortsetzung
 
-Zeilen, die mit `>>>` beginnen, sind goldene 18-Punkt-Antwortabsätze. Der leere Absatz direkt nach einem Marker erhält denselben Stil. Eingabe dort, Return, Speichern und erneutes Öffnen müssen den fortgesetzten Nutzertext golden und in 18 pt erhalten. Ein späterer Agentenabsatz darf keinen Antworthintergrund haben.
+Zeilen, die mit `>>>` beginnen, und alle folgenden nichtleeren Fortsetzungszeilen sind goldene 18-Punkt-Antwortabsätze. Eine Leerzeile erhält ebenfalls Gold und beendet die Antwort; eine Überschrift, Codeblockgrenze oder `<!-- answer:end -->` beendet sie vor dem nächsten Absatz. Trenne Agententext immer durch eine dieser Grenzen. Für Nutzertext über Leerzeilen hinweg oder mit wörtlichem Markdown nutze einen `user-original`-Block: Jede Zeile darin ist golden. Eingabe in einem goldenen Absatz, Return, Speichern und erneutes Öffnen müssen den fortgesetzten Nutzertext golden und in 18 pt erhalten. Ein späterer Agentenabsatz darf keinen Antworthintergrund haben.
 
-Der automatisierte AppKit-Test deckt diesen Speicher- und Save/Reload-Ablauf ab. Eine manuelle TextEdit-Prüfung bleibt getrennt, weil Start oder Fokus des Editors den Desktop des Nutzers stören können.
+Der automatisierte AppKit-Test deckt diesen Ablauf beim Speichern und Neuladen ab. Eine manuelle TextEdit-Prüfung bleibt getrennt, weil Start oder Fokus des Editors den Desktop des Nutzers stören können.
 
 <!-- rule:RT-04 -->
 ## Drei Belegbereiche
