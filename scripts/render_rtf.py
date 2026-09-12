@@ -95,12 +95,18 @@ def inline(line, base, links, future=None):
             label = match.group('code')
             candidate = base / label
             if label.startswith(('/', '~/','https://','http://')) or candidate.exists():
-                destination = target(label, base, future)
+                try:
+                    destination = target(label, base, future)
+                except (OSError, ValueError):
+                    destination = None  # z. B. Pfad mit Leerzeichen, an der Wortgrenze abgeschnitten
         else:
             label = label.rstrip('.,;:')
             tail = match.group(0)[len(label):]
             if label.startswith(('/', '~/','https://','http://')) or (base / label).exists():
-                destination = target(label, base, future)
+                try:
+                    destination = target(label, base, future)
+                except (OSError, ValueError):
+                    destination = None  # nicht existierender oder abgeschnittener Pfad bleibt Klartext
         if destination:
             links.append(destination)
             encoded.append('{\\field{\\*\\fldinst HYPERLINK "' + rtf(destination) + '"}{\\fldrslt ' + rtf(label) + '}}')
