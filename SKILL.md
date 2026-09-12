@@ -26,6 +26,22 @@ For the document contract and required sections, read [handoff format](reference
 
 Make progress until the authorized outcome is complete. Split independent work only when the host and assignment allow it. Give each worker exclusive paths and acceptance criteria; never exceed actual concurrency. Guardians are optional coordination roles, not a default layer. Keep builds and shared resources serialized.
 
+### Build one at a time, not side by side (2026-09-13)
+
+The user's rule of 2026-09-13 (stated 12.09. 23:36 and 13.09. 00:52): the machine must not thrash — clean work before speed. Each topic guardian builds exactly once, at the end of its topic, and runs only its targeted tests; the full suite belongs to the merge guardian alone. The build order is fixed and runs from the largest topic to the smallest. A guardian may take the shared build lock only after the previous guardian's done marker exists; it waits in the foreground (repeat the wait command until it returns), never detached, and never reports early. Log `uptime` before the build. Workers and subagents keep running in parallel — they do not build.
+
+```
+L=/tmp/aitomat-build.lock; V=/tmp/aitomat-<wave>-fertig-<predecessor>   # first topic has no predecessor
+while [ -n "$V" ] && [ ! -f "$V" ]; do sleep 30; done
+while ! mkdir $L 2>/dev/null; do
+  P=$(cat $L/pid 2>/dev/null); [ -n "$P" ] && ! kill -0 $P 2>/dev/null && rmdir $L 2>/dev/null; sleep 30
+done; echo $$ > $L/pid
+… build + targeted tests …
+rm -f $L/pid; rmdir $L; touch /tmp/aitomat-<wave>-fertig-<me>
+```
+
+Measurement intent: compare the wave that first uses this rule against the previous wave (load average, wall-clock duration of the wave) and record the result in the wave report.
+
 For execution details, read [wave execution](references/wave-execution.md). For model selection and changing platform facts, read [model routing](references/model-routing.md) and [evidence scope](references/evidence-scope.md).
 
 <!-- rule:WH-04 -->

@@ -26,6 +26,22 @@ Für Dokumentvertrag und Pflichtabschnitte lies [Handoff-Format](references/hand
 
 Arbeite weiter, bis das autorisierte Ergebnis vollständig ist. Teile unabhängige Arbeit nur auf, wenn Host und Auftrag es erlauben. Gib jedem Arbeiter exklusive Pfade und Akzeptanzkriterien; überschreite nie die tatsächliche Parallelkapazität. Wächter sind optionale Koordinatoren und keine Standardschicht. Serialisiere Builds und gemeinsam genutzte Ressourcen.
 
+### Hintereinander bauen, nicht nebeneinander (13.09.2026)
+
+Regel des Nutzers vom 13.09.2026 (geäußert am 12.09. 23:36 und 13.09. 00:52): der Rechner soll nicht rödeln — saubere Arbeit vor Tempo. Jeder Themen-Wächter baut genau EINMAL, am Ende seines Themas, und führt nur seine gezielten Tests aus; die Vollsuite gehört allein dem Merge-Wächter. Die Reihenfolge ist fest und läuft vom größten zum kleinsten Thema. Ein Wächter darf das gemeinsame Build-Lock erst nehmen, wenn die Fertig-Marke des Vorgängers existiert; er wartet im Vordergrund (Wartebefehl wiederholen, bis er zurückkommt), nie losgelöst, und meldet nie vorzeitig. Vor dem Build `uptime` ins Log schreiben. Arbeiter und Subagenten laufen weiter parallel — sie bauen nicht.
+
+```
+L=/tmp/aitomat-build.lock; V=/tmp/aitomat-<welle>-fertig-<vorgaenger>   # erstes Thema hat keinen Vorgänger
+while [ -n "$V" ] && [ ! -f "$V" ]; do sleep 30; done
+while ! mkdir $L 2>/dev/null; do
+  P=$(cat $L/pid 2>/dev/null); [ -n "$P" ] && ! kill -0 $P 2>/dev/null && rmdir $L 2>/dev/null; sleep 30
+done; echo $$ > $L/pid
+… Build + gezielte Tests …
+rm -f $L/pid; rmdir $L; touch /tmp/aitomat-<welle>-fertig-<ich>
+```
+
+Messvorsatz: Die Welle, die diese Regel zuerst nutzt, gegen die vorige Welle vergleichen (Load-Average, Wanduhrzeit der Welle) und das Ergebnis im Wellenbericht festhalten.
+
 Für die Ausführung lies [Wellen-Ausführung](references/wave-execution.de.md). Für Modellwahl und veränderliche Plattformfakten lies [Modellrouting](references/model-routing.de.md) und [Beleggrenzen](references/evidence-scope.de.md).
 
 <!-- rule:WH-04 -->
