@@ -55,6 +55,8 @@ Zwischen Handoff und Wellenstart ist das Handoff der einzige Eingang (`SAMMLUNG 
 
 Lies [RTF unter macOS](references/rtf-macos.de.md), bevor du renderst oder Dokumente öffnest.
 
+Erzeuge Handoff- und Zwischenrufe-RTFs ausschließlich über `scripts/handoff-rtf.sh` aus dem Skillverzeichnis. Halte genau einen aktiven Zwischenrufe-Eingang: Handoff-Fußbereich oder vereinbarte Datei; der andere Ort verlinkt nur darauf. Cmd-S gibt gespeicherte Eingaben innerhalb der bestehenden Autorisierung frei.
+
 <!-- rule:WH-05 -->
 ## 5. Optionale Hilfen bewusst einsetzen
 

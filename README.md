@@ -34,6 +34,10 @@ Do not copy the whole repository. Historical evidence, personal helpers, review 
 
 RTF support is optional and macOS-only. It needs Bash, Python 3, and `textutil`:
 
+Generate handoff and Zwischenrufe RTFs exclusively with `scripts/handoff-rtf.sh` from the repository or installed skill directory, using absolute source/output paths and a new output filename. The bundled renderer keeps text behind `>>>` and typed continuations black on gold at 18 pt: colour table `;gold;black;`, `GOLD = \cb1\cbpat1\chshdng0\chcbpat1\highlight1\cf2`, `RESET = \plain\f0\cf2`, answer paragraphs `RESET + \fs36 + GOLD`. See [RTF safety](references/rtf-macos.md) for answer boundaries and verification limits.
+
+Cmd-S releases saved input within existing authorization. Keep exactly one active Zwischenrufe inbox (handoff footer or agreed file); the other only links to it. Archive answered handoffs in the project's `handoff-archiv/` with `mv`, never `rm`; do not move the active input file. Run the tests below from the repository checkout; tests are not included in installed packages.
+
 ```sh
 scripts/handoff-rtf.sh /project/docs/handoff.md /project/handoff.rtf --project-root /project
 python3 -m unittest discover -s tests -v

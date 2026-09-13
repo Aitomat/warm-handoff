@@ -5,6 +5,10 @@
 
 RTF ist ein optionaler editierbarer Zwilling eines vom Agenten geschriebenen Markdown-Handoffs. Er benötigt macOS, Python 3, Bash und `textutil`.
 
+Erzeuge Handoff- und Zwischenrufe-RTFs ausschließlich über `scripts/handoff-rtf.sh`, aus dem Repository oder installierten Skillverzeichnis mit absoluten Quell-/Zielpfaden. Baue RTF nicht von Hand nach und rufe `render_rtf.py` nicht direkt auf; `textutil` dient nur dem Lesen und Prüfen.
+
+Cmd-S gibt gespeicherte Nutzereingaben innerhalb der bestehenden Autorisierung frei. Halte genau einen aktiven Zwischenrufe-Eingang: Handoff-Fußbereich oder vereinbarte Datei; der andere Ort verlinkt nur darauf. Archiviere beantwortete Handoffs im `handoff-archiv/` desselben Projekts per `mv`, nie `rm`; verschiebe nicht die aktive Nutzereingabedatei.
+
 ```sh
 scripts/handoff-rtf.sh /projekt/docs/handoff.md /projekt/handoff.rtf --project-root /projekt
 ```
@@ -27,8 +31,8 @@ Der **Dokumentstandard** trägt dasselbe 18 pt Gold, damit eingefügter Klartext
 und getippter Text es erben und nicht auf den RTF-Urstandard 12 pt ohne
 Hintergrund zurückfallen. Der Kopf setzt dafür einen `Normal`-Stylesheet-Eintrag
 und denselben Zeichenzustand vor dem ersten Absatz; Agentenabsätze, Überschriften
-und Codeblöcke setzen mit `\pard\plain\f0` zurück. Cocoa und TextEdit lesen
-`\highlight` überhaupt nicht — dort färbt nur `\cb`/`\cbpat` —, und `\cb0` wird
+und Codeblöcke setzen mit `\pard\plain\f0\cf2` zurück. Nutze den vollständigen
+GOLD-Zustand unten für Cocoa-Zeichenschattierung; `\highlight` allein reicht nicht, und `\cb0` wird
 als Schwarz gelesen statt als „kein Hintergrund"; `\plain` ist deshalb der
 einzige saubere Reset. Beleg über `textutil -convert html -stdout DATEI.rtf`: die
 Antwortklasse trägt 18 px Schrift und den goldenen Hintergrund, Agententext
@@ -39,8 +43,8 @@ keinen. Dieselbe Goldregel gilt für die Zwischenrufe-RTF, nicht nur den Handoff
 
 Tippen oder Einfügen (Cmd-V) am Ende eines goldenen Antwortabsatzes muss
 schwarze Schrift auf Gold in 18 pt bleiben. Cocoa färbt nur auf Zeichenebene,
-ein Renderer braucht daher alles Folgende — die Steuerworte stehen hier
-ausdrücklich, weil Codex-User ohne `scripts/render_rtf.py` rendern können:
+der Renderer nutzt daher alles Folgende. Dies sind Prüfkriterien für den
+mitgelieferten Renderer, keine Erlaubnis für einen anderen Erzeugungsweg:
 
 - Farbtabelle `;gold;schwarz;` — Gold ist Eintrag 1 (`\red255\green231\blue153`),
   Schwarz ist Eintrag 2;

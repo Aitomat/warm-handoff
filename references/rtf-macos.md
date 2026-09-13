@@ -5,6 +5,10 @@
 
 RTF is an optional editable twin of an agent-authored Markdown handoff. It requires macOS, Python 3, Bash, and `textutil`.
 
+Generate handoff and Zwischenrufe RTFs exclusively through `scripts/handoff-rtf.sh`, run from the repository or installed skill directory with absolute source/output paths. Do not rebuild RTF by hand or invoke `render_rtf.py` directly; use `textutil` only to read and verify.
+
+Cmd-S releases saved user input within the existing authorization. Keep exactly one active Zwischenrufe inbox: the handoff footer or the agreed file; the other only links to it. Archive answered handoffs in the same project's `handoff-archiv/` using `mv`, never `rm`; do not move the active user input file.
+
 ```sh
 scripts/handoff-rtf.sh /project/docs/handoff.md /project/handoff.rtf --project-root /project
 ```
@@ -27,8 +31,8 @@ The **document default** carries the same 18 pt gold, so pasted plain text and
 typed text inherit it instead of falling back to the RTF built-in 12 pt with no
 background. The header therefore sets a `Normal` stylesheet entry and the same
 character state before the first paragraph; agent paragraphs, headings and code
-blocks reset with `\pard\plain\f0`. Cocoa and TextEdit ignore `\highlight`
-entirely — only `\cb`/`\cbpat` paint a background there — and `\cb0` reads as
+blocks reset with `\pard\plain\f0\cf2`. Use the complete GOLD state below for
+Cocoa character shading; `\highlight` alone is insufficient, and `\cb0` reads as
 black rather than "no background", so `\plain` is the only clean reset. Verify
 with `textutil -convert html -stdout FILE.rtf`: the answer class carries an
 18 px font and the gold background, agent text carries no background. The same
@@ -39,8 +43,8 @@ gold rule applies to the Zwischenrufe RTF, not only to the handoff.
 
 Typing or pasting (Cmd-V) at the end of a gold answer paragraph must stay black
 text on gold at 18 pt. Cocoa honors only character-level shading, so a renderer
-needs all of the following — naming the control words matters because Codex
-users may render without `scripts/render_rtf.py`:
+uses all of the following. These are verification requirements for the bundled
+renderer, not permission to use another generation path:
 
 - colour table `;gold;black;` — gold is entry 1 (`\red255\green231\blue153`),
   black is entry 2;

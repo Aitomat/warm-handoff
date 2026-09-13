@@ -17,7 +17,7 @@ Sprache deutsch. Zeitstempel überall als `TT.MM.JJJJ, HH:MM`.
 - Den **benannten** Vorgänger-Handoff, nicht den mit dem neuesten Änderungsdatum.
 - Die RTF-Antworten: `textutil -convert txt -stdout DATEI.rtf`.
 - Die Zwischenrufe-Datei und die Chat-Steuerung.
-- **Nur der gespeicherte Stand zählt. Cmd-S ist die Freigabe.** Was in einem
+- **Nur der gespeicherte Stand zählt. Cmd-S ist die Freigabe innerhalb bestehender Autorisierung.** Was in einem
   Editor ungespeichert offen liegt, ist nicht gelesen: entweder um das Speichern
   bitten oder die Lücke im Handoff ausdrücklich als Lücke benennen. Niemals die
   Antwortdatei des Nutzers zum Einlesen speichern, schließen oder neu erzeugen.
@@ -84,7 +84,7 @@ antwortet**. Vollständig in [RTF unter macOS](references/rtf-macos.de.md).
   `user-original`-Blöcke sind golden; darüber hinaus ist der Dokumentstandard
   selbst 18 pt Gold, damit **eingefügter (Cmd-V) und getippter Text** im
   Antwortfeld ebenfalls 18 pt Gold ist und nicht auf 12 pt ohne Farbe zurückfällt.
-  Agententext, Überschriften und Codeblöcke setzen mit `\pard\plain\f0` zurück.
+  Agententext, Überschriften und Codeblöcke setzen mit `\pard\plain\f0\cf2` zurück.
   Dieselbe Goldregel gilt für die **Zwischenrufe-RTF**, nicht nur für den Handoff.
 - **Hinter `>>>` eingefügter Text ist schwarz auf Gold, 18 pt** (Beleg W58-E1,
   13.09.2026). Farbtabelle `;gold;schwarz;`; der goldene Zeichenzustand ist
@@ -92,8 +92,8 @@ antwortet**. Vollständig in [RTF unter macOS](references/rtf-macos.de.md).
   Antwortabsätze werden als `RESET + \fs36 + GOLD` geschrieben (`\fs36` = 18 pt).
   Nur `\chshdng0\chcbpat1` färbt in Cocoa auf Zeichenebene, `\cf2` hält
   Nutzertext schwarz, und `\cb0` würde als Schwarz gelesen — nie als Reset
-  verwenden. Wer RTF selbst erzeugt statt `scripts/handoff-rtf.sh` zu rufen, muss
-  genau diese Steuerworte schreiben.
+  verwenden. Prüfe diese Steuerworte im mitgelieferten Renderer; die Erzeugung
+  erfolgt weiterhin ausschließlich über `scripts/handoff-rtf.sh`.
 - **Beantwortete Handoffs nach `handoff-archiv/`** des Projekts ablegen
   (`mv`, nie `rm`; Yasin 13.09.2026 03:31).
 - Nach dem Erzeugen `grep -c "file://" DATEI.rtf`: > 0, sobald das Dokument

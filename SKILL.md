@@ -55,6 +55,8 @@ Between handoff and wave start the handoff is the only inbox (`COLLECTION FOR TH
 
 Read [RTF on macOS](references/rtf-macos.md) before rendering or opening documents.
 
+Generate handoff and Zwischenrufe RTFs exclusively through `scripts/handoff-rtf.sh` from the skill directory. Keep exactly one active Zwischenrufe inbox: the handoff footer or the agreed file; the other only links to it. Cmd-S releases saved input within the existing authorization.
+
 <!-- rule:WH-05 -->
 ## 5. Use optional helpers deliberately
 

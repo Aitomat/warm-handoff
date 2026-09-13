@@ -12,7 +12,7 @@ German edition: [HANDOFF-FÜR-CODEX.md](HANDOFF-FÜR-CODEX.md).
 - The **named** predecessor handoff, not the one with the newest timestamp.
 - The RTF answers: `textutil -convert txt -stdout FILE.rtf`.
 - The Zwischenrufe (interjections) file and the chat steering messages.
-- **Only the saved state counts. Saving is the user's release.** Text left
+- **Only the saved state counts. Cmd-S is the user's release within existing authorization.** Text left
   unsaved in an editor has not been read: ask for the save, or mark the gap
   explicitly as a gap. Never save, close, or recreate the user's answer file in
   order to read it.
@@ -78,7 +78,7 @@ Full detail in [RTF on macOS](references/rtf-macos.md).
   `user-original` blocks are gold; beyond that the document default itself is
   18 pt gold, so **pasted and typed text** in an answer field is 18 pt gold too
   instead of falling back to 12 pt with no background. Agent text, headings and
-  code blocks reset with `\pard\plain\f0`. The same gold rule applies to the
+  code blocks reset with `\pard\plain\f0\cf2`. The same gold rule applies to the
   **Zwischenrufe RTF**, not only to the handoff.
 - **Text pasted behind `>>>` is black on gold, 18 pt** (evidence W58-E1,
   2026-09-13). Colour table `;gold;black;`; the gold character state is
@@ -86,8 +86,8 @@ Full detail in [RTF on macOS](references/rtf-macos.md).
   and answer paragraphs are emitted as `RESET + \fs36 + GOLD` (`\fs36` = 18 pt).
   `\chshdng0\chcbpat1` is the only character-level shading Cocoa paints, `\cf2`
   keeps the user's typing black, and `\cb0` would read as black — so never use it
-  as a reset. If you render RTF yourself instead of calling
-  `scripts/handoff-rtf.sh`, emit exactly these control words.
+  as a reset. Verify these control words in the bundled renderer; generation
+  remains exclusively through `scripts/handoff-rtf.sh`.
 - **Archive answered handoffs in `handoff-archiv/`** of the same project
   (`mv`, never `rm`; user 2026-09-13 03:31).
 - After generating, `grep -c "file://" FILE.rtf` must be > 0 as soon as the
