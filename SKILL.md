@@ -59,4 +59,8 @@ Read [RTF on macOS](references/rtf-macos.md) before rendering or opening documen
 
 Before completion, reread the designated feedback source, inspect status, run the required targeted checks, and confirm only owned paths changed. Report completed, pending, and running work with evidence and the next action. Write the requested durable report before returning a short chat response.
 
+### Check the interjections file on every wake-up (2026-09-13)
+
+The user's rule of 2026-09-13 (05:17): every time the main session wakes up — a worker or guardian notification, a timer, a resumed turn — compare the modification time of the designated interjections file with the time of the last read. Changed: read the saved additions before acting or reporting. Unchanged: do not open it. Saved state only; the user's Cmd-S is the release.
+
 Spanish localization is deferred. Audio, video, and website material are outside this skill.

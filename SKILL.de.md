@@ -59,4 +59,8 @@ Lies [RTF unter macOS](references/rtf-macos.de.md), bevor du renderst oder Dokum
 
 Lies vor dem Abschluss die benannte Feedbackquelle erneut, prüfe den Status, führe die geforderten zielgerichteten Prüfungen aus und bestätige, dass nur eigene Pfade geändert wurden. Berichte erledigte, offene und laufende Arbeit mit Belegen und nächstem Schritt. Schreibe den geforderten dauerhaften Bericht vor einer kurzen Chatantwort.
 
+### Zwischenrufe-Datei bei jedem Aufwachen prüfen (13.09.2026)
+
+Regel des Nutzers vom 13.09.2026 (05:17): Bei jedem Aufwachen der Hauptsession — Meldung eines Arbeiters oder Wächters, Zeitgeber, fortgesetzter Zug — die Änderungszeit der benannten Zwischenrufe-Datei mit dem Zeitpunkt des letzten Lesens vergleichen. Geändert: die gespeicherten Ergänzungen lesen, bevor gehandelt oder gemeldet wird. Unverändert: nicht öffnen. Nur gespeicherter Stand; Cmd-S des Nutzers ist die Freigabe.
+
 Die spanische Übersetzung ist zurückgestellt. Audio, Video und Website-Material gehören nicht zu diesem Skill.
