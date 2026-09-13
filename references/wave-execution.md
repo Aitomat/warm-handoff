@@ -81,6 +81,6 @@ Start independent packets together only when the host supports it. Workers must 
 <!-- rule:WV-05 -->
 ## Communication
 
-Let host completion delivery carry routine results. Send updates for a real blocker, a decision that changes scope, or a material risk. Keep the user-facing thread focused on choices and verified outcomes. User instructions override generic delegation preferences for that workflow.
+Let host completion delivery carry routine results. Send updates for a real blocker, a decision that changes scope, or a material risk. Keep the user-facing thread focused on choices and verified outcomes. User instructions override generic delegation preferences for that workflow. On every wake-up of the main session, check the interjections file's modification time and read it if it changed, before acting or reporting (user rule of 2026-09-13).
 
 See [Codex](codex.md), [Claude Code](claude-code.md), [model routing](model-routing.md), and [evidence scope](evidence-scope.md).
