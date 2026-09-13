@@ -41,6 +41,39 @@ background run of one's own is not a report.
 Projects may explicitly opt into **guardian mode**. In that mode, substantive research, analysis, implementation, QA, visual inspection, reports, and handoff writing go through a guardian and its workers. The main session limits itself to concise coordination, necessary decisions, and batched acceptance; it does not duplicate detail work in parallel. Use short self-contained briefs and automatic result delivery. Do not ask for status before 25 minutes unless there is a real blocker. If slots are unavailable, report the host limit and queue or reduce the wave instead of doing duplicate work.
 
 <!-- rule:WV-04 -->
+## Two build slots (rule 4 v2, 2026-09-13)
+
+At most TWO builds run at a time (user, 2026-09-13 03:23: „Zwei Builds
+gleichzeitig erlauben bitte"; 04:00: „mehr wie zwei nicht"). This replaces the
+earlier one-lock, strictly sequential rule. Each topic guardian builds once, at
+the end of its topic, with its targeted tests only; the full suite belongs to the
+merge guardian, who waits for ALL done markers. Order runs from the largest topic
+to the smallest. A guardian claims a free slot as soon as at most ONE predecessor
+is still without a done marker:
+
+```
+TRASH=<project trash directory>               # never rm; move corpses here
+M=/tmp/<wave>-fertig; VOR="a b"               # my predecessors in build order; A: empty, B: "a"
+while [ "$(for v in $VOR; do [ -f $M-$v ] || echo x; done | wc -l)" -gt 1 ]; do sleep 30; done
+L=""; while [ -z "$L" ]; do
+  for s in 1 2; do C=/tmp/aitomat-build-$s.lock
+    if mkdir $C 2>/dev/null; then L=$C; break; fi
+    P=$(cat $C/pid 2>/dev/null); [ -n "$P" ] && ! kill -0 $P 2>/dev/null && rmdir $C 2>/dev/null
+    [ -f $C ] && mv $C "$TRASH"/lock-leiche-$s-$$   # file corpse instead of directory (W58, 01:48)
+  done; [ -z "$L" ] && sleep 30
+done; echo $$ > $L/pid; uptime
+… build + targeted tests …
+rm -f $L/pid; rmdir $L; touch $M-<me>
+```
+
+A lock directory whose pid no longer exists is cleared with `rmdir`. A lock that
+exists as a FILE instead of a directory is a corpse (observed W58, 01:48): move
+it to the project's trash directory, never `rm` it. Wait in the foreground
+(repeat the wait command; a host timeout of up to 600000 ms is fine), never
+detached, and never report before the build finished. Workers and subagents do
+not build (`swiftc -parse` at most). Log `uptime` before the build, and compare
+load average and wall-clock duration against the previous wave in the report.
+
 ## Execution and integration
 
 Start independent packets together only when the host supports it. Workers must stop before touching unowned files. A result report states changed paths, tests, evidence, limitations, and unresolved dependencies. Integration verifies the diff and reruns the smallest meaningful combined checks. A start notification or worker claim is not acceptance evidence.

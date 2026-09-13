@@ -80,6 +80,16 @@ Full detail in [RTF on macOS](references/rtf-macos.md).
   instead of falling back to 12 pt with no background. Agent text, headings and
   code blocks reset with `\pard\plain\f0`. The same gold rule applies to the
   **Zwischenrufe RTF**, not only to the handoff.
+- **Text pasted behind `>>>` is black on gold, 18 pt** (evidence W58-E1,
+  2026-09-13). Colour table `;gold;black;`; the gold character state is
+  `\cb1\cbpat1\chshdng0\chcbpat1\highlight1\cf2`, the reset is `\plain\f0\cf2`,
+  and answer paragraphs are emitted as `RESET + \fs36 + GOLD` (`\fs36` = 18 pt).
+  `\chshdng0\chcbpat1` is the only character-level shading Cocoa paints, `\cf2`
+  keeps the user's typing black, and `\cb0` would read as black — so never use it
+  as a reset. If you render RTF yourself instead of calling
+  `scripts/handoff-rtf.sh`, emit exactly these control words.
+- **Archive answered handoffs in `handoff-archiv/`** of the same project
+  (`mv`, never `rm`; user 2026-09-13 03:31).
 - After generating, `grep -c "file://" FILE.rtf` must be > 0 as soon as the
   document contains local references.
 - Roundtrip and hyperlink verification run automatically. They do **not** prove

@@ -86,6 +86,16 @@ antwortet**. Vollständig in [RTF unter macOS](references/rtf-macos.de.md).
   Antwortfeld ebenfalls 18 pt Gold ist und nicht auf 12 pt ohne Farbe zurückfällt.
   Agententext, Überschriften und Codeblöcke setzen mit `\pard\plain\f0` zurück.
   Dieselbe Goldregel gilt für die **Zwischenrufe-RTF**, nicht nur für den Handoff.
+- **Hinter `>>>` eingefügter Text ist schwarz auf Gold, 18 pt** (Beleg W58-E1,
+  13.09.2026). Farbtabelle `;gold;schwarz;`; der goldene Zeichenzustand ist
+  `\cb1\cbpat1\chshdng0\chcbpat1\highlight1\cf2`, der Reset `\plain\f0\cf2`,
+  Antwortabsätze werden als `RESET + \fs36 + GOLD` geschrieben (`\fs36` = 18 pt).
+  Nur `\chshdng0\chcbpat1` färbt in Cocoa auf Zeichenebene, `\cf2` hält
+  Nutzertext schwarz, und `\cb0` würde als Schwarz gelesen — nie als Reset
+  verwenden. Wer RTF selbst erzeugt statt `scripts/handoff-rtf.sh` zu rufen, muss
+  genau diese Steuerworte schreiben.
+- **Beantwortete Handoffs nach `handoff-archiv/`** des Projekts ablegen
+  (`mv`, nie `rm`; Yasin 13.09.2026 03:31).
 - Nach dem Erzeugen `grep -c "file://" DATEI.rtf`: > 0, sobald das Dokument
   lokale Verweise enthält.
 - Textroundtrip und HYPERLINK-Prüfung laufen automatisch. Sie belegen **nicht**

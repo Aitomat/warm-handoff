@@ -37,4 +37,6 @@ Nutze `<!-- user-original:start -->` und `<!-- user-original:end -->`, wenn der 
 
 Nenne eine Arbeit nur erledigt, wenn ein Artefakt, Commit, Status oder Test das Ergebnis belegt. „Gestartet“, „Datei vorhanden“ und Agentenmeldungen sind kein Endbeleg. Nenne für offene manuelle Prüfung den genauen offenen Schritt.
 
+Beantwortete Handoffs nach `handoff-archiv/` des Projekts ablegen (anlegen, falls nicht vorhanden) und mit `mv` verschieben, nie mit `rm` (Yasin 13.09.2026 03:31). Ein neues Handoff ist immer eine NEUE Datei; das alte erst archivieren, wenn seine Antworten übernommen sind.
+
 Siehe auch [Wellen-Ausführung](wave-execution.de.md), [Beleggrenzen](evidence-scope.de.md) und [RTF unter macOS](rtf-macos.de.md).

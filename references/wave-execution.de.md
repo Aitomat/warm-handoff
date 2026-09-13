@@ -42,6 +42,39 @@ noch laufenden eigenen Hintergrundlauf ist kein Bericht.
 Projekte können ausdrücklich den **Wächtermodus** wählen. Dann laufen substanzielle Recherche, Analyse, Umsetzung, QA, Sichtprüfung, Berichte und Handoff-Erstellung über einen Wächter mit seinen Arbeitern. Die Hauptsession beschränkt sich auf knappe Koordination, notwendige Entscheidungen und gebündelte Abnahme; sie dupliziert keine Detailarbeit parallel. Nutze kurze eigenständige Briefe und automatische Ergebniszustellung. Frage nicht vor 25 Minuten nach Status, außer es gibt einen echten Blocker. Fehlen Plätze, nenne die Hostgrenze und stelle die Arbeit an oder verkleinere die Welle, statt Doppelarbeit zu leisten.
 
 <!-- rule:WV-04 -->
+## Zwei Bau-Slots (Regel 4 v2, 13.09.2026)
+
+Höchstens ZWEI Builds laufen gleichzeitig (Nutzer, 13.09.2026 03:23: „Zwei Builds
+gleichzeitig erlauben bitte"; 04:00: „mehr wie zwei nicht"). Das ersetzt die
+frühere Regel mit einem Lock und strenger Reihenfolge. Jeder Themen-Wächter baut
+einmal am Ende seines Themas, nur mit seinen gezielten Tests; die Vollsuite
+gehört dem Merge-Wächter, der auf ALLE Fertig-Marken wartet. Die Reihenfolge
+läuft vom größten zum kleinsten Thema. Ein Wächter nimmt einen freien Slot,
+sobald höchstens EIN Vorgänger noch ohne Fertig-Marke ist:
+
+```
+TRASH=<Löschbar-Ordner des Projekts>          # nie rm; Leichen hierher verschieben
+M=/tmp/<welle>-fertig; VOR="a b"              # meine Vorgänger in der Reihenfolge; A: leer, B: "a"
+while [ "$(for v in $VOR; do [ -f $M-$v ] || echo x; done | wc -l)" -gt 1 ]; do sleep 30; done
+L=""; while [ -z "$L" ]; do
+  for s in 1 2; do C=/tmp/aitomat-build-$s.lock
+    if mkdir $C 2>/dev/null; then L=$C; break; fi
+    P=$(cat $C/pid 2>/dev/null); [ -n "$P" ] && ! kill -0 $P 2>/dev/null && rmdir $C 2>/dev/null
+    [ -f $C ] && mv $C "$TRASH"/lock-leiche-$s-$$   # Datei-Leiche statt Verzeichnis (W58, 01:48)
+  done; [ -z "$L" ] && sleep 30
+done; echo $$ > $L/pid; uptime
+… Build + gezielte Tests …
+rm -f $L/pid; rmdir $L; touch $M-<ich>
+```
+
+Ein Lock-Verzeichnis, dessen PID nicht mehr lebt, wird mit `rmdir` geräumt. Ein
+Lock, das als DATEI statt als Verzeichnis existiert, ist eine Leiche (beobachtet
+W58, 01:48): in den Löschbar-Ordner des Projekts verschieben, nie `rm`. Warten im
+Vordergrund (Wartebefehl wiederholen; Host-Timeout bis 600000 ms ist in Ordnung),
+nie losgelöst, und nie vor dem Ende des Builds melden. Arbeiter und Subagenten
+bauen nicht (`swiftc -parse` höchstens). Vor dem Build `uptime` ins Log, und im
+Bericht Load-Average und Wanduhrzeit gegen die vorige Welle stellen.
+
 ## Ausführung und Integration
 
 Starte unabhängige Pakete nur gemeinsam, wenn der Host es unterstützt. Arbeiter müssen stoppen, bevor sie fremde Dateien anfassen. Ein Ergebnisbericht nennt geänderte Pfade, Tests, Belege, Grenzen und ungelöste Abhängigkeiten. Die Integration prüft den Diff und führt die kleinsten aussagekräftigen Kombinationsprüfungen erneut aus. Eine Startmeldung oder Arbeiterbehauptung ist kein Abnahmebeleg.

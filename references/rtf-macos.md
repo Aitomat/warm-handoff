@@ -34,6 +34,29 @@ with `textutil -convert html -stdout FILE.rtf`: the answer class carries an
 18 px font and the gold background, agent text carries no background. The same
 gold rule applies to the Zwischenrufe RTF, not only to the handoff.
 
+<!-- rule:RT-03b -->
+## Black on gold, 18 pt, for text pasted behind `>>>` (evidence W58-E1, 2026-09-13)
+
+Typing or pasting (Cmd-V) at the end of a gold answer paragraph must stay black
+text on gold at 18 pt. Cocoa honors only character-level shading, so a renderer
+needs all of the following — naming the control words matters because Codex
+users may render without `scripts/render_rtf.py`:
+
+- colour table `;gold;black;` — gold is entry 1 (`\red255\green231\blue153`),
+  black is entry 2;
+- `GOLD = \cb1\cbpat1\chshdng0\chcbpat1\highlight1\cf2` — `\chshdng0\chcbpat1`
+  is the only part Cocoa paints on the character level, and `\cf2` forces black
+  glyphs so user typing is never gold on gold;
+- `RESET = \plain\f0\cf2` — `\cb0` reads as black rather than "no background",
+  so `\plain` is the only clean reset;
+- answer paragraphs are emitted as `RESET + \fs36 + GOLD`; `\fs36` = 18 pt.
+
+Evidence W58-E1: a test file opened in TextEdit via osascript, cursor at end of
+document, `keystroke "Test 123"`, saved — the RTF at the insertion point reads
+`\fs36 \cf0 \cb2 >>> … Test 123`, with `\cb2` the gold
+`\red255\green231\blue153` and `\cf0` auto/black; `textutil -convert txt`
+returns the text in full.
+
 <!-- rule:RT-04 -->
 ## Three evidence scopes
 

@@ -24,23 +24,19 @@ Für Dokumentvertrag und Pflichtabschnitte lies [Handoff-Format](references/hand
 <!-- rule:WH-03 -->
 ## 3. Innerhalb der Autorisierung arbeiten
 
-Arbeite weiter, bis das autorisierte Ergebnis vollständig ist. Teile unabhängige Arbeit nur auf, wenn Host und Auftrag es erlauben. Gib jedem Arbeiter exklusive Pfade und Akzeptanzkriterien; überschreite nie die tatsächliche Parallelkapazität. Wächter sind optionale Koordinatoren und keine Standardschicht. Serialisiere Builds und gemeinsam genutzte Ressourcen.
+Arbeite weiter, bis das autorisierte Ergebnis vollständig ist. Teile unabhängige Arbeit nur auf, wenn Host und Auftrag es erlauben. Gib jedem Arbeiter exklusive Pfade und Akzeptanzkriterien; überschreite nie die tatsächliche Parallelkapazität. Wächter sind optionale Koordinatoren und keine Standardschicht. Serialisiere gemeinsam genutzte Ressourcen und begrenze Builds auf die zwei Slots von Regel 4 v2.
 
-### Hintereinander bauen, nicht nebeneinander (13.09.2026)
+### Regel 4 v2 — höchstens ZWEI Builds gleichzeitig (13.09.2026)
 
-Regel des Nutzers vom 13.09.2026 (geäußert am 12.09. 23:36 und 13.09. 00:52): der Rechner soll nicht rödeln — saubere Arbeit vor Tempo. Jeder Themen-Wächter baut genau EINMAL, am Ende seines Themas, und führt nur seine gezielten Tests aus; die Vollsuite gehört allein dem Merge-Wächter. Die Reihenfolge ist fest und läuft vom größten zum kleinsten Thema. Ein Wächter darf das gemeinsame Build-Lock erst nehmen, wenn die Fertig-Marke des Vorgängers existiert; er wartet im Vordergrund (Wartebefehl wiederholen, bis er zurückkommt), nie losgelöst, und meldet nie vorzeitig. Vor dem Build `uptime` ins Log schreiben. Arbeiter und Subagenten laufen weiter parallel — sie bauen nicht.
-
-```
-L=/tmp/aitomat-build.lock; V=/tmp/aitomat-<welle>-fertig-<vorgaenger>   # erstes Thema hat keinen Vorgänger
-while [ -n "$V" ] && [ ! -f "$V" ]; do sleep 30; done
-while ! mkdir $L 2>/dev/null; do
-  P=$(cat $L/pid 2>/dev/null); [ -n "$P" ] && ! kill -0 $P 2>/dev/null && rmdir $L 2>/dev/null; sleep 30
-done; echo $$ > $L/pid
-… Build + gezielte Tests …
-rm -f $L/pid; rmdir $L; touch /tmp/aitomat-<welle>-fertig-<ich>
-```
-
-Messvorsatz: Die Welle, die diese Regel zuerst nutzt, gegen die vorige Welle vergleichen (Load-Average, Wanduhrzeit der Welle) und das Ergebnis im Wellenbericht festhalten.
+Ersetzt die frühere Regel „hintereinander bauen". Der Nutzer am 13.09. 03:23:
+„Zwei Builds gleichzeitig erlauben bitte"; 04:00: „mehr wie zwei nicht". Jeder
+Themen-Wächter baut EINMAL am Ende seines Themas und führt nur seine gezielten
+Tests aus; die Vollsuite gehört dem Merge-Wächter, der auf ALLE Fertig-Marken
+wartet. Die Reihenfolge läuft vom größten zum kleinsten Thema. Es gibt zwei
+Slot-Locks, `/tmp/<projekt>-build-1.lock` und `-2.lock`; ein Wächter darf einen
+freien Slot nehmen, sobald höchstens EIN Vorgänger noch ohne Fertig-Marke ist.
+Warten im Vordergrund, nie losgelöst, nie vorzeitig melden; Arbeiter bauen nicht.
+Der Slot-Lock-Block steht in [Wellen-Ausführung](references/wave-execution.de.md).
 
 Für die Ausführung lies [Wellen-Ausführung](references/wave-execution.de.md). Für Modellwahl und veränderliche Plattformfakten lies [Modellrouting](references/model-routing.de.md) und [Beleggrenzen](references/evidence-scope.de.md).
 
@@ -48,6 +44,8 @@ Für die Ausführung lies [Wellen-Ausführung](references/wave-execution.de.md).
 ## 4. Dokumentsicherheit erhalten
 
 Überschreibe nie ein beantwortetes Nutzer-Handoff. Schreibe eine neue Markdown-Quelle und auf Wunsch unter macOS einen neuen editierbaren RTF-Zwilling. Prüfe Textroundtrip und Linkfelder vor der Veröffentlichung. Die Rendererprüfung belegt weder die Fortsetzung in TextEdit noch das Einfügen in eine Anwendung; prüfe diese Aussagen getrennt.
+
+Hinter `>>>` eingefügter oder getippter Text muss schwarz auf Gold in 18 pt bleiben: Farbtabelle `;gold;schwarz;`, Goldzustand `\cb1\cbpat1\chshdng0\chcbpat1\highlight1\cf2`, Reset `\plain\f0\cf2`, Antwortabsätze `RESET + \fs36 + GOLD` (`\fs36` = 18 pt; Beleg W58-E1, 13.09.2026). Beantwortete Handoffs nach `handoff-archiv/` des Projekts ablegen (`mv`, nie `rm`; Yasin 13.09.2026 03:31).
 
 Lies [RTF unter macOS](references/rtf-macos.de.md), bevor du renderst oder Dokumente öffnest.
 

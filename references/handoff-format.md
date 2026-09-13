@@ -36,4 +36,6 @@ Use `<!-- user-original:start -->` and `<!-- user-original:end -->` when the ren
 
 Call work complete only when an artifact, commit, status, or test proves the result. “Started,” file existence, and agent reports are not final evidence. For an open manual check, name the exact remaining step.
 
+Archive answered handoffs in `handoff-archiv/` of the same project, created if missing, and move them with `mv`, never `rm` (user 2026-09-13 03:31). A new handoff is always a NEW file; archive the old one only after its answers have been carried over.
+
 See also [wave execution](wave-execution.md), [evidence scope](evidence-scope.md), and [RTF on macOS](rtf-macos.md).

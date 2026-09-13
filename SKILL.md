@@ -24,23 +24,19 @@ For the document contract and required sections, read [handoff format](reference
 <!-- rule:WH-03 -->
 ## 3. Work inside authorization
 
-Make progress until the authorized outcome is complete. Split independent work only when the host and assignment allow it. Give each worker exclusive paths and acceptance criteria; never exceed actual concurrency. Guardians are optional coordination roles, not a default layer. Keep builds and shared resources serialized.
+Make progress until the authorized outcome is complete. Split independent work only when the host and assignment allow it. Give each worker exclusive paths and acceptance criteria; never exceed actual concurrency. Guardians are optional coordination roles, not a default layer. Keep shared resources serialized and builds limited to the two slots of rule 4 v2.
 
-### Build one at a time, not side by side (2026-09-13)
+### Rule 4 v2 — at most TWO builds at a time (2026-09-13)
 
-The user's rule of 2026-09-13 (stated 12.09. 23:36 and 13.09. 00:52): the machine must not thrash — clean work before speed. Each topic guardian builds exactly once, at the end of its topic, and runs only its targeted tests; the full suite belongs to the merge guardian alone. The build order is fixed and runs from the largest topic to the smallest. A guardian may take the shared build lock only after the previous guardian's done marker exists; it waits in the foreground (repeat the wait command until it returns), never detached, and never reports early. Log `uptime` before the build. Workers and subagents keep running in parallel — they do not build.
-
-```
-L=/tmp/aitomat-build.lock; V=/tmp/aitomat-<wave>-fertig-<predecessor>   # first topic has no predecessor
-while [ -n "$V" ] && [ ! -f "$V" ]; do sleep 30; done
-while ! mkdir $L 2>/dev/null; do
-  P=$(cat $L/pid 2>/dev/null); [ -n "$P" ] && ! kill -0 $P 2>/dev/null && rmdir $L 2>/dev/null; sleep 30
-done; echo $$ > $L/pid
-… build + targeted tests …
-rm -f $L/pid; rmdir $L; touch /tmp/aitomat-<wave>-fertig-<me>
-```
-
-Measurement intent: compare the wave that first uses this rule against the previous wave (load average, wall-clock duration of the wave) and record the result in the wave report.
+Supersedes the earlier "build one at a time" rule. The user on 2026-09-13, 03:23:
+„Zwei Builds gleichzeitig erlauben bitte"; 04:00: „mehr wie zwei nicht". Each
+topic guardian builds ONCE at the end of its topic and runs only its targeted
+tests; the full suite belongs to the merge guardian, who waits for ALL done
+markers. Build order runs from the largest topic to the smallest. There are two
+slot locks, `/tmp/<project>-build-1.lock` and `-2.lock`, and a guardian may take
+a free slot as soon as at most ONE predecessor is still without a done marker.
+Wait in the foreground, never detached, never report early; workers do not build.
+The slot-lock snippet is in [wave execution](references/wave-execution.md).
 
 For execution details, read [wave execution](references/wave-execution.md). For model selection and changing platform facts, read [model routing](references/model-routing.md) and [evidence scope](references/evidence-scope.md).
 
@@ -48,6 +44,8 @@ For execution details, read [wave execution](references/wave-execution.md). For 
 ## 4. Preserve document safety
 
 Never overwrite a user's answered handoff. Write a new Markdown source and, when requested on macOS, a new editable RTF twin. Verify plain-text roundtrip and link fields before publishing. Renderer verification does not prove TextEdit continuation behavior or application paste behavior; test those separately.
+
+Text pasted or typed behind `>>>` must stay black on gold at 18 pt: colour table `;gold;black;`, gold state `\cb1\cbpat1\chshdng0\chcbpat1\highlight1\cf2`, reset `\plain\f0\cf2`, answer paragraphs `RESET + \fs36 + GOLD` (`\fs36` = 18 pt; evidence W58-E1, 2026-09-13). Archive answered handoffs in `handoff-archiv/` of the same project (`mv`, never `rm`; user 2026-09-13 03:31).
 
 Read [RTF on macOS](references/rtf-macos.md) before rendering or opening documents.
 

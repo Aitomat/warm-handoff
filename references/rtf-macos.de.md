@@ -34,6 +34,29 @@ einzige saubere Reset. Beleg über `textutil -convert html -stdout DATEI.rtf`: d
 Antwortklasse trägt 18 px Schrift und den goldenen Hintergrund, Agententext
 keinen. Dieselbe Goldregel gilt für die Zwischenrufe-RTF, nicht nur den Handoff.
 
+<!-- rule:RT-03b -->
+## Schwarz auf Gold, 18 pt, für Text hinter `>>>` (Beleg W58-E1, 13.09.2026)
+
+Tippen oder Einfügen (Cmd-V) am Ende eines goldenen Antwortabsatzes muss
+schwarze Schrift auf Gold in 18 pt bleiben. Cocoa färbt nur auf Zeichenebene,
+ein Renderer braucht daher alles Folgende — die Steuerworte stehen hier
+ausdrücklich, weil Codex-User ohne `scripts/render_rtf.py` rendern können:
+
+- Farbtabelle `;gold;schwarz;` — Gold ist Eintrag 1 (`\red255\green231\blue153`),
+  Schwarz ist Eintrag 2;
+- `GOLD = \cb1\cbpat1\chshdng0\chcbpat1\highlight1\cf2` — `\chshdng0\chcbpat1`
+  ist das Einzige, was Cocoa auf Zeichenebene färbt, und `\cf2` erzwingt
+  schwarze Schrift, damit Nutzertext nie Gold auf Gold wird;
+- `RESET = \plain\f0\cf2` — `\cb0` wird als Schwarz gelesen statt als „kein
+  Hintergrund"; `\plain` ist deshalb der einzige saubere Reset;
+- Antwortabsätze werden als `RESET + \fs36 + GOLD` geschrieben; `\fs36` = 18 pt.
+
+Beleg W58-E1: Testdatei per osascript in TextEdit geöffnet, Cursor ans
+Dokumentende, `keystroke "Test 123"`, gespeichert — das RTF am Einfügepunkt
+lautet `\fs36 \cf0 \cb2 >>> … Test 123`, dabei `\cb2` das Gold
+`\red255\green231\blue153` und `\cf0` auto/schwarz; `textutil -convert txt`
+liefert den Text vollständig.
+
 <!-- rule:RT-04 -->
 ## Drei Belegbereiche
 
