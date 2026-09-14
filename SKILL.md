@@ -10,7 +10,7 @@ Use this compact entry point for routine work. Read only the reference needed fo
 <!-- rule:WH-01 -->
 ## 1. Establish scope
 
-Treat the user's latest saved handoff and later messages as one ordered input stream. Read project instructions first, identify the named source and feedback files, and record the authorized scope, prohibited actions, file ownership, and required evidence. A handoff records intent; it does not grant permissions that the user did not give.
+Treat the user's latest saved handoff and later messages as one ordered input stream. Read project instructions first, identify the named source and feedback files, and record the authorized scope, prohibited actions, file ownership, and required evidence. A handoff records intent; it grants no permission the user did not give.
 
 Select one host adapter: [Codex](references/codex.md) or [Claude Code](references/claude-code.md). Keep the core rules provider-neutral.
 
@@ -45,17 +45,17 @@ For execution details, read [wave execution](references/wave-execution.md). For 
 <!-- rule:WH-04 -->
 ## 4. Preserve document safety
 
-Never overwrite a user's answered handoff. Write a new Markdown source and, when requested on macOS, a new editable RTF twin. Verify plain-text roundtrip and link fields before publishing. Renderer verification does not prove TextEdit continuation behavior or application paste behavior; test those separately.
+Never overwrite a user's answered handoff. Write a new Markdown source and, on macOS when requested, a new editable RTF twin. Verify plain-text roundtrip and link fields before publishing. Renderer verification proves neither TextEdit continuation nor application paste behavior; test those separately.
 
 Text pasted or typed behind `>>>` must stay black on gold at 18 pt (`\fs36`); the exact control words are in [RTF on macOS](references/rtf-macos.md) (evidence W58-E1, 2026-09-13). Archive answered handoffs in `handoff-archiv/` of the same project (`mv`, never `rm`; user 2026-09-13 03:31).
 
 ### One inbox at a time, switched by the wave clock (2026-09-14)
 
-Between handoff and wave start the handoff is the only inbox (`COLLECTION FOR THE NEXT HANDOFF` plus the `>>>User answer:` lines); the Zwischenrufe file does **not** exist then and is never created together with the handoff (user 2026-09-14). Only at wave start do you create it, open it in TextEdit, and it stays the only inbox until the next handoff. The same gold rule applies to every user line there. Answer short items at once; schedule longer ones into the next wave with a note.
+Between handoff and wave start the handoff is the only inbox (`COLLECTION FOR THE NEXT HANDOFF` plus the `>>>User answer:` lines); the Zwischenrufe file does **not** exist then and is never created together with the handoff (user 2026-09-14). Only at wave start do you create it, open it in TextEdit, and it stays the only inbox until the next handoff. The same gold rule applies there. Answer short items at once; schedule longer ones into the next wave.
 
 Read [RTF on macOS](references/rtf-macos.md) before rendering or opening documents.
 
-Generate handoff and Zwischenrufe RTFs exclusively through `scripts/handoff-rtf.sh` from the skill directory. Keep exactly one active Zwischenrufe inbox: the handoff footer or the agreed file; the other only links to it. Cmd-S releases saved input within the existing authorization.
+Generate handoff and Zwischenrufe RTFs exclusively through `scripts/handoff-rtf.sh` from the skill directory. Cmd-S releases saved input within the existing authorization.
 
 <!-- rule:WH-05 -->
 ## 5. Use optional helpers deliberately
@@ -65,7 +65,7 @@ Generate handoff and Zwischenrufe RTFs exclusively through `scripts/handoff-rtf.
 <!-- rule:WH-06 -->
 ## 6. Close with evidence
 
-Before completion, reread the designated feedback source, inspect status, run the required targeted checks, and confirm only owned paths changed. Report completed, pending, and running work with evidence and the next action. Write the requested durable report before returning a short chat response.
+Before completion, reread the designated feedback source, inspect status, run the required targeted checks, and confirm only owned paths changed. Report completed, pending, and running work with evidence and the next action. Write the durable report before the short chat response.
 
 ### Check the interjections file on every wake-up (2026-09-13)
 

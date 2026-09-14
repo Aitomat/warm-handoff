@@ -15,7 +15,10 @@ class PublicSurfaceTests(unittest.TestCase):
     def test_compact_entry_is_shorter_than_full_and_selects_adapters(self):
         compact = (ROOT / "SKILL.md").read_text(encoding="utf-8")
         full = (ROOT / "variants/full/SKILL.md").read_text(encoding="utf-8")
-        self.assertLess(len(compact.split()), 800)
+        # 14.09.2026: von 800 auf 900 angehoben. Der kompakte Einstieg traegt
+        # jetzt die drei Stopp-Regeln und die Abschnittsfolge, weil genau diese
+        # Punkte uebersprungen wurden, solange sie nur in der Referenz standen.
+        self.assertLess(len(compact.split()), 900)
         self.assertGreater(len(full.split()), len(compact.split()))
         self.assertIn("references/codex.md", compact)
         self.assertIn("references/claude-code.md", compact)

@@ -84,4 +84,32 @@ Starte unabhängige Pakete nur gemeinsam, wenn der Host es unterstützt. Arbeite
 
 Nutze die automatische Fertigmeldung des Hosts für Routineergebnisse. Melde echte Blocker, Entscheidungen mit Umfangsänderung oder wesentliche Risiken. Halte den Nutzerfaden auf Entscheidungen und belegte Ergebnisse ausgerichtet. Nutzeranweisungen haben für den jeweiligen Ablauf Vorrang vor allgemeinen Delegationsempfehlungen.
 
+<!-- rule:WV-06 -->
+## Rechte, die Bauagenten wirklich brauchen (14.09.2026)
+
+Ein Arbeiter, der nicht bauen darf, liefert ungeprüften Code — das ist teurer als
+jede gesparte Freigabe. Kläre diese vier Punkte, BEVOR die Welle startet, und
+schreibe sie in den Auftrag jedes Arbeiters:
+
+1. **Schreibrecht auf die Werkzeug-Zwischenspeicher.** Compiler und Paketmanager
+   schreiben außerhalb des Arbeitsverzeichnisses (z. B. `~/.cache`). Fehlt das
+   Recht, stirbt jeder Testlauf vor der Übersetzung. Beim Host ausdrücklich
+   mitgeben (bei Codex: `--add-dir`), nicht hoffen.
+2. **Verschachtelte Sandkästen auflösen.** Läuft der Agent schon in einer
+   Sandbox, kann ein Werkzeug darin keine zweite aufspannen. Typischer Beleg:
+   `sandbox_apply: Operation not permitted`. Lösung ist die Option des
+   Werkzeugs, seine eigene interne Prüfung auszulassen — nicht das Abschalten
+   der Host-Sandbox. Diese Option gehört wörtlich in den Auftrag, mit dem
+   Zusatz: fehlgeschlagene Versuche zählen nicht gegen die Einmal-Bau-Regel.
+3. **Zwischencommits vorschreiben.** Arbeiter, die erst am Ende committen,
+   verlieren bei jedem Abbruch die ganze Arbeit. Nach jedem abgeschlossenen
+   Punkt committen; am Ende darf zusammengefasst werden.
+4. **Prozesslebensdauer klären.** Hintergrundprozesse der Hauptsession können
+   mit ihr sterben. Prüfe, ob die gestarteten Arbeiter einen Abbruch der
+   Hauptsession überleben, und starte lange Läufe nicht neben Abbruch-gefährdeten
+   Hintergrundbefehlen.
+
+Belegt am 14.09.2026 in Welle 62: drei Arbeiter lieferten ungeprüften Code
+(Punkt 2), drei weitere verloren je eine Viertelstunde Arbeit (Punkte 3 und 4).
+
 Siehe [Codex](codex.de.md), [Claude Code](claude-code.de.md), [Modellrouting](model-routing.de.md) und [Beleggrenzen](evidence-scope.de.md).

@@ -83,4 +83,28 @@ Start independent packets together only when the host supports it. Workers must 
 
 Let host completion delivery carry routine results. Send updates for a real blocker, a decision that changes scope, or a material risk. Keep the user-facing thread focused on choices and verified outcomes. User instructions override generic delegation preferences for that workflow. On every wake-up of the main session, check the interjections file's modification time and read it if it changed, before acting or reporting (user rule of 2026-09-13).
 
+<!-- rule:WV-06 -->
+## Permissions build agents actually need (2026-09-14)
+
+A worker that cannot build delivers unverified code — more expensive than any
+permission you saved. Settle these four points BEFORE the wave starts and write
+them into every worker's brief:
+
+1. **Write access to tool caches.** Compilers and package managers write outside
+   the working directory (e.g. `~/.cache`). Without that right every test run
+   dies before compilation. Grant it explicitly at the host (Codex: `--add-dir`).
+2. **Resolve nested sandboxes.** An agent already inside a sandbox cannot let a
+   tool open a second one. Typical evidence: `sandbox_apply: Operation not
+   permitted`. The fix is the tool's own option to skip its internal check — not
+   disabling the host sandbox. Put that option verbatim in the brief, and add
+   that failed attempts do not count against the build-once rule.
+3. **Require intermediate commits.** Workers that commit only at the end lose
+   everything on any abort. Commit after each finished point; squash at the end.
+4. **Clarify process lifetime.** Background processes of the main session can die
+   with it. Check whether started workers survive an abort of the main session,
+   and do not run long jobs next to abort-prone background commands.
+
+Evidence 2026-09-14, wave 62: three workers delivered unverified code (point 2),
+three more lost a quarter hour of work each (points 3 and 4).
+
 See [Codex](codex.md), [Claude Code](claude-code.md), [model routing](model-routing.md), and [evidence scope](evidence-scope.md).
