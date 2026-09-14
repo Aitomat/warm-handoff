@@ -54,4 +54,23 @@ Die acht Pflichtabschnitte oben sind das Minimum. Die ausgelieferte Reihenfolge 
 Fehlt einer, ist das Handoff nicht fertig. Vor dem Rendern die Liste gegen die Datei prüfen.
 
 
+<!-- rule:HF-07 -->
+## Die Zwischenrufe-Datei beantworten (14.09.2026)
+
+Die Zwischenrufe-Datei ist kein Briefkasten, sondern ein Gespräch. Wenn du
+gespeicherte Zwischenrufe gelesen und bearbeitet hast, schreibst du deine
+Antwort in dieselbe Datei — nicht nur in den Chat:
+
+1. Unter die beantworteten Zwischenrufe kommt ein Block
+   `ZWISCHENRUFE BIS HIER BEARBEITET — <Uhrzeit>` mit deinen Antworten:
+   je Punkt ein Satz, was daraus wurde (umgesetzt, geplant als Thema X,
+   abgelehnt mit Grund).
+2. Darunter die Marke `AB HIER NEUE ZWISCHENRUFE` und eine leere `>>>`-Zeile.
+3. Erst dann im Chat melden. Der Nutzer sieht so in einem Blick, was
+   angekommen ist, ohne den Chatverlauf zu durchsuchen.
+
+Der Nutzer muss nie zweimal schreiben. Musste er Zwischenrufe in den Chat
+kopieren, weil du sie übersehen hast, gehört das als Fehler in die Messung der
+Welle.
+
 Siehe auch [Wellen-Ausführung](wave-execution.de.md), [Beleggrenzen](evidence-scope.de.md) und [RTF unter macOS](rtf-macos.de.md).

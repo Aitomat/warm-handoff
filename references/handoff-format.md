@@ -53,4 +53,23 @@ The eight required sections above are the minimum. The shipped order is:
 A missing section means the handoff is not finished. Check the list against the file before rendering.
 
 
+<!-- rule:HF-07 -->
+## Answer inside the Zwischenrufe file (2026-09-14)
+
+The Zwischenrufe file is a conversation, not a letterbox. Once you have read and
+acted on saved interjections, write your answer into that same file — not only
+into the chat:
+
+1. Below the answered interjections add a block
+   `ZWISCHENRUFE BIS HIER BEARBEITET — <time>` with your answers: one sentence
+   per point saying what became of it (done, scheduled as topic X, declined with
+   a reason).
+2. Below that the marker `AB HIER NEUE ZWISCHENRUFE` and one empty `>>>` line.
+3. Only then report in chat. The user sees at a glance what arrived, without
+   searching the chat history.
+
+The user must never write anything twice. If they had to paste interjections
+into the chat because you missed them, that belongs in the wave's measurement as
+a failure.
+
 See also [wave execution](wave-execution.md), [evidence scope](evidence-scope.md), and [RTF on macOS](rtf-macos.md).

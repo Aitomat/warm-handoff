@@ -107,4 +107,27 @@ them into every worker's brief:
 Evidence 2026-09-14, wave 62: three workers delivered unverified code (point 2),
 three more lost a quarter hour of work each (points 3 and 4).
 
+<!-- rule:WV-07 -->
+## Cap and measure load (2026-09-14)
+
+Build slots cap the number of builds, not the number of processes. A single
+build starts as many compiler processes as the machine has cores — two
+concurrent builds bring the user's machine to its knees. Evidence 2026-09-14,
+wave 62: two build slots on twelve cores produced sixteen compiler processes and
+a load average of 104; the user could barely work.
+
+So, in addition to the slots:
+
+1. **Cap jobs per build.** At most a quarter of the cores per build (`-j 3` on
+   twelve cores), so two builds together leave half the machine free. The option
+   belongs in every worker's brief.
+2. **Build politely.** Start builds and tests at low priority (`nice -n 10`) so
+   the user's interface keeps precedence.
+3. **Measure before and after.** Note the load average at wave start and at the
+   end, and put it in the wave's measurement. A load above the core count means
+   the wave was too wide; the next one runs with fewer concurrent workers.
+4. **The machine belongs to the user.** Noticeable slowdown is a blocker, not a
+   blemish: renice running builds (`renice +15`) instead of killing them, and
+   narrow the wave immediately.
+
 See [Codex](codex.md), [Claude Code](claude-code.md), [model routing](model-routing.md), and [evidence scope](evidence-scope.md).

@@ -112,4 +112,29 @@ schreibe sie in den Auftrag jedes Arbeiters:
 Belegt am 14.09.2026 in Welle 62: drei Arbeiter lieferten ungeprüften Code
 (Punkt 2), drei weitere verloren je eine Viertelstunde Arbeit (Punkte 3 und 4).
 
+<!-- rule:WV-07 -->
+## Last begrenzen und messen (14.09.2026)
+
+Bau-Slots begrenzen die Zahl der Builds, nicht die Zahl der Prozesse. Ein
+einziger Build startet so viele Compilerprozesse, wie die Maschine Kerne hat —
+zwei gleichzeitige Builds legen den Rechner des Nutzers lahm. Belegt am
+14.09.2026 in Welle 62: zwei Bau-Slots auf zwölf Kernen ergaben sechzehn
+Compilerprozesse und einen Load-Average von 104; der Nutzer konnte kaum noch
+arbeiten.
+
+Deshalb gilt zusätzlich zu den Slots:
+
+1. **Jobzahl je Build begrenzen.** Höchstens ein Viertel der Kerne pro Build
+   (bei zwölf Kernen `-j 3`), damit zwei Builds zusammen die Hälfte der Maschine
+   frei lassen. Die Option gehört in den Auftrag jedes Arbeiters.
+2. **Freundlich bauen.** Build und Tests mit niedriger Priorität starten
+   (`nice -n 10`), damit die Oberfläche des Nutzers Vorrang behält.
+3. **Vorher und nachher messen.** Load-Average vor dem Wellenstart und am Ende
+   notieren und in die Messung der Welle schreiben. Steigt der Load über die
+   Kernzahl, war die Welle zu breit — die nächste läuft mit weniger
+   gleichzeitigen Arbeitern.
+4. **Der Rechner gehört dem Nutzer.** Wird er spürbar langsam, ist das ein
+   Blocker, kein Schönheitsfehler: laufende Builds herabstufen (`renice +15`)
+   statt sie abzubrechen, und die Breite der Welle sofort reduzieren.
+
 Siehe [Codex](codex.de.md), [Claude Code](claude-code.de.md), [Modellrouting](model-routing.de.md) und [Beleggrenzen](evidence-scope.de.md).
