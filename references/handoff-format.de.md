@@ -49,7 +49,7 @@ Lies das vorherige Handoff ungefiltert von der ersten bis zur letzten Zeile, bev
 
 Die acht Pflichtabschnitte oben sind das Minimum. Die ausgelieferte Reihenfolge lautet:
 
-1. Kopierbarer absoluter Pfad — 2. Bearbeitungshinweis und `>>>Ich habe das Handoff bearbeitet:` — 3. Der Stand in drei Sätzen — 4. Ziel und Autorisierung — 5. Verifizierter Stand — 6. Laufend und offen — 7. Sammlung des Nutzers, wörtlich, nach Quelle getrennt — 8. Was ich daraus gemacht habe — 9. Entscheidungen und Fragen mit `>>>Userantwort:` — 10. Testliste mit `>>>Userantwort:` je Punkt — 11. Der rote Faden — 12. Kurz-Roadmap — 13. Messung der Welle — 14. Hauptdokumente und weitere Dokumente — 15. Gedächtnis (Langzeit/Kurzzeit) — 16. Logbuch — 17. `SAMMLUNG FÜR DAS NÄCHSTE HANDOFF`.
+1. Kopierbarer absoluter Pfad — 2. Bearbeitungshinweis — OHNE eigene `>>>`-Zeile darunter (die stand in BE und BF als sinnlose Goldzeile im Kopf; Yasin 14.09.2026 23:14: „Das macht keinen Sinn"). Die erste `>>>Userantwort:` gehört unter die erste Frage — 3. Der Stand in drei Sätzen — 4. Ziel und Autorisierung — 5. Verifizierter Stand — 6. Laufend und offen — 7. Sammlung des Nutzers, wörtlich, nach Quelle getrennt — 8. Was ich daraus gemacht habe — 9. Entscheidungen und Fragen mit `>>>Userantwort:` — 10. Testliste mit `>>>Userantwort:` je Punkt — 11. Der rote Faden — 12. Kurz-Roadmap — 13. Messung der Welle — 14. Hauptdokumente und weitere Dokumente — 15. Gedächtnis (Langzeit/Kurzzeit) — 16. Logbuch — 17. `SAMMLUNG FÜR DAS NÄCHSTE HANDOFF`.
 
 Fehlt einer, ist das Handoff nicht fertig. Vor dem Rendern die Liste gegen die Datei prüfen.
 
