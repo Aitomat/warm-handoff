@@ -32,7 +32,7 @@ Before acting:
 - mark stale, unknown, or unverified state honestly;
 - keep secrets and irrelevant transcript material out of the next handoff.
 
-Use a new dated handoff instead of editing an answered source. The opening copy line should identify the new absolute handoff path. Include the preserved user collection, current objective and constraints, verified delivered work, pending or running work, open decisions, test instructions, concise memory, and the collection area for the next session. See [handoff format](references/handoff-format.md).
+Use a new dated handoff instead of editing an answered source. The opening copy line should identify the new absolute handoff path. Include the preserved user collection, current objective and constraints, verified delivered work, pending or running work, open decisions, test instructions, concise memory, and the collection area for the next session. See [handoff format](references/handoff-format.md). **Mandatory (2026-09-14):** Read `references/handoff-format.md` in full before writing, and read the previous handoff unfiltered — never truncate lines, never grep only for `>>>User answer:`. The mandatory 17-part section order lives in the reference (HF-06). At the end of a wave, do not wait for agent reports; close out.
 
 <!-- rule:WH-03 -->
 ## 3. Work inside authorization

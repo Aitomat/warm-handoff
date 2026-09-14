@@ -5,7 +5,7 @@ description: Preserve user input and verified work across pauses, resume safely,
 
 # Warm Handoff
 
-Use this compact entry point for routine work. Read only the reference needed for the current action. Use the separately installed `warm-handoff-full` variant when teaching, adopting, or auditing the entire workflow.
+Use this compact entry point for routine work. Read only the reference needed for the current action. The `warm-handoff-full` variant covers teaching, adoption, and audits.
 
 <!-- rule:WH-01 -->
 ## 1. Establish scope
@@ -21,6 +21,13 @@ Read the complete saved source, including embedded or appended user text. Preser
 
 For the document contract and required sections, read [handoff format](references/handoff-format.md).
 
+### Writing a handoff: three stop rules (2026-09-14)
+
+1. **Open the reference first.** Read `references/handoff-format.md` in full before writing — it holds the mandatory 17-part section order (HF-06). "I know the format" does not count.
+2. **Read the predecessor unfiltered.** First line to last. Never truncate lines, never grep only for `>>>User answer:`, never filter "to save tokens" — that is how the through-line, roadmap, measurement, memory, and logbook get lost.
+3. **Do not wait, close out.** At the end of a wave do not wait for one more agent report; outstanding reports go under "Running and pending".
+
+
 <!-- rule:WH-03 -->
 ## 3. Work inside authorization
 
@@ -28,15 +35,10 @@ Make progress until the authorized outcome is complete. Split independent work o
 
 ### Rule 4 v2 — at most TWO builds at a time (2026-09-13)
 
-Supersedes the earlier "build one at a time" rule. The user on 2026-09-13, 03:23:
-„Zwei Builds gleichzeitig erlauben bitte"; 04:00: „mehr wie zwei nicht". Each
-topic guardian builds ONCE at the end of its topic and runs only its targeted
-tests; the full suite belongs to the merge guardian, who waits for ALL done
-markers. Build order runs from the largest topic to the smallest. There are two
-slot locks, `/tmp/<project>-build-1.lock` and `-2.lock`, and a guardian may take
-a free slot as soon as at most ONE predecessor is still without a done marker.
-Wait in the foreground, never detached, never report early; workers do not build.
-The slot-lock snippet is in [wave execution](references/wave-execution.md).
+Each topic guardian builds ONCE at the end of its topic with targeted tests; the
+full suite belongs to the merge guardian. Two slot locks, largest topic first,
+wait in the foreground, workers do not build. Details and the slot-lock snippet
+are in [wave execution](references/wave-execution.md).
 
 For execution details, read [wave execution](references/wave-execution.md). For model selection and changing platform facts, read [model routing](references/model-routing.md) and [evidence scope](references/evidence-scope.md).
 
@@ -45,14 +47,18 @@ For execution details, read [wave execution](references/wave-execution.md). For 
 
 Never overwrite a user's answered handoff. Write a new Markdown source and, when requested on macOS, a new editable RTF twin. Verify plain-text roundtrip and link fields before publishing. Renderer verification does not prove TextEdit continuation behavior or application paste behavior; test those separately.
 
-Text pasted or typed behind `>>>` must stay black on gold at 18 pt: colour table `;gold;black;`, gold state `\cb1\cbpat1\chshdng0\chcbpat1\highlight1\cf2`, reset `\plain\f0\cf2`, answer paragraphs `RESET + \fs36 + GOLD` (`\fs36` = 18 pt; evidence W58-E1, 2026-09-13). Archive answered handoffs in `handoff-archiv/` of the same project (`mv`, never `rm`; user 2026-09-13 03:31).
+Text pasted or typed behind `>>>` must stay black on gold at 18 pt (`\fs36`); the exact control words are in [RTF on macOS](references/rtf-macos.md) (evidence W58-E1, 2026-09-13). Archive answered handoffs in `handoff-archiv/` of the same project (`mv`, never `rm`; user 2026-09-13 03:31).
+
+### One inbox at a time, switched by the wave clock (2026-09-14)
+
+Between handoff and wave start the handoff is the only inbox (`COLLECTION FOR THE NEXT HANDOFF` plus the `>>>User answer:` lines); the Zwischenrufe file does **not** exist then and is never created together with the handoff (user 2026-09-14). Only at wave start do you create it, open it in TextEdit, and it stays the only inbox until the next handoff. The same gold rule applies to every user line there. Answer short items at once; schedule longer ones into the next wave with a note.
 
 Read [RTF on macOS](references/rtf-macos.md) before rendering or opening documents.
 
 <!-- rule:WH-05 -->
 ## 5. Use optional helpers deliberately
 
-[Context Mode](references/context-mode.md) can reduce large command and file output. Treat package installation, MCP availability, and hook operation as separate states. Never install it without permission.
+[Context Mode](references/context-mode.md) can reduce large command and file output. Treat installation, MCP availability, and hooks as separate states. Never install it without permission.
 
 <!-- rule:WH-06 -->
 ## 6. Close with evidence

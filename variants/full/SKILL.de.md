@@ -32,7 +32,7 @@ Vor dem Handeln:
 - kennzeichne veralteten, unbekannten oder ungeprüften Stand ehrlich;
 - halte Geheimnisse und irrelevanten Gesprächsverlauf aus dem nächsten Handoff heraus.
 
-Erzeuge ein neues datiertes Handoff, statt eine beantwortete Quelle zu bearbeiten. Die Kopierzeile oben soll den absoluten Pfad des neuen Handoffs nennen. Nimm erhaltene Nutzersammlung, aktuelles Ziel und Grenzen, belegte Lieferungen, offene oder laufende Arbeit, offene Entscheidungen, Testanweisungen, knappe Erinnerung und den Sammelbereich für die nächste Sitzung auf. Siehe [Handoff-Format](references/handoff-format.de.md).
+Erzeuge ein neues datiertes Handoff, statt eine beantwortete Quelle zu bearbeiten. Die Kopierzeile oben soll den absoluten Pfad des neuen Handoffs nennen. Nimm erhaltene Nutzersammlung, aktuelles Ziel und Grenzen, belegte Lieferungen, offene oder laufende Arbeit, offene Entscheidungen, Testanweisungen, knappe Erinnerung und den Sammelbereich für die nächste Sitzung auf. Siehe [Handoff-Format](references/handoff-format.de.md). **Pflicht (14.09.2026):** Lies `references/handoff-format.de.md` vollständig, bevor du schreibst, und lies das vorherige Handoff ungefiltert — nie Zeilen abschneiden, nie nur nach `>>>Userantwort:` greppen. Die verbindliche 17-teilige Abschnittsfolge steht in der Referenz (HF-06). Am Wellenende nicht auf Agentenmeldungen warten, sondern abschließen.
 
 <!-- rule:WH-03 -->
 ## 3. Innerhalb der Autorisierung arbeiten

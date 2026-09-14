@@ -1,4 +1,9 @@
 # warm-handoff — Video-Skript (Gerüst)
+Vorschläge für Videotitel:
+Ich konnte nie gut tiippen und nun habe ich es komplett verlernt und es macht gar keinen Spass mehr
+Ich tippe so gut wie nie mehr
+Emails Schreiben Ade
+Never Miss again your Train off Thoughts
 
 Stand: 30.08.2026, 00:53. Zielzeit ~6–8 Minuten, deutsch, Bildschirmaufnahme
 mit Terminal und TextEdit. Je Szene: Bild → Text.

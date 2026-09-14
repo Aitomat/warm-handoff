@@ -39,4 +39,19 @@ Nenne eine Arbeit nur erledigt, wenn ein Artefakt, Commit, Status oder Test das 
 
 Beantwortete Handoffs nach `handoff-archiv/` des Projekts ablegen (anlegen, falls nicht vorhanden) und mit `mv` verschieben, nie mit `rm` (Yasin 13.09.2026 03:31). Ein neues Handoff ist immer eine NEUE Datei; das alte erst archivieren, wenn seine Antworten übernommen sind.
 
+<!-- rule:HF-05 -->
+## Vollständig lesen, nicht gefiltert (14.09.2026)
+
+Lies das vorherige Handoff ungefiltert von der ersten bis zur letzten Zeile, bevor du das neue schreibst. Nie lange Zeilen abschneiden, nie nur nach `>>>Userantwort:` greppen, nie „zum Token-Sparen" filtern — genau so verschwinden roter Faden, Roadmap, Messung, Hauptdokumente, Gedächtnis und Logbuch aus der Nachfolgerevision. Zu große Dateien in Blöcken lesen, aber vollständig. Und: am Wellenende nicht auf eine weitere Agentenmeldung warten; offene Meldungen gehören unter „Laufend und offen", sie halten den Abschluss nicht auf.
+
+<!-- rule:HF-06 -->
+## Vollständige Abschnittsfolge (verbindlich, 14.09.2026)
+
+Die acht Pflichtabschnitte oben sind das Minimum. Die ausgelieferte Reihenfolge lautet:
+
+1. Kopierbarer absoluter Pfad — 2. Bearbeitungshinweis und `>>>Ich habe das Handoff bearbeitet:` — 3. Der Stand in drei Sätzen — 4. Ziel und Autorisierung — 5. Verifizierter Stand — 6. Laufend und offen — 7. Sammlung des Nutzers, wörtlich, nach Quelle getrennt — 8. Was ich daraus gemacht habe — 9. Entscheidungen und Fragen mit `>>>Userantwort:` — 10. Testliste mit `>>>Userantwort:` je Punkt — 11. Der rote Faden — 12. Kurz-Roadmap — 13. Messung der Welle — 14. Hauptdokumente und weitere Dokumente — 15. Gedächtnis (Langzeit/Kurzzeit) — 16. Logbuch — 17. `SAMMLUNG FÜR DAS NÄCHSTE HANDOFF`.
+
+Fehlt einer, ist das Handoff nicht fertig. Vor dem Rendern die Liste gegen die Datei prüfen.
+
+
 Siehe auch [Wellen-Ausführung](wave-execution.de.md), [Beleggrenzen](evidence-scope.de.md) und [RTF unter macOS](rtf-macos.de.md).

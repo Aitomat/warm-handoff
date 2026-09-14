@@ -38,4 +38,19 @@ Call work complete only when an artifact, commit, status, or test proves the res
 
 Archive answered handoffs in `handoff-archiv/` of the same project, created if missing, and move them with `mv`, never `rm` (user 2026-09-13 03:31). A new handoff is always a NEW file; archive the old one only after its answers have been carried over.
 
+<!-- rule:HF-05 -->
+## Read it completely, never filtered (2026-09-14)
+
+Read the previous handoff unfiltered, first line to last, before writing the new one. Never truncate long lines, never grep only for `>>>User answer:`, never filter "to save tokens" — that is exactly how the through-line, roadmap, measurement, main documents, memory, and logbook disappear from the successor revision. Read oversized files in blocks, but completely. And at the end of a wave, do not wait for one more agent report; outstanding reports belong under "Running and pending" and do not hold up completion.
+
+<!-- rule:HF-06 -->
+## Full section order (mandatory, 2026-09-14)
+
+The eight required sections above are the minimum. The shipped order is:
+
+1. Copyable absolute path — 2. Editing note and `>>>I edited the handoff:` — 3. The state in three sentences — 4. Objective and authorization — 5. Verified state — 6. Running and pending — 7. The user's collection, verbatim, separated by source — 8. What I made of it — 9. Decisions and questions with `>>>User answer:` — 10. Test list with `>>>User answer:` per item — 11. The through-line — 12. Short roadmap — 13. Measurement of the wave — 14. Main documents and further documents — 15. Memory (durable/session) — 16. Logbook — 17. `COLLECTION FOR THE NEXT HANDOFF`.
+
+A missing section means the handoff is not finished. Check the list against the file before rendering.
+
+
 See also [wave execution](wave-execution.md), [evidence scope](evidence-scope.md), and [RTF on macOS](rtf-macos.md).

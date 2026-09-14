@@ -21,6 +21,13 @@ Lies die vollständige gespeicherte Quelle einschließlich eingebetteter oder an
 
 Für Dokumentvertrag und Pflichtabschnitte lies [Handoff-Format](references/handoff-format.de.md).
 
+### Handoff schreiben: drei Stopp-Regeln (14.09.2026)
+
+1. **Referenz zuerst öffnen.** `references/handoff-format.de.md` vollständig lesen, bevor du schreibst — dort steht die verbindliche 17-teilige Abschnittsfolge (HF-06). „Ich kenne das Format" zählt nicht.
+2. **Vorgänger ungefiltert lesen.** Erste bis letzte Zeile. Nie Zeilen abschneiden, nie nur nach `>>>Userantwort:` greppen, nie „zum Token-Sparen" filtern — so gehen roter Faden, Roadmap, Messung, Gedächtnis und Logbuch verloren.
+3. **Nicht warten, abschließen.** Am Wellenende nicht auf eine weitere Agentenmeldung warten; offene Meldungen kommen unter „Laufend und offen".
+
+
 <!-- rule:WH-03 -->
 ## 3. Innerhalb der Autorisierung arbeiten
 
@@ -28,15 +35,10 @@ Arbeite weiter, bis das autorisierte Ergebnis vollständig ist. Teile unabhängi
 
 ### Regel 4 v2 — höchstens ZWEI Builds gleichzeitig (13.09.2026)
 
-Ersetzt die frühere Regel „hintereinander bauen". Der Nutzer am 13.09. 03:23:
-„Zwei Builds gleichzeitig erlauben bitte"; 04:00: „mehr wie zwei nicht". Jeder
-Themen-Wächter baut EINMAL am Ende seines Themas und führt nur seine gezielten
-Tests aus; die Vollsuite gehört dem Merge-Wächter, der auf ALLE Fertig-Marken
-wartet. Die Reihenfolge läuft vom größten zum kleinsten Thema. Es gibt zwei
-Slot-Locks, `/tmp/<projekt>-build-1.lock` und `-2.lock`; ein Wächter darf einen
-freien Slot nehmen, sobald höchstens EIN Vorgänger noch ohne Fertig-Marke ist.
-Warten im Vordergrund, nie losgelöst, nie vorzeitig melden; Arbeiter bauen nicht.
-Der Slot-Lock-Block steht in [Wellen-Ausführung](references/wave-execution.de.md).
+Jeder Themen-Wächter baut EINMAL am Ende seines Themas mit gezielten Tests; die
+Vollsuite gehört dem Merge-Wächter. Zwei Slot-Locks, größtes Thema zuerst, warten
+im Vordergrund, Arbeiter bauen nicht. Details und Slot-Lock-Block stehen in
+[Wellen-Ausführung](references/wave-execution.de.md).
 
 Für die Ausführung lies [Wellen-Ausführung](references/wave-execution.de.md). Für Modellwahl und veränderliche Plattformfakten lies [Modellrouting](references/model-routing.de.md) und [Beleggrenzen](references/evidence-scope.de.md).
 
@@ -46,6 +48,10 @@ Für die Ausführung lies [Wellen-Ausführung](references/wave-execution.de.md).
 Überschreibe nie ein beantwortetes Nutzer-Handoff. Schreibe eine neue Markdown-Quelle und auf Wunsch unter macOS einen neuen editierbaren RTF-Zwilling. Prüfe Textroundtrip und Linkfelder vor der Veröffentlichung. Die Rendererprüfung belegt weder die Fortsetzung in TextEdit noch das Einfügen in eine Anwendung; prüfe diese Aussagen getrennt.
 
 Hinter `>>>` eingefügter oder getippter Text muss schwarz auf Gold in 18 pt bleiben: Farbtabelle `;gold;schwarz;`, Goldzustand `\cb1\cbpat1\chshdng0\chcbpat1\highlight1\cf2`, Reset `\plain\f0\cf2`, Antwortabsätze `RESET + \fs36 + GOLD` (`\fs36` = 18 pt; Beleg W58-E1, 13.09.2026). Beantwortete Handoffs nach `handoff-archiv/` des Projekts ablegen (`mv`, nie `rm`; Yasin 13.09.2026 03:31).
+
+### Ein einziger Eingang, zeitlich getrennt (14.09.2026)
+
+Zwischen Handoff und Wellenstart ist das Handoff der einzige Eingang (`SAMMLUNG FÜR DAS NÄCHSTE HANDOFF` plus die `>>>Userantwort:`-Zeilen); die Zwischenrufe-Datei existiert dann **nicht** und wird nicht zusammen mit dem Handoff angelegt (Yasin 14.09.2026). Erst mit dem Wellenstart legst du sie an, öffnest sie in TextEdit, und sie ist bis zum nächsten Handoff der einzige Eingang. Dieselbe Goldregel gilt dort für jede Nutzerzeile. Kurzes beantwortest du sofort, Längeres planst du mit Notiz in die nächste Welle.
 
 Lies [RTF unter macOS](references/rtf-macos.de.md), bevor du renderst oder Dokumente öffnest.
 
