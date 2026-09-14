@@ -137,4 +137,28 @@ Deshalb gilt zusätzlich zu den Slots:
    Blocker, kein Schönheitsfehler: laufende Builds herabstufen (`renice +15`)
    statt sie abzubrechen, und die Breite der Welle sofort reduzieren.
 
+<!-- rule:WV-08 -->
+## Ein Rauchtest vor der Welle (14.09.2026)
+
+Bevor die Welle startet, lässt du EINEN Arbeiter den kleinsten echten Bau- und
+Testlauf machen — nicht die Hauptsession, sondern einen Arbeiter unter genau den
+Rechten, die alle bekommen werden. Erst wenn dessen Lauf kompiliert, starten die
+übrigen.
+
+Belegt am 14.09.2026: Ohne Rauchtest liefen vier Wächter los, alle vier
+scheiterten an derselben Sandbox-Hürde, und die Ursache fiel erst nach einer
+Stunde auf. Ein einzelner Rauchtest hätte sie in drei Minuten gezeigt. Dieselbe
+Panne war schon in der Welle davor aufgetreten — in anderer Form, mit derselben
+Wirkung: ungeprüfter Code.
+
+Prüfe im Rauchtest drei Dinge und halte sie im Wellenplan fest: der Arbeiter
+kann schreiben, wo das Werkzeug schreiben muss; er kann bauen und testen; sein
+Prozess überlebt einen Abbruch der Hauptsession. Wiederhole den Rauchtest,
+sobald sich Host, Modell oder Rechtevergabe ändern.
+
+Zweite Lehre desselben Tages: Die Breite der Welle ist nicht das Problem, die
+Last ist es. Mit begrenzter Jobzahl je Build (WV-07) laufen mehr Arbeiter
+gleichzeitig, ohne den Rechner zu lähmen — zwölf Themen in drei Staffeln kosten
+mehr Wanduhrzeit als zwölf in zwei.
+
 Siehe [Codex](codex.de.md), [Claude Code](claude-code.de.md), [Modellrouting](model-routing.de.md) und [Beleggrenzen](evidence-scope.de.md).

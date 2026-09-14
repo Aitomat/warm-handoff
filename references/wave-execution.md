@@ -130,4 +130,26 @@ So, in addition to the slots:
    blemish: renice running builds (`renice +15`) instead of killing them, and
    narrow the wave immediately.
 
+<!-- rule:WV-08 -->
+## One smoke test before the wave (2026-09-14)
+
+Before the wave starts, have ONE worker run the smallest real build-and-test —
+not the main session, but a worker under exactly the permissions every worker
+will get. Only when that run compiles do the others start.
+
+Evidence 2026-09-14: without a smoke test four guardians set off, all four hit
+the same sandbox obstacle, and the cause surfaced only an hour later. A single
+smoke test would have shown it in three minutes. The same failure had occurred
+in the previous wave — in another form, with the same effect: unverified code.
+
+Check three things in the smoke test and record them in the wave plan: the
+worker can write where the tooling must write; it can build and test; its
+process survives an abort of the main session. Repeat the smoke test whenever
+host, model, or permissions change.
+
+Second lesson from the same day: the width of the wave is not the problem, the
+load is. With a capped job count per build (WV-07) more workers run at once
+without paralysing the machine — twelve topics in three batches cost more wall
+clock than twelve in two.
+
 See [Codex](codex.md), [Claude Code](claude-code.md), [model routing](model-routing.md), and [evidence scope](evidence-scope.md).
