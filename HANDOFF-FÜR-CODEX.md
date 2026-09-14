@@ -24,6 +24,14 @@ Sprache deutsch. Zeitstempel überall als `TT.MM.JJJJ, HH:MM`.
 - `[Pasted text]` / `Pasted Content` ist **kein Inhalt**. Die zugehörige Datei
   öffnen; fehlt sie, den Eingang ausdrücklich offenlassen.
 - Nutzeroriginale wörtlich übernehmen; Deutung und Antwort in eigene Abschnitte.
+- **Ungefiltert lesen (14.09.2026).** Den Vorgänger-Handoff von der ersten bis
+  zur letzten Zeile lesen. Nie lange Zeilen abschneiden, nie nur nach
+  `>>>Userantwort:` greppen, nie „zum Token-Sparen" filtern — genau so sind
+  roter Faden, Roadmap, Messung, Hauptdokumente, Gedächtnis und Logbuch schon
+  einmal aus der Nachfolgerevision verschwunden. Zu große Dateien in Blöcken
+  lesen, aber vollständig.
+- **Die Referenz öffnen**, bevor geschrieben wird: `references/handoff-format.de.md`
+  im Skill-Repo (Regeln HF-05 und HF-06). „Ich kenne das Format" zählt nicht.
 
 ## 2. Die Pflichtblöcke — in dieser Reihenfolge
 
@@ -41,15 +49,25 @@ Sprache deutsch. Zeitstempel überall als `TT.MM.JJJJ, HH:MM`.
    `>>>Userantwort:`-Feldern. Kein offener Test gilt als bestanden.
 7. **Fragen an dich** mit `>>>Antwort:`; optionale Fragen getrennt von den
    Entscheidungen, die den nächsten Schritt wirklich sperren.
-8. **Der rote Faden**, **Hauptdokumente**, **Weitere Dokumente**, **Aktive
-   Werkzeuge dieses Projekts** — echte Pfade, tatsächliche Verfügbarkeit.
+8. **Der rote Faden**, **Kurz-Roadmap**, **Messung der Welle** (Zahlen, was
+   schiefging, was es gekostet hat, Lehren), **Hauptdokumente**, **Weitere
+   Dokumente**, **Aktive Werkzeuge dieses Projekts** — echte Pfade, tatsächliche
+   Verfügbarkeit.
 9. **Gedächtnis** — je vier bis sechs konkrete Lang- und Kurzzeitpunkte.
 10. **Kostentabelle** — Quelle, Alter, Haupt-/Arbeiteranteile, Messlücken.
+10b. **Logbuch** — was in dieser Welle tatsächlich passiert ist, mit Zeitstempeln.
 11. Ganz zuletzt **SAMMLUNG FÜR DAS NÄCHSTE HANDOFF** mit Ursprungspfad und `>>>`.
 
-**Genau EIN aktiver Sammlungs- bzw. Zwischenrufe-Abschnitt.** Entweder der
-RTF-Fußbereich oder die vereinbarte Zwischenrufe-Datei; am anderen Ort steht nur
-ein Link darauf. Zwei parallele Eingänge haben schon Antworten verschluckt.
+**Genau EIN aktiver Sammlungs- bzw. Zwischenrufe-Abschnitt**, und er wechselt
+mit dem Wellentakt (Yasin 14.09.2026): Zwischen Handoff und Wellenstart ist der
+RTF-Fußbereich `SAMMLUNG FÜR DAS NÄCHSTE HANDOFF` der einzige Eingang — die
+Zwischenrufe-Datei wird **nicht** zusammen mit dem Handoff angelegt. Erst beim
+Wellenstart entsteht sie und ist dann bis zum nächsten Handoff der einzige
+Eingang. Zwei parallele Eingänge haben schon Antworten verschluckt.
+
+**Nicht warten, abschließen.** Am Wellenende nicht auf eine weitere
+Agentenmeldung warten: Handoff schreiben, öffnen, pushen, melden. Offene
+Meldungen stehen unter „Laufend und offen"; sie halten den Abschluss nicht auf.
 
 ## 3. Die drei Skripte
 

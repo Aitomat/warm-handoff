@@ -20,6 +20,14 @@ German edition: [HANDOFF-FÜR-CODEX.md](HANDOFF-FÜR-CODEX.md).
   file; if it is missing, leave that input explicitly open.
 - Preserve user originals verbatim; put interpretation and replies in separate
   sections.
+- **Read it unfiltered (2026-09-14).** Read the predecessor handoff from the
+  first line to the last. Never truncate long lines, never grep only for
+  `>>>Userantwort:`, never filter "to save tokens" — that is exactly how the
+  through line, roadmap, measurement, main documents, memory, and logbook once
+  vanished from the successor revision. Read oversized files in blocks, but
+  completely.
+- **Open the reference** before writing: `references/handoff-format.md` in the
+  skill repo (rules HF-05 and HF-06). "I know the format" does not count.
 
 ## 2. The required blocks, in this order
 
@@ -37,15 +45,25 @@ German edition: [HANDOFF-FÜR-CODEX.md](HANDOFF-FÜR-CODEX.md).
    `>>>Userantwort:` fields. No open test counts as passed.
 7. **Questions for you** with `>>>Antwort:`; keep optional questions apart from
    the decisions that actually block the next step.
-8. **The through line**, **main documents**, **further documents**, **active
-   tools of this project** — real paths, actual availability.
+8. **The through line**, **short roadmap**, **measurement of the wave** (numbers,
+   what went wrong, what it cost, lessons), **main documents**, **further
+   documents**, **active tools of this project** — real paths, actual
+   availability.
 9. **Memory** — four to six concrete long-term and short-term points each.
 10. **Cost table** — source, age, main/worker shares, measurement gaps.
+10b. **Logbook** — what actually happened in this wave, with timestamps.
 11. Last of all, **collection for the next handoff** with origin path and `>>>`.
 
-**Exactly ONE active collection / Zwischenrufe inbox.** Either the RTF footer or
-the agreed Zwischenrufe file; the other place only links to it. Two parallel
-inboxes have already swallowed answers.
+**Exactly ONE active collection / Zwischenrufe inbox**, and it switches with the
+wave clock (user 2026-09-14): between handoff and wave start the RTF footer
+`SAMMLUNG FÜR DAS NÄCHSTE HANDOFF` is the only inbox — the Zwischenrufe file is
+**not** created together with the handoff. It comes into being at wave start and
+is then the only inbox until the next handoff. Two parallel inboxes have already
+swallowed answers.
+
+**Do not wait, close out.** At the end of a wave do not wait for one more agent
+report: write the handoff, open it, push, report. Outstanding reports belong
+under "running and pending"; they do not hold up completion.
 
 ## 3. The three scripts
 
