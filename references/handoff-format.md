@@ -48,7 +48,7 @@ Read the previous handoff unfiltered, first line to last, before writing the new
 
 The eight required sections above are the minimum. The shipped order is:
 
-1. Copyable absolute path — 2. Editing note and `>>>I edited the handoff:` — 3. The state in three sentences — 4. Objective and authorization — 5. Verified state — 6. Running and pending — 7. The user's collection, verbatim, separated by source — 8. What I made of it — 9. Decisions and questions with `>>>User answer:` — 10. Test list with `>>>User answer:` per item — 11. The through-line — 12. Short roadmap — 13. Measurement of the wave — 14. Main documents and further documents — 15. Memory (durable/session) — 16. Logbook — 17. `COLLECTION FOR THE NEXT HANDOFF`.
+1. Copyable absolute path — 2. Editing note — WITHOUT its own `>>>` line below it (BE and BF carried a meaningless gold line in the header; user 2026-09-14 23:14). The first `>>>User answer:` belongs under the first question — 3. The state in three sentences — 4. Objective and authorization — 5. Verified state — 6. Running and pending — 7. The user's collection, verbatim, separated by source — 8. What I made of it — 9. Decisions and questions with `>>>User answer:` — 10. Test list with `>>>User answer:` per item — 11. The through-line — 12. Short roadmap — 13. Measurement of the wave — 14. Main documents and further documents — 15. Memory (durable/session) — 16. Logbook — 17. `COLLECTION FOR THE NEXT HANDOFF`.
 
 A missing section means the handoff is not finished. Check the list against the file before rendering.
 
