@@ -28,6 +28,11 @@ markdown=0
 if [ -z "$ziel" ]; then
   proj="$HOME/.claude/projects/$(pwd | sed 's|/|-|g')"
   ziel=$(ls -t "$proj"/*.jsonl 2>/dev/null | head -1)
+  # Aus einem Worktree heraus liegt die Sitzung beim Hauptordner des Repos.
+  if [ -z "$ziel" ]; then
+    haupt=$(git worktree list --porcelain 2>/dev/null | sed -n '1s/^worktree //p')
+    [ -n "$haupt" ] && ziel=$(ls -t "$HOME/.claude/projects/$(echo "$haupt" | sed 's|/|-|g')"/*.jsonl 2>/dev/null | head -1)
+  fi
 fi
 
 if [ ! -f "$ziel" ]; then
