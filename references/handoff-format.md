@@ -38,6 +38,23 @@ Call work complete only when an artifact, commit, status, or test proves the res
 
 Archive answered handoffs in `handoff-archiv/` of the same project, created if missing, and move them with `mv`, never `rm` (user 2026-09-13 03:31). A new handoff is always a NEW file; archive the old one only after its answers have been carried over.
 
+**Create a new handoff directly inside `handoff-archiv/` — do not write it to the
+project root first (user, 2026-09-16 20:19).** Reason in his words: "wenn ich es dann
+später verschiebe, dann ändert sich ja der Pfadname des Handoffs und lieber haben wir
+es schon im richtigen Ordner". Every later move invalidates the path the document was
+already linked under. So:
+
+```sh
+mkdir -p "<project>/handoff-archiv"
+# write both twins here from the start:
+#   <project>/handoff-archiv/_handoff-<project>-<date>-<id>.md
+#   <project>/handoff-archiv/_handoff-<project>-<date>-<id>.rtf
+```
+
+The user deletes there himself what he no longer needs; he never has to move a file.
+**The Zwischenrufe file is the exception and stays in the project root** — he clears
+that one by hand. Link the handoff by its archive path in every message that names it.
+
 <!-- rule:HF-05 -->
 ## Read it completely, never filtered (2026-09-14)
 
@@ -73,3 +90,28 @@ into the chat because you missed them, that belongs in the wave's measurement as
 a failure.
 
 See also [wave execution](wave-execution.md), [evidence scope](evidence-scope.md), and [RTF on macOS](rtf-macos.md).
+
+### Path line at the very top of every document (user, 2026-09-16 20:36)
+
+Every document you create or revise — plan, report, concept, roadmap, handoff,
+Zwischenrufe — starts with **its own absolute path** as the very first line,
+nothing above it, not even a heading. Below that the as-of date, then the heading:
+
+```markdown
+/absolute/path/to/project/docs/plans/wave-plan.md
+Stand: DD.MM.YYYY, HH:MM
+
+# Document heading
+```
+
+Reason, in the user's words: he wants to copy the top line and have the path with
+it instead of hunting for it. When a document moves, the line moves with it.
+
+### Timestamp on every NEW request (user, 2026-09-16 21:58)
+
+**The first line of the first reply to a new user message carries
+`Name, DD.MM.YYYY-HH:MM`.** Not on every interim message inside the same reply
+chain — only at the start. The timestamp is the user's signal that work has begun.
+
+The time comes **only** from `date "+%d.%m.%Y-%H:%M"`, never from an estimate
+(the user measured a 15-minute drift on 2026-09-12). He has asked for this twice.
