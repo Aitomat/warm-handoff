@@ -7,7 +7,9 @@ RTF ist ein optionaler editierbarer Zwilling eines vom Agenten geschriebenen Mar
 
 Erzeuge Handoff- und Zwischenrufe-RTFs ausschließlich über `scripts/handoff-rtf.sh`, aus dem Repository oder installierten Skillverzeichnis mit absoluten Quell-/Zielpfaden. Baue RTF nicht von Hand nach und rufe `render_rtf.py` nicht direkt auf; `textutil` dient nur dem Lesen und Prüfen.
 
-Cmd-S gibt gespeicherte Nutzereingaben innerhalb der bestehenden Autorisierung frei. Halte genau einen aktiven Zwischenrufe-Eingang: Handoff-Fußbereich oder vereinbarte Datei; der andere Ort verlinkt nur darauf. Archiviere beantwortete Handoffs im `handoff-archiv/` desselben Projekts per `mv`, nie `rm`; verschiebe nicht die aktive Nutzereingabedatei.
+Cmd-S gibt gespeicherte Nutzereingaben innerhalb der bestehenden Autorisierung frei. Halte genau einen aktiven Zwischenrufe-Eingang: Handoff-Fußbereich oder vereinbarte Datei; der andere Ort verlinkt nur darauf. Archiviere beantwortete Handoffs im Archivordner des Projekts per `mv`, nie `rm`; verschiebe nicht die aktive Nutzereingabedatei.
+
+**Lege ein neues Handoff direkt im Archivordner an.** Schreibe es nicht in den Projektstamm und verschiebe es später — jedes Verschieben ändert einen Pfad, unter dem das Dokument bereits verlinkt wurde. Also von Anfang an `<projekt>/handoff-archiv/_handoff-<projekt>-<datum>-<kennung>.md` und `.rtf` (Ordner mit `mkdir -p` anlegen, falls er fehlt); der Nutzer löscht dort selbst, was er nicht braucht. **Die Zwischenrufe-Datei bleibt im Projektstamm**, wo der Nutzer sie von Hand wegräumt.
 
 ```sh
 scripts/handoff-rtf.sh /projekt/docs/handoff.md /projekt/handoff.rtf --project-root /projekt
@@ -69,3 +71,60 @@ liefert den Text vollständig.
 - Einfügen in Anwendung: Verhalten in der Zielanwendung.
 
 Leite keinen Bereich aus Belegen eines anderen ab. Dateien öffnen, Tabs zusammenführen oder TextEdit-Fenster steuern ist nur mit autorisierter UI-Steuerung erlaubt. Überschreibe nie das beantwortete RTF des Nutzers.
+
+<!-- rule:RT-05 -->
+## Pfadzeile ganz oben in jedem Dokument
+
+Jedes Dokument, das entsteht oder überarbeitet wird — Plan, Bericht, Konzept,
+Roadmap, Handoff, Zwischenrufe-Datei —, beginnt mit **seinem eigenen absoluten
+Pfad** als allererster Zeile, davor nichts, auch keine Überschrift. Darunter das
+Stand-Datum, dann erst die Überschrift:
+
+```markdown
+/absoluter/pfad/zum/dokument.md
+Stand: TT.MM.JJJJ, HH:MM
+
+# Überschrift des Dokuments
+```
+
+Der Sinn: Der Nutzer kann die oberste Zeile kopieren und hat den Pfad gleich
+mit, statt ihn zu suchen; wird ein Dokument verschoben, zieht die Zeile mit. Aus
+demselben Grund stehen Pfade in Antworten immer vollständig ab der Wurzel.
+
+<!-- rule:RT-06 -->
+## Geöffnete Dokumente nach dem Ändern schließen und neu öffnen
+
+TextEdit zeigt weiter den Stand, mit dem es die Datei geladen hat — eine
+Änderung auf der Platte kommt dort nicht an. Wer eine Datei ändert, die offen
+sein könnte, schließt sie darum **zuerst** und öffnet sie **danach** neu:
+
+```sh
+osascript -e 'tell application "TextEdit" to close (every document whose path contains "<dateiname>")'
+open -a TextEdit "<voller pfad>"
+```
+
+Nur das eigene Dokument schließen, nie „alle Dokumente" — fremde offene Dateien
+bleiben in Ruhe. Und nur schließen, was keine ungesicherten Eingaben enthält: Bei
+der Zwischenrufe-Datei und beim Handoff erst lesen, was gespeichert ist, und sie
+sonst offen lassen. Gilt für jedes Dokument, dessen Pfad in einer Antwort
+genannt wird.
+
+<!-- rule:RT-07 -->
+## Zwischenrufe als Markdown, Antworten direkt in die Datei
+
+Ein Projekt kann die Zwischenrufe-Datei als schlichte `.md` führen statt als
+RTF-Zwilling; der Renderer verweigert zu Recht das Anhängen an ein bestehendes
+RTF, ein RTF-Eingang lässt sich also nicht an Ort und Stelle beantworten.
+Antwortblock sicher anhängen — nie Ungespeichertes anfassen:
+
+```sh
+M=$(osascript -e 'tell application "TextEdit" to get modified of (first document whose path contains "<dateiname>")')
+# nur wenn M gleich "false": ohne Speichern schließen, anhängen, neu öffnen
+osascript -e 'tell application "TextEdit" to close (every document whose path contains "<dateiname>") saving no'
+cat >> "<voller pfad>" <<'EOT'   # Heredoc in Anführungszeichen: Backticks und $ bleiben wörtlich
+…
+EOT
+open -a TextEdit "<voller pfad>"
+```
+
+Ist `modified` gleich `true`: nicht schließen, im Chat antworten, beim nächsten Aufwachen anhängen.

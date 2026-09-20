@@ -19,43 +19,31 @@ Wähle genau einen Host-Adapter: [Codex](references/codex.de.md) oder [Claude Co
 
 Lies die vollständige gespeicherte Quelle einschließlich eingebetteter oder angehängter Nutzertexte. Erhalte Nutzeroriginale wörtlich und schreibe Deutungen oder Antworten in getrennte Abschnitte. Gleiche späte Ergänzungen vor dem Handeln ab. Prüfe Repository-Stand und Erledigt-Aussagen anhand von Dateien, Git-Stand, Tests oder anderen direkten Belegen; kennzeichne alles andere als unbekannt.
 
-Für Dokumentvertrag und Pflichtabschnitte lies [Handoff-Format](references/handoff-format.de.md).
+Drei Stopp-Regeln, wenn du ein Handoff schreibst:
 
-### Handoff schreiben: drei Stopp-Regeln (14.09.2026)
-
-1. **Referenz zuerst öffnen.** `references/handoff-format.de.md` vollständig lesen, bevor du schreibst — dort steht die verbindliche 17-teilige Abschnittsfolge (HF-06). „Ich kenne das Format" zählt nicht.
-2. **Vorgänger ungefiltert lesen.** Erste bis letzte Zeile. Nie Zeilen abschneiden, nie nur nach `>>>Userantwort:` greppen, nie „zum Token-Sparen" filtern — so gehen roter Faden, Roadmap, Messung, Gedächtnis und Logbuch verloren.
-3. **Nicht warten, abschließen.** Am Wellenende nicht auf eine weitere Agentenmeldung warten; offene Meldungen kommen unter „Laufend und offen".
-
+1. **Referenz zuerst öffnen.** Lies [Handoff-Format](references/handoff-format.de.md) vollständig; dort stehen der Dokumentvertrag und die verbindliche Abschnittsfolge. „Ich kenne das Format" zählt nicht.
+2. **Vorgänger ungefiltert lesen,** erste bis letzte Zeile. Nie abschneiden, nie nur nach Antwortmarken greppen, nie zum Token-Sparen filtern — so gehen roter Faden, Roadmap, Messung, Gedächtnis und Logbuch verloren.
+3. **Nicht warten, abschließen.** Halte eine Welle nicht für eine weitere Agentenmeldung offen; offene Meldungen kommen unter „Laufend und offen".
 
 <!-- rule:WH-03 -->
 ## 3. Innerhalb der Autorisierung arbeiten
 
-Arbeite weiter, bis das autorisierte Ergebnis vollständig ist. Teile unabhängige Arbeit nur auf, wenn Host und Auftrag es erlauben. Gib jedem Arbeiter exklusive Pfade und Akzeptanzkriterien; überschreite nie die tatsächliche Parallelkapazität. Wächter sind optionale Koordinatoren und keine Standardschicht. Serialisiere gemeinsam genutzte Ressourcen und begrenze Builds auf die zwei Slots von Regel 4 v2.
+Arbeite weiter, bis das autorisierte Ergebnis vollständig ist. Teile unabhängige Arbeit nur auf, wenn Host und Auftrag es erlauben. Gib jedem Arbeiter exklusive Pfade, Akzeptanzkriterien und ausdrückliche Dateigrenzen; überschreite nie die tatsächliche Parallelkapazität. Wächter sind optionale Koordinatoren und keine Standardschicht. Serialisiere gemeinsam genutzte Ressourcen.
 
-### Regel 4 v2 — höchstens ZWEI Builds gleichzeitig (13.09.2026)
+Builds sind die knappe Ressource, und die Grenze ist der Speicher, nicht die Zahl der Agenten: **ein Bau gleichzeitig**, mit der Sperre im Testskript des Projekts statt im Auftrag eines Arbeiters — ein Auftrag ist eine Bitte, ein Skript ist ein Tor. Ein Abschlussbau zählt nur, wenn er die Tests erreicht hat; ein Lauf, der vorher abbricht, wird wiederholt, und wer danach noch etwas ändert, baut erneut. Baue im Vordergrund, begrenze die Zahl gleichzeitiger Arbeiter und fahre einen Rauchtest, bevor der erste Arbeiter startet.
 
-Jeder Themen-Wächter baut EINMAL am Ende seines Themas mit gezielten Tests; die
-Vollsuite gehört dem Merge-Wächter. Zwei Slot-Locks, größtes Thema zuerst, warten
-im Vordergrund, Arbeiter bauen nicht. Details und Slot-Lock-Block stehen in
-[Wellen-Ausführung](references/wave-execution.de.md).
-
-Für die Ausführung lies [Wellen-Ausführung](references/wave-execution.de.md). Für Modellwahl und veränderliche Plattformfakten lies [Modellrouting](references/model-routing.de.md) und [Beleggrenzen](references/evidence-scope.de.md).
+Vorflug-Listen, Slot-Sperre, Arbeiteraufträge und Wellen-Choreografie stehen in [Wellen-Ausführung](references/wave-execution.de.md). Für Modellwahl und veränderliche Plattformfakten lies [Modellrouting](references/model-routing.de.md) und [Beleggrenzen](references/evidence-scope.de.md).
 
 <!-- rule:WH-04 -->
 ## 4. Dokumentsicherheit erhalten
 
-Überschreibe nie ein beantwortetes Nutzer-Handoff. Schreibe eine neue Markdown-Quelle und auf Wunsch unter macOS einen neuen editierbaren RTF-Zwilling. Prüfe Textroundtrip und Linkfelder vor der Veröffentlichung. Die Rendererprüfung belegt weder die Fortsetzung in TextEdit noch das Einfügen in eine Anwendung; prüfe diese Aussagen getrennt.
+Überschreibe nie ein beantwortetes Nutzer-Handoff. Schreibe eine neue Markdown-Quelle und auf Wunsch unter macOS einen neuen editierbaren RTF-Zwilling. Prüfe Textroundtrip und Linkfelder vor der Veröffentlichung. Die Rendererprüfung belegt weder die Fortsetzung im Editor noch das Einfügen in eine Anwendung; prüfe diese Aussagen getrennt.
 
-Hinter `>>>` eingefügter oder getippter Text muss schwarz auf Gold in 18 pt bleiben: Farbtabelle `;gold;schwarz;`, Goldzustand `\cb1\cbpat1\chshdng0\chcbpat1\highlight1\cf2`, Reset `\plain\f0\cf2`, Antwortabsätze `RESET + \fs36 + GOLD` (`\fs36` = 18 pt; Beleg W58-E1, 13.09.2026). Beantwortete Handoffs nach `handoff-archiv/` des Projekts ablegen (`mv`, nie `rm`; Yasin 13.09.2026 03:31).
+Hinter `>>>` eingefügter oder getippter Text muss schwarz auf Gold in 18 pt bleiben; die genauen Steuerworte stehen in [RTF unter macOS](references/rtf-macos.de.md). Lege ein neues Handoff direkt im Archivordner des Projekts an und verschiebe es danach nie — jedes Verschieben bricht einen Pfad, unter dem das Dokument schon verlinkt war; beantwortete Handoffs wandern per `mv` dorthin, nie per `rm`. Jedes Dokument beginnt mit seinem eigenen absoluten Pfad als erster Zeile, darunter das Stand-Datum. Änderst du ein Dokument, das der Nutzer offen haben könnte, schließe und öffne es für ihn — aber fasse nie Ungespeichertes an.
 
-### Ein einziger Eingang, zeitlich getrennt (14.09.2026)
+Halte genau einen Eingang, zeitlich getrennt durch die Wellenuhr: Zwischen Handoff und Wellenstart ist das Handoff der einzige Eingang; die Zwischenrufe-Datei entsteht mit dem Wellenstart und ist bis zum nächsten Handoff der einzige Eingang. Kurzes beantwortest du sofort, Längeres planst du in die nächste Welle.
 
-Zwischen Handoff und Wellenstart ist das Handoff der einzige Eingang (`SAMMLUNG FÜR DAS NÄCHSTE HANDOFF` plus die `>>>Userantwort:`-Zeilen); die Zwischenrufe-Datei existiert dann **nicht** und wird nicht zusammen mit dem Handoff angelegt (Yasin 14.09.2026). Erst mit dem Wellenstart legst du sie an, öffnest sie in TextEdit, und sie ist bis zum nächsten Handoff der einzige Eingang. Dieselbe Goldregel gilt dort für jede Nutzerzeile. Kurzes beantwortest du sofort, Längeres planst du mit Notiz in die nächste Welle.
-
-Lies [RTF unter macOS](references/rtf-macos.de.md), bevor du renderst oder Dokumente öffnest.
-
-Erzeuge Handoff- und Zwischenrufe-RTFs ausschließlich über `scripts/handoff-rtf.sh` aus dem Skillverzeichnis. Halte genau einen aktiven Zwischenrufe-Eingang: Handoff-Fußbereich oder vereinbarte Datei; der andere Ort verlinkt nur darauf. Cmd-S gibt gespeicherte Eingaben innerhalb der bestehenden Autorisierung frei.
+Lies [RTF unter macOS](references/rtf-macos.de.md), bevor du renderst oder Dokumente öffnest. Erzeuge Handoff- und Zwischenrufe-Zwillinge ausschließlich über `scripts/handoff-rtf.sh` aus dem Skillverzeichnis. Cmd-S gibt gespeicherte Eingaben innerhalb der bestehenden Autorisierung frei.
 
 <!-- rule:WH-05 -->
 ## 5. Optionale Hilfen bewusst einsetzen
@@ -65,10 +53,10 @@ Erzeuge Handoff- und Zwischenrufe-RTFs ausschließlich über `scripts/handoff-rt
 <!-- rule:WH-06 -->
 ## 6. Mit Belegen abschließen
 
-Lies vor dem Abschluss die benannte Feedbackquelle erneut, prüfe den Status, führe die geforderten zielgerichteten Prüfungen aus und bestätige, dass nur eigene Pfade geändert wurden. Berichte erledigte, offene und laufende Arbeit mit Belegen und nächstem Schritt. Schreibe den geforderten dauerhaften Bericht vor einer kurzen Chatantwort.
+Lies vor dem Abschluss die benannte Feedbackquelle erneut, prüfe den Status, führe die geforderten zielgerichteten Prüfungen aus und bestätige, dass nur eigene Pfade geändert wurden. Berichte erledigte, offene und laufende Arbeit mit Belegen und nächstem Schritt. Schreibe den dauerhaften Bericht vor der kurzen Chatantwort. Nimm jeden Zeitstempel aus der Systemuhr, nie aus einer Schätzung.
 
-### Zwischenrufe-Datei bei jedem Aufwachen prüfen (13.09.2026)
+Bei jedem Aufwachen der Hauptsession — Meldung eines Arbeiters, Zeitgeber, fortgesetzter Zug — vergleiche die Änderungszeit der benannten Zwischenrufe-Datei mit dem letzten Lesen. Geändert: die gespeicherten Ergänzungen lesen, bevor gehandelt oder gemeldet wird. Unverändert: geschlossen lassen. Nur gespeicherter Stand; das Speichern des Nutzers ist die Freigabe.
 
-Regel des Nutzers vom 13.09.2026 (05:17): Bei jedem Aufwachen der Hauptsession — Meldung eines Arbeiters oder Wächters, Zeitgeber, fortgesetzter Zug — die Änderungszeit der benannten Zwischenrufe-Datei mit dem Zeitpunkt des letzten Lesens vergleichen. Geändert: die gespeicherten Ergänzungen lesen, bevor gehandelt oder gemeldet wird. Unverändert: nicht öffnen. Nur gespeicherter Stand; Cmd-S des Nutzers ist die Freigabe.
+Eine saubere Welle schließt du ohne Rückfrage ab: Alle Arbeiter fertig und Vollsuite grün heißt bauen, tauschen, veröffentlichen und das Handoff schreiben. Gefragt wird nur beim unsauberen Abschluss — rote Tests, ungeklärter Befund, blockiert gemeldeter Arbeiter —; dann nennst du, was fehlt, und schlägst den nächsten Schritt vor.
 
 Die spanische Übersetzung ist zurückgestellt. Audio, Video und Website-Material gehören nicht zu diesem Skill.

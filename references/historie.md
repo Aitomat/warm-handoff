@@ -2089,3 +2089,115 @@ in fünf Sätzen": one session per wave, collecting costs nothing, guardians
 instead of pings, stay under 200k context, close with a handoff carrying
 the cost table — plus the resolution to measure every session with one
 logbook line for the next few days.
+
+## Projektspezifische Wellen-Historie, aus den aktiven Dateien ausgelagert (20.09.2026)
+
+Beim Kürzen des Skills auf einen öffentlich tauglichen Einstieg (SKILL.md < 900 Wörter,
+keine persönlichen Pfade, keine Projektnamen) sind die folgenden Passagen aus `SKILL.md`,
+`SKILL.de.md` und `references/wave-execution*.md` hierher gewandert. Die Regeln selbst
+leben verallgemeinert in `references/wave-execution.md` (WV-04, WV-09 bis WV-12),
+`references/rtf-macos.md` (RT-05 bis RT-07) und `references/evidence-scope.md` (EV-02)
+weiter; hier stehen die Belege, Zahlen, Daten und Zitate des Aitomat-Projekts.
+
+### Regel 4 v2 — höchstens zwei Builds (13.09.2026, überholt)
+
+Nutzer, 13.09.2026 03:23: „Zwei Builds gleichzeitig erlauben bitte"; 04:00: „mehr wie
+zwei nicht". Zwei Slot-Locks `/tmp/aitomat-build-1.lock` und `-2.lock`, größtes Thema
+zuerst, Warten im Vordergrund, Arbeiter bauen nicht (höchstens `swiftc -parse`). Ein
+Lock als DATEI statt Verzeichnis war eine Leiche (beobachtet W58, 01:48). Ersetzt durch
+Regel 4 v3.
+
+### Regel 4 v3 — EIN Bau gleichzeitig, Sperre im Skript (18.09.2026)
+
+Gemessen in Welle 69 auf Yasins Mac (18 GB RAM, 12 Kerne): zwei gleichzeitige
+Swift-Builds ließen 0,5 % Leerlauf, 8 GB im Kompressor und 85 MB frei — die Maschine war
+zwei Stunden unbenutzbar, Yasin schrieb „diese Session war wirklich für die Katz".
+Denkende Agenten kosten fast nichts (zehn davon = Load 7), Builds kosten alles.
+
+- Ein Bau-Slot: `/tmp/aitomat-build-1.lock`, sonst nichts.
+- Die Sperre lebt in `scripts/test.sh`, nicht im Wächter-Auftrag: In W69 bauten trotz
+  Auftrag sechs von vierzehn Worktrees gleichzeitig.
+- „Ein Abschlussbau" = ein Bau, der die Tests ERREICHTE. W69: vier Themen lieferten
+  unverifizierte Korrekturen, weil der Wortlaut einen zweiten Bau verbot; die
+  Merge-Suite brauchte danach sieben Läufe bis Grün.
+- Vorflug: `better_sqlite3.node` im Codex-Plugin-Cache (sonst `npm install` je Wächter —
+  1499 Prozesse, Load 148, gemessen 14.09. und erneut 17.09.); alle ModuleCache-Ordner
+  umbenannt; Rauchtest in einem Worktree, den KEIN Wächter nutzt (W69: Wächter 0
+  editierte die Datei, die der Rauchtest gerade übersetzte).
+- Höchstens VIER Wächter gleichzeitig (Yasin, 17.09.2026 16:55).
+- Pausierte Builds (`SIGSTOP`) behalten ihren Speicher; macOS-bash 3.2 kennt kein
+  `mapfile`.
+
+### Lehren aus Welle 70 — Warten kostet, nicht Bauen (18.09.2026)
+
+Gemessen mit Claude-Code-Subagenten (Opus-Wächter, Fable-Chef), zehn Themen, ein Slot:
+
+- Wächter O erzeugte im Hintergrund alle sechs Sekunden eine Warteschleife (44 gleichzeitig
+  am Leben, 15-Minuten-Load 41); der fertige Wächter S wurde dabei immer wieder mit ~150k
+  Kontext geweckt. Mit wörtlichem Verbot im Auftrag: Z, W, V, U je 100–140k Token,
+  13–15 min, null Schleifen.
+- Ein kopiertes `.build` wird in einem frischen Worktree nicht wiederverwendet (absolute
+  Pfade): erster Bau dort ~30 min Komplettbau, fünf frische Worktrees = 2,5 h Warteschlange.
+  Darum `git switch -c <nächster-branch> <basis>` im Verzeichnis des fertigen Wächters;
+  höchstens ~4 frische Worktrees je Welle; Thema W auf den Branch von O gestapelt.
+- `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer` vor `test.sh` in Worktrees,
+  sonst `plugin for module 'TestingMacros' not found`.
+
+### Lehren aus Welle 73 — erst der Beweis, dann die rote erste Vollsuite (20.09.2026)
+
+Sechs Themen in 36 Minuten gebaut und konfliktfrei gemergt; danach VIER Vollsuiten
+(~45 min) bis Grün — länger als der ganze Bau. Pro Thema so schnell wie Welle 72
+(~6 min). Von Yasin freigegeben am 20.09.2026-19:42:
+
+- Alt-Vertrags-Suche: zehn überholte Alt-Verträge in alten Tests (Menütitel,
+  Zeilenreihenfolge, Leerergebnis-Meldung, Icon-Größe, Modus-Listen) kosteten drei
+  zusätzliche Suiten.
+- Ein Test, der zweimal fällt, ist kein Wackler: Der Namenskollisions-Test fiel in zwei
+  Suiten; Ursache war eine echte 2-%-Kollision eines 4-stelligen Hex-Suffixes.
+- Beweis vor Auftrag: Der Pinch-Absturz war aus dem Exception-Backtrace
+  (`~/Library/Logs/DiagnosticReports`) bewiesen und in 6 min behoben; das
+  Anruf-Diktat-Thema lief dagegen drei Wellen auf Vermutungen.
+- Wächter-Regeln versionieren statt kopieren: Eine kopierte Datei brachte ein
+  `git checkout --` zurück, das Yasins Schutzregel sperrt. Wächter lassen fremde
+  `.DS_Store`-/PNG-Reste liegen und nutzen `git add <eigene Dateien>`, nie `-A`.
+
+### Dokument- und Zeitregeln mit Yasins Originalzitaten
+
+Pfadzeile ganz oben (Yasin, 16.09.2026-20:36) — „Dass du allgemein bei jedem Dokument
+einen Pfadnamen oben hast von dem jeweiligen Dokument". Beispiel aus der Praxis:
+
+```markdown
+/Users/pro16/Code/aitomat/docs/plans/2026-09-16-welle-68.md
+Stand: 16.09.2026, 20:45
+
+# Überschrift des Dokuments
+```
+
+Geöffnete Dokumente schließen und neu öffnen (Yasin, 16.09.2026-21:30) — „Ich hatte die
+Roadmap offen, aber natürlich hat es sich nicht aktualisiert. Deswegen wäre es gut
+gewesen, wenn du das Roadmap-Dokument bei mir einmal geschlossen und dann geöffnet
+hättest."
+
+Zeitstempel bei jeder NEUEN Anfrage (Yasin, 16.09.2026-21:58) — „Ich sehe daran, dass du
+eine neue Anfrage gestartet hast und losarbeitest. Nur wenn du eine neue Anfrage
+gestartet hast. Nicht jedes Mal. Das ist ein Indikator für mich." Uhrzeit nur aus
+`date "+%d.%m.%Y-%H:%M"`; Yasin maß am 12.09.2026 eine Abweichung von 15 Minuten und hat
+die Regel zweimal angemahnt (12.09. und 16.09.).
+
+Bundle und Handoff am Wellenende ohne Rückfrage (Yasin, 16.09.2026-22:09) — „Wenn alle
+Wächter fertig sind und alles schön ausschaut, dann solltest du automatisch ein Bundle
+machen und dann auch das neue Handoff erstellen."
+
+Neue Handoffs direkt in `handoff-archiv/` (Yasin, 16.09.2026-20:19) — „wenn ich es dann
+später verschiebe, dann ändert sich ja der Pfadname des Handoffs und lieber haben wir es
+schon im richtigen Ordner". Beantwortete Handoffs per `mv`, nie `rm` (Yasin,
+13.09.2026-03:31). Zwischenrufe-Datei ab Welle 73 als schlichte `.md` (Yasin,
+20.09.2026-16:10), weil der RTF-Renderer das Anhängen an ein bestehendes RTF zu Recht
+verweigert.
+
+### Ein Abschlussbau heißt nicht „nur ein Versuch" (W68-Lehre, 16.09.2026)
+
+In Welle 68 kostete die Einmal-Bau-Regel zweimal einen Beleg: einmal, als ein defekter
+ModuleCache den Lauf vor dem ersten Test abbrach, und einmal, als ein Wächter nach seinem
+Lauf noch Tests nachzog und sie unverifiziert abliefern musste. Seitdem gilt: Ein
+Abschlussbau, der die Tests erreicht hat, zählt; ein Abbruch davor wird wiederholt.

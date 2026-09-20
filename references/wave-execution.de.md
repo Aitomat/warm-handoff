@@ -23,7 +23,7 @@ ein verwaistes Lock nach einem Absturz erkennbar, ohne dass jemand ein fremdes
 laufendes Lock entfernt:
 
 ```sh
-L=/tmp/project-build.lock
+L=/tmp/<projekt>-build.lock
 while ! mkdir $L 2>/dev/null; do
   P=$(cat $L/pid 2>/dev/null); [ -n "$P" ] && ! kill -0 $P 2>/dev/null && rmdir $L 2>/dev/null; sleep 30
 done; echo $$ > $L/pid
@@ -42,25 +42,44 @@ noch laufenden eigenen Hintergrundlauf ist kein Bericht.
 Projekte können ausdrücklich den **Wächtermodus** wählen. Dann laufen substanzielle Recherche, Analyse, Umsetzung, QA, Sichtprüfung, Berichte und Handoff-Erstellung über einen Wächter mit seinen Arbeitern. Die Hauptsession beschränkt sich auf knappe Koordination, notwendige Entscheidungen und gebündelte Abnahme; sie dupliziert keine Detailarbeit parallel. Nutze kurze eigenständige Briefe und automatische Ergebniszustellung. Frage nicht vor 25 Minuten nach Status, außer es gibt einen echten Blocker. Fehlen Plätze, nenne die Hostgrenze und stelle die Arbeit an oder verkleinere die Welle, statt Doppelarbeit zu leisten.
 
 <!-- rule:WV-04 -->
-## Zwei Bau-Slots (Regel 4 v2, 13.09.2026)
+## Ein einziger Bau-Slot
 
-Höchstens ZWEI Builds laufen gleichzeitig (Nutzer, 13.09.2026 03:23: „Zwei Builds
-gleichzeitig erlauben bitte"; 04:00: „mehr wie zwei nicht"). Das ersetzt die
-frühere Regel mit einem Lock und strenger Reihenfolge. Jeder Themen-Wächter baut
-einmal am Ende seines Themas, nur mit seinen gezielten Tests; die Vollsuite
-gehört dem Merge-Wächter, der auf ALLE Fertig-Marken wartet. Die Reihenfolge
-läuft vom größten zum kleinsten Thema. Ein Wächter nimmt einen freien Slot,
-sobald höchstens EIN Vorgänger noch ohne Fertig-Marke ist:
+Es läuft genau EIN Build gleichzeitig. Die Grenze ist der Speicher, nicht die
+Zahl der Agenten: einmal gemessen auf einem speichergebundenen Laptop, machten
+zwei gleichzeitige Builds eines kompilierten Projekts die Maschine für Stunden
+unbenutzbar, während zehn denkende Agenten kaum auffielen. Frühere Fassungen
+dieses Skills erlaubten zwei Slots; ein Slot ersetzt sie.
 
-```
+- **Die Sperre gehört in das Testskript des Projekts, nicht in den Auftrag des
+  Arbeiters.** Ein Auftrag ist eine Bitte — in einer gemessenen Welle bauten
+  trotzdem sechs von vierzehn Arbeitsverzeichnissen gleichzeitig. Ein Skript ist
+  ein Tor, durch das jeder Arbeiter muss.
+- **Ein Abschlussbau zählt nur, wenn er die Tests erreicht hat.** Ein Lauf, der
+  vor dem ersten Test abbricht (Werkzeug, Zwischenspeicher, Umgebung), ist kein
+  Abschlussbau und wird wiederholt; wer nach seinem Lauf noch etwas ändert, fährt
+  einen zweiten. Beide Läufe gehören in den Bericht. Die Regel spart Last; sie
+  darf nie Belege unterdrücken.
+- **Ein Build je Themenverantwortlichem, ganz am Ende** — nicht je Arbeiter. Der
+  Verantwortliche sammelt die Arbeiterergebnisse ein und baut einmal über den
+  integrierten Stand. Arbeiter und Subagenten bauen nicht, höchstens eine
+  Syntax- oder Parse-Prüfung.
+- **Zahl gleichzeitiger Arbeiter begrenzen** (vier ist auf einem einzelnen Laptop
+  eine sinnvolle Obergrenze). Mehr ist nicht schneller, wenn ohnehin alle hinter
+  einem Slot warten.
+- Ein pausierter Build behält seinen Speicher; Pausieren hilft der CPU, nicht dem
+  RAM. Die Antwort ist, den zweiten Build gar nicht erst zu starten.
+
+Der Slot selbst, genommen, sobald höchstens ein Vorgänger noch offen ist:
+
+```sh
 TRASH=<Löschbar-Ordner des Projekts>          # nie rm; Leichen hierher verschieben
-M=/tmp/<welle>-fertig; VOR="a b"              # meine Vorgänger in der Reihenfolge; A: leer, B: "a"
+M=/tmp/<welle>-fertig; VOR="a b"              # meine Vorgänger in der Baureihenfolge
 while [ "$(for v in $VOR; do [ -f $M-$v ] || echo x; done | wc -l)" -gt 1 ]; do sleep 30; done
 L=""; while [ -z "$L" ]; do
-  for s in 1 2; do C=/tmp/aitomat-build-$s.lock
+  for s in 1; do C=/tmp/<projekt>-build-$s.lock
     if mkdir $C 2>/dev/null; then L=$C; break; fi
     P=$(cat $C/pid 2>/dev/null); [ -n "$P" ] && ! kill -0 $P 2>/dev/null && rmdir $C 2>/dev/null
-    [ -f $C ] && mv $C "$TRASH"/lock-leiche-$s-$$   # Datei-Leiche statt Verzeichnis (W58, 01:48)
+    [ -f $C ] && mv $C "$TRASH"/lock-leiche-$s-$$   # Datei-Leiche statt Verzeichnis
   done; [ -z "$L" ] && sleep 30
 done; echo $$ > $L/pid; uptime
 … Build + gezielte Tests …
@@ -68,12 +87,11 @@ rm -f $L/pid; rmdir $L; touch $M-<ich>
 ```
 
 Ein Lock-Verzeichnis, dessen PID nicht mehr lebt, wird mit `rmdir` geräumt. Ein
-Lock, das als DATEI statt als Verzeichnis existiert, ist eine Leiche (beobachtet
-W58, 01:48): in den Löschbar-Ordner des Projekts verschieben, nie `rm`. Warten im
-Vordergrund (Wartebefehl wiederholen; Host-Timeout bis 600000 ms ist in Ordnung),
-nie losgelöst, und nie vor dem Ende des Builds melden. Arbeiter und Subagenten
-bauen nicht (`swiftc -parse` höchstens). Vor dem Build `uptime` ins Log, und im
-Bericht Load-Average und Wanduhrzeit gegen die vorige Welle stellen.
+Lock, das als DATEI statt als Verzeichnis existiert, ist eine Leiche: in den
+Löschbar-Ordner des Projekts verschieben, nie `rm`. Warten im Vordergrund
+(Wartebefehl wiederholen; Host-Timeout bis 600000 ms ist in Ordnung), nie
+losgelöst, und nie vor dem Ende des Builds melden. Vor dem Build `uptime` ins
+Log, und im Bericht Load-Average und Wanduhrzeit gegen die vorige Welle stellen.
 
 ## Ausführung und Integration
 
@@ -82,7 +100,7 @@ Starte unabhängige Pakete nur gemeinsam, wenn der Host es unterstützt. Arbeite
 <!-- rule:WV-05 -->
 ## Kommunikation
 
-Nutze die automatische Fertigmeldung des Hosts für Routineergebnisse. Melde echte Blocker, Entscheidungen mit Umfangsänderung oder wesentliche Risiken. Halte den Nutzerfaden auf Entscheidungen und belegte Ergebnisse ausgerichtet. Nutzeranweisungen haben für den jeweiligen Ablauf Vorrang vor allgemeinen Delegationsempfehlungen.
+Nutze die automatische Fertigmeldung des Hosts für Routineergebnisse. Melde echte Blocker, Entscheidungen mit Umfangsänderung oder wesentliche Risiken. Halte den Nutzerfaden auf Entscheidungen und belegte Ergebnisse ausgerichtet. Nutzeranweisungen haben für den jeweiligen Ablauf Vorrang vor allgemeinen Delegationsempfehlungen. Prüfe bei jedem Aufwachen der Hauptsession die Änderungszeit der Zwischenrufe-Datei und lies sie, wenn sie sich geändert hat, bevor du handelst oder meldest.
 
 <!-- rule:WV-06 -->
 ## Rechte, die Bauagenten wirklich brauchen (14.09.2026)
@@ -160,5 +178,112 @@ Zweite Lehre desselben Tages: Die Breite der Welle ist nicht das Problem, die
 Last ist es. Mit begrenzter Jobzahl je Build (WV-07) laufen mehr Arbeiter
 gleichzeitig, ohne den Rechner zu lähmen — zwölf Themen in drei Staffeln kosten
 mehr Wanduhrzeit als zwölf in zwei.
+
+<!-- rule:WV-09 -->
+## Vorflug-Liste, bevor der erste Arbeiter startet
+
+Diese Liste läuft einmal, bevor irgendein Arbeiter gestartet wird. Jeder Punkt
+hat eine gemessene Welle Stunden gekostet, als er übersprungen wurde:
+
+1. **Werkzeug-Zwischenspeicher vorbereiten.** Vorgebaute native Module, die die
+   Agenten-CLI braucht, gehören vor der Welle in ihren Plugin-Zwischenspeicher;
+   sonst stößt jeder Arbeiter seine eigene Paketinstallation an (einmal gemessen:
+   rund 1500 Prozesse und ein Load-Average von 148). Dasselbe gilt für
+   Compiler-Zwischenspeicher: überholte vorher umbenennen oder räumen, nicht
+   mittendrin.
+2. **Rauchtest in einem Verzeichnis, das kein Arbeiter benutzt.** Ändert ein
+   Arbeiter die Datei, die der Rauchtest gerade übersetzt, ist der Rauchtest
+   wertlos. Siehe WV-08.
+3. **Die Toolchain-Umgebung ausdrücklich setzen**, vor dem Aufruf des Testskripts
+   in zusätzlichen Arbeitsverzeichnissen, wo ein nackter Aufruf die falsche
+   Toolchain erwischen kann.
+4. **Die vier Rechtepunkte aus WV-06 klären** und in jeden Auftrag schreiben.
+5. **Eine Regeldatei für die Arbeiter schreiben und versionieren** — die
+   Wellennummer anhängen, die Datei nie kopieren. Eine kopierte Datei bringt
+   Sätze zurück, die der Nutzer längst verboten hat. Arbeiter lassen fremde
+   Restdateien liegen und committen immer mit ausdrücklicher Dateiliste, nie mit
+   einem Sammel-Add.
+
+<!-- rule:WV-10 -->
+## Choreografie: je Thema starten, früh mergen, spät bauen
+
+Warten kostet die Welle, nicht das Bauen. Gemessen mit einem Bau-Slot und zehn
+Themen:
+
+- **Jeden Arbeiter starten, sobald SEINE Vorarbeit fertig ist** (die
+  Datei:Zeile-Liste seines Themas), nicht erst, wenn die ganze Welle geplant ist.
+  Die Staffelung ergibt sich dann von selbst, und der erste Bau läuft nach
+  wenigen Minuten.
+- **Arbeiter bauen im Vordergrund und pollen nie im Hintergrund.** Die
+  Bauwarteschlange ist stumm; ein Arbeiter, der Warteschleifen in den Hintergrund
+  legt, weckt sich und seine Nachbarn immer wieder: Ein beobachteter Arbeiter
+  erzeugte alle sechs Sekunden eine Schleife und trieb den Load über 40, ein
+  fertiger Arbeiter wurde jedes Mal mit großem Kontext neu geweckt. Das Verbot
+  gehört wörtlich in jeden Auftrag. Schleift ein Arbeiter trotzdem: anhalten,
+  seine Schleifen beenden, seinen Abschlusstest selbst fahren — seine Commits
+  sind sicher.
+- **Gebaute Verzeichnisse wiederverwenden statt frischer Arbeitsverzeichnisse.**
+  Ein kopiertes Bauverzeichnis wird an einem neuen Pfad nicht wiederverwendet
+  (absolute Pfade darin), der erste Bau dort ist also ein Komplettbau — mit einem
+  Slot sind fünf frische Arbeitsverzeichnisse Stunden Warteschlange. Ist ein
+  Arbeiter fertig, das nächste Thema in SEINEM Verzeichnis abzweigen und
+  inkrementell bauen. Ein Thema auf den Branch eines Vorgängers stapeln, wenn
+  beide dieselbe Datei anfassen, und die Restprozesse des fertigen Arbeiters
+  beenden, bevor sein Verzeichnis weitergenutzt wird (nach Shells suchen, deren
+  Kommando seine Logdatei nennt, nicht nur nach dem Ordner).
+- **Früh mergen, spät bauen.** Jedes fertige Thema sofort in den Wellen-Branch
+  mergen, nur Merge, kein Bau; Konflikte zeigen sich dann einzeln. Merge-Nachricht
+  ausdrücklich mitgeben: Die Standardnachricht verliert Pflicht-Trailer
+  stillschweigend.
+- **Dateigrenzen in jedem Auftrag nennen** („NICHT anfassen: …"). Sechs parallele
+  Themen mit klaren Grenzen ergaben null Konflikte.
+- **Nie Quellen in einem Verzeichnis ändern, in dem gerade ein Bau läuft.** Eine
+  späte Korrektur kommt in ein freies gebautes Verzeichnis auf eigenem Branch und
+  wird nach der Suite gemergt.
+
+<!-- rule:WV-11 -->
+## Die erste Vollsuite grün bekommen
+
+Eine Welle ist nur so schnell wie ihre erste Vollsuite; in einer gemessenen Welle
+waren sechs Themen in einer halben Stunde gebaut und gemergt und brauchten danach
+vier Vollsuiten bis Grün. Die Hebel:
+
+- **Vor dem Bau nach überholten Verträgen suchen.** Wer sichtbare Texte,
+  Menütitel, Meldungen, Layout-Reihenfolgen, Asset-Maße oder die ANZAHL
+  eingebauter Dinge ändert, durchsucht VOR dem Bau den Testbaum nach der alten
+  Zeichenkette oder Bezeichnung, nimmt jeden Treffer in seinen Testfilter und
+  stellt ihn auf den neuen, gleich scharfen Vertrag um. Der Chef wiederholt die
+  Suche über alle Arbeiterberichte vor der ersten Vollsuite. Überholte Verträge in
+  alten Tests sind die häufigste Ursache zusätzlicher Suiten.
+- **Ein Test, der zweimal fällt, ist kein „Wackler unter Last", bis es bewiesen
+  ist.** Ein wiederholt fallender Test entpuppte sich als echte Kollision in einem
+  kurzen Zufallssuffix. Nie auf einer roten Vollsuite installieren, wie plausibel
+  die Ausrede auch klingt.
+- **Ein Themenfilter deckt ältere Tests nicht ab, die ein Arbeiter außerhalb
+  davon geändert hat.** Sie gehören in die Merge-Notizen; die Vollsuite ist ihr
+  erster echter Lauf.
+- **Jedes „nicht gefunden" eines Agenten mit einer eigenen Suche gegenprüfen**,
+  bevor darauf gehandelt wird.
+- **Beweis vor Auftrag.** Bei Absturz oder Hänger zuerst den Absturzbericht und
+  das Diagnoseprotokoll der Anwendung lesen; der Auftrag nennt die Ursache dann
+  als bewiesen, wahrscheinlich oder vermutet. Themen, die auf Vermutungen liefen,
+  kosteten ganze Wellen; ein bewiesener Backtrace war in Minuten behoben.
+
+<!-- rule:WV-12 -->
+## Eine Welle abschließen
+
+Alle Arbeiter fertig **und** Vollsuite grün heißt: ohne Rückfrage abschließen —
+bauen, selbst testen, tauschen, veröffentlichen und das Handoff schreiben.
+Gefragt wird nur beim unsauberen Abschluss — rote Tests, ungeklärter Befund, ein
+blockiert gemeldeter Arbeiter —; dann kein Artefakt, sondern die Frage, mit dem,
+was fehlt, und einem Vorschlag.
+
+Den Selbsttest am fertigen Artefakt selbst fahren, nicht am Arbeitsstand, bevor
+es installiert wird, und den Exit-Code direkt aus dem Lauf abgreifen statt aus
+einer Zusammenfassungszeile, die abgeschnitten oder umgeschrieben sein kann.
+
+Der Eingang folgt derselben Uhr wie die Welle: Zwischen Handoff und Wellenstart
+ist das Handoff der einzige Eingang; die Zwischenrufe-Datei entsteht mit dem
+Wellenstart und ist bis zum nächsten Handoff der einzige Eingang.
 
 Siehe [Codex](codex.de.md), [Claude Code](claude-code.de.md), [Modellrouting](model-routing.de.md) und [Beleggrenzen](evidence-scope.de.md).

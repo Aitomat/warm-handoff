@@ -22,7 +22,7 @@ plan names. A directory lock is atomic; the PID inside it makes an orphaned lock
 recognizable after a crash without anyone removing a live foreign lock:
 
 ```sh
-L=/tmp/project-build.lock
+L=/tmp/<project>-build.lock
 while ! mkdir $L 2>/dev/null; do
   P=$(cat $L/pid 2>/dev/null); [ -n "$P" ] && ! kill -0 $P 2>/dev/null && rmdir $L 2>/dev/null; sleep 30
 done; echo $$ > $L/pid
@@ -41,25 +41,39 @@ background run of one's own is not a report.
 Projects may explicitly opt into **guardian mode**. In that mode, substantive research, analysis, implementation, QA, visual inspection, reports, and handoff writing go through a guardian and its workers. The main session limits itself to concise coordination, necessary decisions, and batched acceptance; it does not duplicate detail work in parallel. Use short self-contained briefs and automatic result delivery. Do not ask for status before 25 minutes unless there is a real blocker. If slots are unavailable, report the host limit and queue or reduce the wave instead of doing duplicate work.
 
 <!-- rule:WV-04 -->
-## Two build slots (rule 4 v2, 2026-09-13)
+## One build slot
 
-At most TWO builds run at a time (user, 2026-09-13 03:23: „Zwei Builds
-gleichzeitig erlauben bitte"; 04:00: „mehr wie zwei nicht"). This replaces the
-earlier one-lock, strictly sequential rule. Each topic guardian builds once, at
-the end of its topic, with its targeted tests only; the full suite belongs to the
-merge guardian, who waits for ALL done markers. Order runs from the largest topic
-to the smallest. A guardian claims a free slot as soon as at most ONE predecessor
-is still without a done marker:
+Exactly ONE build runs at a time. The limit is memory, not agent count: measured
+once on a memory-bound laptop, two concurrent builds of a compiled project left
+the machine unusable for hours, while ten thinking agents barely registered.
+Earlier editions of this skill allowed two slots; one slot replaces them.
 
-```
+- **The lock belongs in the project's test script, not in the worker prompt.** A
+  prompt is a request — in one measured wave six of fourteen worktrees built at
+  the same time despite it. A script is a gate every worker passes through.
+- **A final build counts only when it reached the tests.** A run that aborts
+  before the first test (tooling, cache, environment) is not a final build and is
+  repeated; whoever changes anything after their run does a second one. Both runs
+  go in the report. The rule saves load; it must never suppress evidence.
+- **One build per topic owner, at the very end** — not one per worker. The owner
+  collects the worker results and builds once over the integrated state. Workers
+  and subagents do not build beyond a syntax or parse check.
+- **Cap concurrent workers** (four is a sound ceiling on a single laptop). More
+  is not faster when they queue behind one slot anyway.
+- A paused build keeps its memory; pausing helps the CPU, not RAM. The answer is
+  not to start the second build at all.
+
+The slot itself, claimed after at most one predecessor is still unfinished:
+
+```sh
 TRASH=<project trash directory>               # never rm; move corpses here
-M=/tmp/<wave>-fertig; VOR="a b"               # my predecessors in build order; A: empty, B: "a"
-while [ "$(for v in $VOR; do [ -f $M-$v ] || echo x; done | wc -l)" -gt 1 ]; do sleep 30; done
+M=/tmp/<wave>-done; PRED="a b"                # my predecessors in build order
+while [ "$(for v in $PRED; do [ -f $M-$v ] || echo x; done | wc -l)" -gt 1 ]; do sleep 30; done
 L=""; while [ -z "$L" ]; do
-  for s in 1 2; do C=/tmp/aitomat-build-$s.lock
+  for s in 1; do C=/tmp/<project>-build-$s.lock
     if mkdir $C 2>/dev/null; then L=$C; break; fi
     P=$(cat $C/pid 2>/dev/null); [ -n "$P" ] && ! kill -0 $P 2>/dev/null && rmdir $C 2>/dev/null
-    [ -f $C ] && mv $C "$TRASH"/lock-leiche-$s-$$   # file corpse instead of directory (W58, 01:48)
+    [ -f $C ] && mv $C "$TRASH"/lock-corpse-$s-$$   # file corpse instead of directory
   done; [ -z "$L" ] && sleep 30
 done; echo $$ > $L/pid; uptime
 … build + targeted tests …
@@ -67,12 +81,11 @@ rm -f $L/pid; rmdir $L; touch $M-<me>
 ```
 
 A lock directory whose pid no longer exists is cleared with `rmdir`. A lock that
-exists as a FILE instead of a directory is a corpse (observed W58, 01:48): move
-it to the project's trash directory, never `rm` it. Wait in the foreground
-(repeat the wait command; a host timeout of up to 600000 ms is fine), never
-detached, and never report before the build finished. Workers and subagents do
-not build (`swiftc -parse` at most). Log `uptime` before the build, and compare
-load average and wall-clock duration against the previous wave in the report.
+exists as a FILE instead of a directory is a corpse: move it to the project's
+trash directory, never `rm` it. Wait in the foreground (repeat the wait command;
+a host timeout of up to 600000 ms is fine), never detached, and never report
+before the build finished. Log `uptime` before the build, and compare load
+average and wall-clock duration against the previous wave in the report.
 
 ## Execution and integration
 
@@ -151,5 +164,100 @@ Second lesson from the same day: the width of the wave is not the problem, the
 load is. With a capped job count per build (WV-07) more workers run at once
 without paralysing the machine — twelve topics in three batches cost more wall
 clock than twelve in two.
+
+<!-- rule:WV-09 -->
+## Pre-flight before the first worker starts
+
+Run this list once, before any worker is launched. Each item cost a measured
+wave hours when it was skipped:
+
+1. **Prime the tool caches.** Make sure prebuilt native modules the agent CLI
+   needs are already in its plugin cache; otherwise every worker triggers its own
+   package install (measured once: about 1500 processes and a load average of
+   148). The same holds for compiler module caches: rename or clear stale ones
+   before the wave, not during it.
+2. **Smoke-build in a directory no worker will use.** A worker editing the file
+   the smoke build is compiling invalidates the smoke test. See WV-08.
+3. **Set the toolchain environment explicitly** in front of the test script in
+   secondary working directories, where a bare call may pick the wrong toolchain.
+4. **Confirm the four permission points of WV-06** and write them into every brief.
+5. **Write one rules file for the workers and version it** — append the wave
+   number, never copy the file. A copied file resurrects sentences the user has
+   since forbidden. Workers leave stray unrelated files alone and always commit
+   with an explicit file list, never with a catch-all add.
+
+<!-- rule:WV-10 -->
+## Wave choreography: start per topic, merge early, build late
+
+Waiting, not building, is the cost of a wave. Measured with one build slot and
+ten topics:
+
+- **Start each worker as soon as ITS pre-work is ready** (the file:line list for
+  its topic), not once the whole wave is planned. Staggering then comes for free
+  and the first build starts minutes in.
+- **Workers build in the foreground and never poll in the background.** The build
+  queue is silent, so a worker that backgrounds sleep/poll loops re-wakes itself
+  and its neighbours: one observed worker produced a loop every six seconds and
+  drove the load average past 40, and a finished worker kept being woken at a
+  large context each time. Put the ban verbatim in every brief. If a worker still
+  loops, stop it, kill its loops, and run its final test yourself; its commits are
+  safe.
+- **Reuse built directories instead of creating fresh worktrees.** A copied build
+  directory is not reused in a new path (absolute paths inside), so the first
+  build there is a full rebuild — with one slot, five fresh worktrees are hours of
+  queue. When a worker finishes, branch the next topic inside ITS directory and
+  build incrementally. Stack a topic on a predecessor's branch when both touch
+  the same file, and stop the finished worker's leftover processes before reusing
+  its directory (look for shells whose command mentions its log file, not only
+  its folder).
+- **Merge early, build late.** Merge every finished topic into the wave branch
+  immediately, merge only, no build; conflicts then surface one at a time. Use an
+  explicit merge message: a default merge message silently drops required trailers.
+- **State the file boundaries in every assignment** ("do not touch: …"). Six
+  parallel topics with explicit boundaries produced zero conflicts.
+- **Never edit sources in a directory where a build is running.** Put a late fix
+  in a free built directory on its own branch and merge it after the suite.
+
+<!-- rule:WV-11 -->
+## Keep the first full suite green
+
+Per topic, the wave is only as fast as its first full suite; in a measured wave
+six topics built and merged in half an hour and then took four full suites to go
+green. The levers:
+
+- **Search for stale contracts before building.** A worker that changes visible
+  texts, menu titles, messages, layout order, asset dimensions, or the NUMBER of
+  built-in items greps the test tree for the old string or identifier BEFORE its
+  build, adds every hit to its test filter, and rewrites it to the new, equally
+  sharp contract. The lead repeats that search across all worker reports before
+  the first full suite. Stale contracts in old tests are the most common cause of
+  extra suites.
+- **A test that fails twice is not "flaky under load" until proven.** One
+  repeatedly failing test turned out to be a real collision in a short random
+  suffix. Never install on a red full suite, however plausible the excuse.
+- **A topic filter does not cover older tests a worker edited outside it.** List
+  them in the merge notes; the full suite is their first real run.
+- **Re-check every "not found" an agent reports** with one search of your own
+  before acting on it.
+- **Evidence before the assignment.** For a crash or a hang, read the crash
+  report and the application's diagnostic log first; the assignment then states
+  the cause as proven, likely, or guessed. Topics that ran on guesses cost whole
+  waves; a proven backtrace was fixed in minutes.
+
+<!-- rule:WV-12 -->
+## Closing a wave
+
+All workers done **and** the full suite green means finish without asking: build,
+self-test, install, publish, and write the handoff. Ask only on an unclean finish
+— red tests, an unresolved finding, a worker reporting blocked — and then deliver
+no artifact but the question, with what is missing and a proposal.
+
+Self-test the finished artifact itself, not the working tree, before installing
+it, and read the exit code directly from the run rather than from a summary line
+that can be truncated or rewritten.
+
+The inbox follows the same clock as the wave: between handoff and wave start the
+handoff is the only inbox; the interjections file is created at wave start and is
+the only inbox until the next handoff.
 
 See [Codex](codex.md), [Claude Code](claude-code.md), [model routing](model-routing.md), and [evidence scope](evidence-scope.md).

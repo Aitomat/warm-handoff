@@ -19,43 +19,31 @@ Select one host adapter: [Codex](references/codex.md) or [Claude Code](reference
 
 Read the complete saved source, including embedded or appended user text. Preserve user originals verbatim and put interpretations or answers in separate sections. Compare late additions before acting. Verify repository state and completed claims from files, Git state, tests, or other direct evidence; label anything else unknown.
 
-For the document contract and required sections, read [handoff format](references/handoff-format.md).
+Three stop rules when you write a handoff:
 
-### Writing a handoff: three stop rules (2026-09-14)
-
-1. **Open the reference first.** Read `references/handoff-format.md` in full before writing — it holds the mandatory 17-part section order (HF-06). "I know the format" does not count.
-2. **Read the predecessor unfiltered.** First line to last. Never truncate lines, never grep only for `>>>User answer:`, never filter "to save tokens" — that is how the through-line, roadmap, measurement, memory, and logbook get lost.
-3. **Do not wait, close out.** At the end of a wave do not wait for one more agent report; outstanding reports go under "Running and pending".
-
+1. **Open the reference first.** Read [handoff format](references/handoff-format.md) in full; it holds the document contract and the mandatory section order. "I know the format" does not count.
+2. **Read the predecessor unfiltered,** first line to last. Never truncate, never grep only for answer markers, never filter to save tokens — that is how the through-line, roadmap, measurement, memory, and logbook get lost.
+3. **Do not wait, close out.** Do not hold a wave open for one more agent report; outstanding reports go under "Running and pending".
 
 <!-- rule:WH-03 -->
 ## 3. Work inside authorization
 
-Make progress until the authorized outcome is complete. Split independent work only when the host and assignment allow it. Give each worker exclusive paths and acceptance criteria; never exceed actual concurrency. Guardians are optional coordination roles, not a default layer. Keep shared resources serialized and builds limited to the two slots of rule 4 v2.
+Make progress until the authorized outcome is complete. Split independent work only when the host and assignment allow it. Give each worker exclusive paths, acceptance criteria, and explicit file boundaries; never exceed actual concurrency. Guardians are optional coordination roles, not a default layer. Keep shared resources serialized.
 
-### Rule 4 v2 — at most TWO builds at a time (2026-09-13)
+Builds are the scarce resource, and the limit is memory, not agent count: **one build at a time**, with the lock in the project's test script, not in a worker prompt — a prompt is a request, a script is a gate. A final build counts only when it reached the tests; a run that dies earlier must be repeated, and whoever changes anything afterwards builds again. Keep builds in the foreground, cap how many workers run at once, and smoke-build once before the first worker starts.
 
-Each topic guardian builds ONCE at the end of its topic with targeted tests; the
-full suite belongs to the merge guardian. Two slot locks, largest topic first,
-wait in the foreground, workers do not build. Details and the slot-lock snippet
-are in [wave execution](references/wave-execution.md).
-
-For execution details, read [wave execution](references/wave-execution.md). For model selection and changing platform facts, read [model routing](references/model-routing.md) and [evidence scope](references/evidence-scope.md).
+For pre-flight checklists, the lock snippet, worker briefs, and wave choreography, read [wave execution](references/wave-execution.md). For model selection and changing platform facts, read [model routing](references/model-routing.md) and [evidence scope](references/evidence-scope.md).
 
 <!-- rule:WH-04 -->
 ## 4. Preserve document safety
 
-Never overwrite a user's answered handoff. Write a new Markdown source and, on macOS when requested, a new editable RTF twin. Verify plain-text roundtrip and link fields before publishing. Renderer verification proves neither TextEdit continuation nor application paste behavior; test those separately.
+Never overwrite a user's answered handoff. Write a new Markdown source and, on macOS when requested, a new editable RTF twin. Verify plain-text roundtrip and link fields before publishing. Renderer verification proves neither editor continuation nor application paste behavior; test those separately.
 
-Text pasted or typed behind `>>>` must stay black on gold at 18 pt (`\fs36`); the exact control words are in [RTF on macOS](references/rtf-macos.md) (evidence W58-E1, 2026-09-13). Archive answered handoffs in `handoff-archiv/` of the same project (`mv`, never `rm`; user 2026-09-13 03:31).
+Text pasted or typed behind `>>>` must stay black on gold at 18 pt; the exact control words are in [RTF on macOS](references/rtf-macos.md). Create a new handoff directly in the project's archive folder and never move it afterwards — every move breaks a path the document was already linked under; archive answered handoffs with `mv`, never `rm`. Every document begins with its own absolute path as the first line, then its as-of date. When you change a document the user may have open, close and reopen it for him, but never touch unsaved input.
 
-### One inbox at a time, switched by the wave clock (2026-09-14)
+Keep exactly one inbox at a time, switched by the wave clock: between handoff and wave start the handoff is the only inbox; the interjections file is created at wave start and is the only inbox until the next handoff. Answer short items at once; schedule longer ones into the next wave.
 
-Between handoff and wave start the handoff is the only inbox (`COLLECTION FOR THE NEXT HANDOFF` plus the `>>>User answer:` lines); the Zwischenrufe file does **not** exist then and is never created together with the handoff (user 2026-09-14). Only at wave start do you create it, open it in TextEdit, and it stays the only inbox until the next handoff. The same gold rule applies there. Answer short items at once; schedule longer ones into the next wave.
-
-Read [RTF on macOS](references/rtf-macos.md) before rendering or opening documents.
-
-Generate handoff and Zwischenrufe RTFs exclusively through `scripts/handoff-rtf.sh` from the skill directory. Cmd-S releases saved input within the existing authorization.
+Read [RTF on macOS](references/rtf-macos.md) before rendering or opening documents. Generate handoff and interjection twins exclusively through `scripts/handoff-rtf.sh` from the skill directory. Cmd-S releases saved input within the existing authorization.
 
 <!-- rule:WH-05 -->
 ## 5. Use optional helpers deliberately
@@ -65,10 +53,10 @@ Generate handoff and Zwischenrufe RTFs exclusively through `scripts/handoff-rtf.
 <!-- rule:WH-06 -->
 ## 6. Close with evidence
 
-Before completion, reread the designated feedback source, inspect status, run the required targeted checks, and confirm only owned paths changed. Report completed, pending, and running work with evidence and the next action. Write the durable report before the short chat response.
+Before completion, reread the designated feedback source, inspect status, run the required targeted checks, and confirm only owned paths changed. Report completed, pending, and running work with evidence and the next action. Write the durable report before the short chat response. Take every timestamp from the system clock, never from an estimate.
 
-### Check the interjections file on every wake-up (2026-09-13)
+On every wake-up of the main session — a worker notification, a timer, a resumed turn — compare the modification time of the designated interjections file against the last read. Changed: read the saved additions before acting or reporting. Unchanged: leave it closed. Saved state only; the user's save is the release.
 
-The user's rule of 2026-09-13 (05:17): every time the main session wakes up — a worker or guardian notification, a timer, a resumed turn — compare the modification time of the designated interjections file with the time of the last read. Changed: read the saved additions before acting or reporting. Unchanged: do not open it. Saved state only; the user's Cmd-S is the release.
+Finish a clean wave without asking: all workers done and the full suite green means build, install, publish, and write the handoff. Ask only on an unclean finish — red tests, an unresolved finding, a blocked worker — and then name what is missing and propose a next step.
 
 Spanish localization is deferred. Audio, video, and website material are outside this skill.

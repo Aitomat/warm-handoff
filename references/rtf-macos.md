@@ -7,7 +7,9 @@ RTF is an optional editable twin of an agent-authored Markdown handoff. It requi
 
 Generate handoff and Zwischenrufe RTFs exclusively through `scripts/handoff-rtf.sh`, run from the repository or installed skill directory with absolute source/output paths. Do not rebuild RTF by hand or invoke `render_rtf.py` directly; use `textutil` only to read and verify.
 
-Cmd-S releases saved user input within the existing authorization. Keep exactly one active Zwischenrufe inbox: the handoff footer or the agreed file; the other only links to it. Archive answered handoffs in the same project's `handoff-archiv/` using `mv`, never `rm`; do not move the active user input file.
+Cmd-S releases saved user input within the existing authorization. Keep exactly one active interjections inbox: the handoff footer or the agreed file; the other only links to it. Archive answered handoffs in the project's archive folder using `mv`, never `rm`; do not move the active user input file.
+
+**Create a new handoff directly in the archive folder.** Do not write it into the project root and move it later — every move changes a path the document has already been linked under. So write `<project>/handoff-archiv/_handoff-<project>-<date>-<id>.md` and `.rtf` from the start (`mkdir -p` the folder if missing); the user deletes there himself what he does not need. **The interjections file stays in the project root**, where the user clears it by hand.
 
 ```sh
 scripts/handoff-rtf.sh /project/docs/handoff.md /project/handoff.rtf --project-root /project
@@ -69,3 +71,59 @@ returns the text in full.
 - Application paste: behavior in the target application.
 
 Do not claim one scope from evidence in another. Opening files, merging tabs, or manipulating TextEdit windows is allowed only when the user authorized UI control. Never overwrite the user's answered RTF.
+
+<!-- rule:RT-05 -->
+## Path line at the top of every document
+
+Every document you create or revise — plan, report, concept, roadmap, handoff,
+interjections file — starts with **its own absolute path** as the very first
+line, with nothing above it, not even a heading. Below that the as-of date, then
+the heading:
+
+```markdown
+/absolute/path/to/the/document.md
+As of: DD.MM.YYYY, HH:MM
+
+# Document heading
+```
+
+The point is that the user can copy the top line and have the path with it
+instead of hunting for it; when a document moves, the line moves with it. Give
+paths in replies in full, from the root, for the same reason.
+
+<!-- rule:RT-06 -->
+## Close and reopen documents you changed
+
+TextEdit keeps showing the state it loaded the file with; a change on disk never
+reaches it. So when you change a file that may be open, close it **first** and
+reopen it **after**:
+
+```sh
+osascript -e 'tell application "TextEdit" to close (every document whose path contains "<filename>")'
+open -a TextEdit "<full path>"
+```
+
+Close only your own document, never "every document" — leave other open files
+alone. And only close what holds no unsaved input: for the Zwischenrufe file and
+the handoff, read what is saved and otherwise leave them open. Applies to every
+document whose path you name in a reply.
+
+<!-- rule:RT-07 -->
+## Interjections as Markdown, with answers written into the file
+
+A project may keep the interjections file as a plain `.md` instead of an RTF
+twin; the renderer rightly refuses to append to an existing RTF, so an RTF inbox
+cannot be answered in place. Append an answer block safely — never touch unsaved
+input:
+
+```sh
+M=$(osascript -e 'tell application "TextEdit" to get modified of (first document whose path contains "<filename>")')
+# only when M is "false": close without saving, append, reopen
+osascript -e 'tell application "TextEdit" to close (every document whose path contains "<filename>") saving no'
+cat >> "<full path>" <<'EOT'   # quoted heredoc: backticks and $ stay literal
+…
+EOT
+open -a TextEdit "<full path>"
+```
+
+If `modified` is `true`, do not close: answer in chat and append on the next wake-up.

@@ -15,6 +15,8 @@ Kennzeichne Schlüsse ausdrücklich. Nutze für veränderliche Plattformaussagen
 
 Nenne bei Aussagen zu Modellen, Caching, Preisen, Kontingenten und Produktfunktionen ein Prüfdatum. Benenne die Oberfläche: API, Desktop-Client, CLI, Abonnement oder aktuelle Host-Sitzung. Ein Fakt aus einer Oberfläche gilt nicht automatisch für eine andere.
 
+Jeder Zeitstempel — in einer Antwort, einem Bericht oder einem Dokument — kommt aus der Systemuhr (`date "+%d.%m.%Y-%H:%M"`), nie aus einer Schätzung; geschätzte Uhrzeiten wichen in der Praxis um eine Viertelstunde ab. Wo der Nutzer es verlangt, trägt die erste Zeile der ersten Antwort auf eine neue Anfrage `Name, TT.MM.JJJJ-HH:MM` — und nur dort: Der Zeitstempel ist sein Signal, dass die Arbeit begonnen hat, keine Zierde für jede Zwischenmeldung.
+
 <!-- rule:EV-03 -->
 ## Abschlussbelege
 
