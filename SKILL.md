@@ -55,7 +55,7 @@ Read [RTF on macOS](references/rtf-macos.md) before rendering or opening documen
 
 Before completion, reread the designated feedback source, inspect status, run the required targeted checks, and confirm only owned paths changed. Report completed, pending, and running work with evidence and the next action. Write the durable report before the short chat response. Take every timestamp from the system clock, never from an estimate.
 
-On every wake-up of the main session — a worker notification, a timer, a resumed turn — compare the modification time of the designated interjections file against the last read. Changed: read the saved additions before acting or reporting. Unchanged: leave it closed. Saved state only; the user's save is the release. Never watch the file itself: no monitor, file watcher, or save hook may wake the session because the user pressed Cmd-S — a save is not a request and must cost nothing (user rule of 2026-09-23). Read it only on a wake-up that happens anyway.
+On every wake-up of the main session — a worker notification, a timer, a resumed turn — compare the modification time of the designated interjections file against the last read. Changed: read the saved additions before acting or reporting. Unchanged: leave it closed. Saved state only; the user's save is the release. Never watch the file: a save is not a request and must wake nothing.
 
 Finish a clean wave without asking: all workers done and the full suite green means build, install, publish, and write the handoff. Ask only on an unclean finish — red tests, an unresolved finding, a blocked worker — and then name what is missing and propose a next step.
 
