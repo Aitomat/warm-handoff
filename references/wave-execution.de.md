@@ -100,7 +100,7 @@ Starte unabhängige Pakete nur gemeinsam, wenn der Host es unterstützt. Arbeite
 <!-- rule:WV-05 -->
 ## Kommunikation
 
-Nutze die automatische Fertigmeldung des Hosts für Routineergebnisse. Melde echte Blocker, Entscheidungen mit Umfangsänderung oder wesentliche Risiken. Halte den Nutzerfaden auf Entscheidungen und belegte Ergebnisse ausgerichtet. Nutzeranweisungen haben für den jeweiligen Ablauf Vorrang vor allgemeinen Delegationsempfehlungen. Prüfe bei jedem Aufwachen der Hauptsession die Änderungszeit der Zwischenrufe-Datei und lies sie, wenn sie sich geändert hat, bevor du handelst oder meldest.
+Nutze die automatische Fertigmeldung des Hosts für Routineergebnisse. Melde echte Blocker, Entscheidungen mit Umfangsänderung oder wesentliche Risiken. Halte den Nutzerfaden auf Entscheidungen und belegte Ergebnisse ausgerichtet. Nutzeranweisungen haben für den jeweiligen Ablauf Vorrang vor allgemeinen Delegationsempfehlungen. Prüfe bei jedem Aufwachen der Hauptsession die Änderungszeit der Zwischenrufe-Datei und lies sie, wenn sie sich geändert hat, bevor du handelst oder meldest. Nie die Datei selbst überwachen: kein Monitor, kein Dateiwächter, kein Speicher-Hook darf die Session wecken, weil der Nutzer Cmd-S gedrückt hat — Speichern ist keine Anfrage und darf nichts kosten (Nutzerregel vom 23.09.2026). Nur bei einem ohnehin stattfindenden Aufwachen lesen.
 
 <!-- rule:WV-06 -->
 ## Rechte, die Bauagenten wirklich brauchen (14.09.2026)

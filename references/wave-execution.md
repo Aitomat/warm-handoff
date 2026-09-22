@@ -94,7 +94,7 @@ Start independent packets together only when the host supports it. Workers must 
 <!-- rule:WV-05 -->
 ## Communication
 
-Let host completion delivery carry routine results. Send updates for a real blocker, a decision that changes scope, or a material risk. Keep the user-facing thread focused on choices and verified outcomes. User instructions override generic delegation preferences for that workflow. On every wake-up of the main session, check the interjections file's modification time and read it if it changed, before acting or reporting (user rule of 2026-09-13).
+Let host completion delivery carry routine results. Send updates for a real blocker, a decision that changes scope, or a material risk. Keep the user-facing thread focused on choices and verified outcomes. User instructions override generic delegation preferences for that workflow. On every wake-up of the main session, check the interjections file's modification time and read it if it changed, before acting or reporting (user rule of 2026-09-13). Never watch the file itself: no monitor, file watcher, or save hook may wake the session because the user pressed Cmd-S — a save is not a request and must cost nothing (user rule of 2026-09-23). Read it only on a wake-up that happens anyway.
 
 <!-- rule:WV-06 -->
 ## Permissions build agents actually need (2026-09-14)
@@ -210,6 +210,17 @@ ten topics:
   the same file, and stop the finished worker's leftover processes before reusing
   its directory (look for shells whose command mentions its log file, not only
   its folder).
+- **Order the wave by expected duration, longest first** (user, 2026-09-22 00:56). Estimate each topic's
+  length while writing the plan, start the three or four LONGEST topics first, and keep the remaining slot
+  or two for the short ones, fed one at a time. Starting the quick topics first leaves the long ones to
+  finish alone at the end, and the wave's bundle waits for a single straggler. In his words: "die drei
+  längsten zuerst starten und die kurzen immer nur einzeln im fünften Slot laufen lassen".
+- **Every launcher must close the agent's stdin** (`< /dev/null`). Measured 2026-09-22: six agents launched
+  without it printed `Reading additional input from stdin...` and then sat for three and a half hours with
+  0.16 s of CPU time, while the build slot stayed free. A hung agent looks exactly like a busy one.
+  Therefore also: **watch the first two minutes.** After starting a batch, check that each agent's log has
+  grown past its first line; a log that never grows is a hang, not patience. And never let the main session
+  idle on "no notification arrived" — schedule a check.
 - **Merge early, build late.** Merge every finished topic into the wave branch
   immediately, merge only, no build; conflicts then surface one at a time. Use an
   explicit merge message: a default merge message silently drops required trailers.
