@@ -4,6 +4,8 @@
 
 Warm Handoff preserves user input and verified project state across pauses. It also defines safe, evidence-based work waves for Codex and Claude Code without treating either host as the core workflow.
 
+Every change to an active rule is also carried into `AGENTS.md` for Codex users.
+
 <!-- section:SURFACES -->
 ## Choose a surface
 

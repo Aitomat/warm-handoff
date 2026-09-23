@@ -4,6 +4,8 @@
 
 Warm Handoff erhält Nutzereingaben und belegten Projektstand über Pausen hinweg. Außerdem definiert der Skill sichere, belegorientierte Arbeitswellen für Codex und Claude Code, ohne einen Host zum Kernablauf zu machen.
 
+Jede Änderung einer aktiven Regel wird auch in `AGENTS.md` für Codex-Nutzer nachgezogen.
+
 <!-- section:SURFACES -->
 ## Oberfläche wählen
 
