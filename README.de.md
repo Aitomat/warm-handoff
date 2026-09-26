@@ -88,7 +88,7 @@ Lies die geltenden AGENTS.md-Dateien und das vollständige gespeicherte Handoff 
 <!-- prompt:compact-en-claude -->
 ```text
 /warm-handoff
-Lies die geltenden CLAUDE.md-Dateien und das vollständige gespeicherte Handoff unter <ABSOLUTE_HANDOFF_PATH>. Erhalte Nutzeroriginale, prüfe aktuellen Git- und Teststand und arbeite nur innerhalb der genannten Autorisierung weiter. Nutze den Claude Code-Adapter und schreibe vor Abschluss den geforderten dauerhaften Bericht.
+Lies die geltenden AGENTS.md-Dateien (oder CLAUDE.md, wo ein Projekt noch eine nutzt) und das vollständige gespeicherte Handoff unter <ABSOLUTE_HANDOFF_PATH>. Erhalte Nutzeroriginale, prüfe aktuellen Git- und Teststand und arbeite nur innerhalb der genannten Autorisierung weiter. Nutze den Claude Code-Adapter und schreibe vor Abschluss den geforderten dauerhaften Bericht.
 ```
 
 ### Kurzes Deutsch (`compact-de`)
@@ -96,7 +96,7 @@ Lies die geltenden CLAUDE.md-Dateien und das vollständige gespeicherte Handoff 
 <!-- prompt:compact-de-claude -->
 ```text
 /warm-handoff-de
-Lies die geltenden CLAUDE.md-Dateien und das vollständige gespeicherte Handoff unter <ABSOLUTE_HANDOFF_PATH>. Arbeite auf Deutsch, erhalte Nutzeroriginale und bleibe in der genannten Autorisierung. Nutze den Claude Code-Adapter und schreibe vor Abschluss den geforderten dauerhaften Bericht.
+Lies die geltenden AGENTS.md-Dateien (oder CLAUDE.md, wo ein Projekt noch eine nutzt) und das vollständige gespeicherte Handoff unter <ABSOLUTE_HANDOFF_PATH>. Arbeite auf Deutsch, erhalte Nutzeroriginale und bleibe in der genannten Autorisierung. Nutze den Claude Code-Adapter und schreibe vor Abschluss den geforderten dauerhaften Bericht.
 ```
 
 ### Vollständiges Englisch (`full-en`)
@@ -104,7 +104,7 @@ Lies die geltenden CLAUDE.md-Dateien und das vollständige gespeicherte Handoff 
 <!-- prompt:full-en-claude -->
 ```text
 /warm-handoff-full
-Lies die geltenden CLAUDE.md-Dateien und das vollständige gespeicherte Handoff unter <ABSOLUTE_HANDOFF_PATH>. Nutze den vollständigen englischen Ablauf, erhalte Nutzeroriginale und bleibe in der genannten Autorisierung. Nutze den Claude Code-Adapter und schreibe vor Abschluss den geforderten dauerhaften Bericht.
+Lies die geltenden AGENTS.md-Dateien (oder CLAUDE.md, wo ein Projekt noch eine nutzt) und das vollständige gespeicherte Handoff unter <ABSOLUTE_HANDOFF_PATH>. Nutze den vollständigen englischen Ablauf, erhalte Nutzeroriginale und bleibe in der genannten Autorisierung. Nutze den Claude Code-Adapter und schreibe vor Abschluss den geforderten dauerhaften Bericht.
 ```
 
 ### Vollständiges Deutsch (`full-de`)
@@ -112,7 +112,7 @@ Lies die geltenden CLAUDE.md-Dateien und das vollständige gespeicherte Handoff 
 <!-- prompt:full-de-claude -->
 ```text
 /warm-handoff-full-de
-Lies die geltenden CLAUDE.md-Dateien und das vollständige gespeicherte Handoff unter <ABSOLUTE_HANDOFF_PATH>. Nutze den vollständigen deutschen Ablauf, erhalte Nutzeroriginale und bleibe in der genannten Autorisierung. Nutze den Claude Code-Adapter und schreibe vor Abschluss den geforderten dauerhaften Bericht.
+Lies die geltenden AGENTS.md-Dateien (oder CLAUDE.md, wo ein Projekt noch eine nutzt) und das vollständige gespeicherte Handoff unter <ABSOLUTE_HANDOFF_PATH>. Nutze den vollständigen deutschen Ablauf, erhalte Nutzeroriginale und bleibe in der genannten Autorisierung. Nutze den Claude Code-Adapter und schreibe vor Abschluss den geforderten dauerhaften Bericht.
 ```
 
 <!-- section:REFERENCES -->

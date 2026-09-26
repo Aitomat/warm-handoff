@@ -67,7 +67,7 @@ class LocaleParityTests(unittest.TestCase):
             name = re.search(r"^name:\s*(\S+)$", entry, re.MULTILINE).group(1)
             contracts = {
                 f"{package_id}-codex": (f"${name}", "AGENTS.md", "<ABSOLUTE_HANDOFF_PATH>", "Codex"),
-                f"{package_id}-claude": (f"/{name}", "CLAUDE.md", "<ABSOLUTE_HANDOFF_PATH>", "Claude Code"),
+                f"{package_id}-claude": (f"/{name}", "AGENTS.md", "<ABSOLUTE_HANDOFF_PATH>", "Claude Code"),
             }
             for prompt_id, required in contracts.items():
                 self.assertEqual(english_prompts[prompt_id].splitlines()[0], required[0])

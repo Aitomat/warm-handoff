@@ -107,7 +107,7 @@ class PublicSurfaceTests(unittest.TestCase):
         routing = (ROOT / "references/model-routing.md").read_text(encoding="utf-8")
         self.assertIn("AGENTS.md", codex)
         self.assertIn("unknown", codex)
-        self.assertIn("CLAUDE.md", claude)
+        self.assertIn("AGENTS.md", claude)
         self.assertIn("version- and configuration-dependent", claude)
         self.assertIn("API specification", routing)
         self.assertIn("Client or host boundary", routing)

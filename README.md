@@ -88,7 +88,7 @@ Read the applicable AGENTS.md files and the complete saved handoff at <ABSOLUTE_
 <!-- prompt:compact-en-claude -->
 ```text
 /warm-handoff
-Read the applicable CLAUDE.md files and the complete saved handoff at <ABSOLUTE_HANDOFF_PATH>. Preserve user originals, verify current Git and test state, and continue only within the stated authorization. Use the Claude Code adapter and write the requested durable report before completion.
+Read the applicable AGENTS.md files (or CLAUDE.md where a project still uses one) and the complete saved handoff at <ABSOLUTE_HANDOFF_PATH>. Preserve user originals, verify current Git and test state, and continue only within the stated authorization. Use the Claude Code adapter and write the requested durable report before completion.
 ```
 
 ### Compact German (`compact-de`)
@@ -96,7 +96,7 @@ Read the applicable CLAUDE.md files and the complete saved handoff at <ABSOLUTE_
 <!-- prompt:compact-de-claude -->
 ```text
 /warm-handoff-de
-Read the applicable CLAUDE.md files and the complete saved handoff at <ABSOLUTE_HANDOFF_PATH>. Work in German, preserve user originals, and continue only within the stated authorization. Use the Claude Code adapter and write the requested durable report before completion.
+Read the applicable AGENTS.md files (or CLAUDE.md where a project still uses one) and the complete saved handoff at <ABSOLUTE_HANDOFF_PATH>. Work in German, preserve user originals, and continue only within the stated authorization. Use the Claude Code adapter and write the requested durable report before completion.
 ```
 
 ### Full English (`full-en`)
@@ -104,7 +104,7 @@ Read the applicable CLAUDE.md files and the complete saved handoff at <ABSOLUTE_
 <!-- prompt:full-en-claude -->
 ```text
 /warm-handoff-full
-Read the applicable CLAUDE.md files and the complete saved handoff at <ABSOLUTE_HANDOFF_PATH>. Apply the full English workflow, preserve user originals, and continue only within the stated authorization. Use the Claude Code adapter and write the requested durable report before completion.
+Read the applicable AGENTS.md files (or CLAUDE.md where a project still uses one) and the complete saved handoff at <ABSOLUTE_HANDOFF_PATH>. Apply the full English workflow, preserve user originals, and continue only within the stated authorization. Use the Claude Code adapter and write the requested durable report before completion.
 ```
 
 ### Full German (`full-de`)
@@ -112,7 +112,7 @@ Read the applicable CLAUDE.md files and the complete saved handoff at <ABSOLUTE_
 <!-- prompt:full-de-claude -->
 ```text
 /warm-handoff-full-de
-Read the applicable CLAUDE.md files and the complete saved handoff at <ABSOLUTE_HANDOFF_PATH>. Apply the full German workflow, preserve user originals, and continue only within the stated authorization. Use the Claude Code adapter and write the requested durable report before completion.
+Read the applicable AGENTS.md files (or CLAUDE.md where a project still uses one) and the complete saved handoff at <ABSOLUTE_HANDOFF_PATH>. Apply the full German workflow, preserve user originals, and continue only within the stated authorization. Use the Claude Code adapter and write the requested durable report before completion.
 ```
 
 <!-- section:REFERENCES -->

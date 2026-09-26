@@ -3,7 +3,7 @@
 <!-- rule:CLA-01 -->
 ## Anweisungen und Fähigkeiten
 
-Lies die geltende `CLAUDE.md` und aktuelle Nutzeranweisungen. Prüfe tatsächlich vorhandene Claude-Code-Version, Werkzeuge, Rechte, Agentenfunktionen und Arbeitsbereichsgrenzen. Rufe `/warm-handoff` auf, wenn Slash-Command-Skills unterstützt werden. Behandle Hooks, Agententeams, Subagenten, Worktrees und Cache-Steuerungen als versions- und konfigurationsabhängig.
+Lies die geltende `AGENTS.md` (aktuelle Claude-Code-Versionen laden sie als Projektanweisung, eine Datei bedient also Codex- und Claude-Nutzer; wo ein Projekt noch eine `CLAUDE.md` hat, auch diese) und aktuelle Nutzeranweisungen. Prüfe tatsächlich vorhandene Claude-Code-Version, Werkzeuge, Rechte, Agentenfunktionen und Arbeitsbereichsgrenzen. Rufe `/warm-handoff` auf, wenn Slash-Command-Skills unterstützt werden. Behandle Hooks, Agententeams, Subagenten, Worktrees und Cache-Steuerungen als versions- und konfigurationsabhängig.
 
 <!-- rule:CLA-02 -->
 ## Agenten und Rechte
