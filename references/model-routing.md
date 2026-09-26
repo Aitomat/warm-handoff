@@ -14,6 +14,11 @@ Choose a model for the task's reasoning depth, latency, tool use, and verified a
 
 Never convert one scope into another without direct evidence. Unknown effective limits remain unknown.
 
+<!-- rule:MR-04 -->
+## User exclusions and real effort
+
+When the user excludes a model, do not use it for any task, including as a subagent default or fallback, unless the user explicitly names it again for a specific task. Keep the exclusion list in memory or project instructions, not in this skill. Treat an effort level as assigned only when the host actually sets it. If a subagent tool inherits the main session's effort, "low/medium/high" in a brief is only a request; say so, and use a launch with an explicit parameter, such as a command-line agent with `--effort`, when the level matters. Extra guardians above topic guardians are not a default: each topic guardian proves, builds, tests and reports on its own, and the merge's full suite is the shared check.
+
 <!-- rule:MR-03 -->
 ## Current verified notes
 

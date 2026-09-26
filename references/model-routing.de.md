@@ -14,6 +14,11 @@ Wähle ein Modell nach benötigter Denktiefe, Latenz, Werkzeugnutzung und belegt
 
 Übertrage keinen Bereich ohne direkten Beleg auf einen anderen. Unbekannte wirksame Grenzen bleiben unbekannt.
 
+<!-- rule:MR-04 -->
+## Ausschlüsse des Nutzers und echter Effort
+
+Schließt der Nutzer ein Modell aus, wird es für keine Aufgabe eingesetzt, auch nicht als Unteragent-Vorgabe oder als Ausweichweg. Ausnahme ist nur, wenn er es für eine bestimmte Aufgabe ausdrücklich wieder nennt. Die Ausschlussliste gehört ins Gedächtnis oder in die Projektanweisungen, nicht in diesen Skill. Eine Effort-Stufe gilt nur dann als vergeben, wenn der Host sie wirklich setzt. Übernimmt ein Unteragenten-Werkzeug die Stufe der Hauptsitzung, steht „low/medium/high“ im Auftrag nur als Bitte. Das wird so gemeldet, und für echte Stufen dient ein Start mit ausdrücklichem Parameter, zum Beispiel ein Kommandozeilen-Agent mit `--effort`. Zusätzliche Wächter über Themen-Wächtern sind kein Standard: Jeder Themen-Wächter beweist, baut, testet und berichtet selbst, und die Vollsuite beim Merge ist die gemeinsame Prüfung.
+
 <!-- rule:MR-03 -->
 ## Aktuell geprüfte Hinweise
 
