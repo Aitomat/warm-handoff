@@ -10,7 +10,7 @@ Use this compact entry point for routine work. Read only the reference needed fo
 <!-- rule:WH-01 -->
 ## 1. Establish scope
 
-Treat the user's latest saved handoff and later messages as one ordered input stream. Read project instructions first, identify the named source and feedback files, and record the authorized scope, prohibited actions, file ownership, and required evidence. A handoff records intent; it grants no permission the user did not give.
+Treat the user's latest saved handoff and later messages as one ordered input stream. Read project instructions first (`AGENTS.md`, the one file for all agents), identify the named source and feedback files, and record the authorized scope, prohibited actions, file ownership, and required evidence. A handoff records intent; it grants no permission the user did not give.
 
 Select one host adapter: [Codex](references/codex.md) or [Claude Code](references/claude-code.md). Keep the core rules provider-neutral.
 

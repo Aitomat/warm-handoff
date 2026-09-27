@@ -4,7 +4,7 @@
 
 Warm Handoff erhält Nutzereingaben und belegten Projektstand über Pausen hinweg. Außerdem definiert der Skill sichere, belegorientierte Arbeitswellen für Codex und Claude Code, ohne einen Host zum Kernablauf zu machen.
 
-Jede Änderung einer aktiven Regel wird auch in `AGENTS.md` für Codex-Nutzer nachgezogen.
+Jede Änderung einer aktiven Regel wird auch in `AGENTS.md` nachgezogen. `AGENTS.md` ist die eine gemeinsame Anweisungsdatei für Codex, Claude Code und andere Agenten; aktuelle Claude-Code-Versionen lesen sie ebenfalls. Eine `CLAUDE.md` ist optional — höchstens ein einzeiliger Verweis oder ein Symlink auf `AGENTS.md`.
 
 <!-- section:SURFACES -->
 ## Oberfläche wählen
@@ -88,7 +88,7 @@ Lies die geltenden AGENTS.md-Dateien und das vollständige gespeicherte Handoff 
 <!-- prompt:compact-en-claude -->
 ```text
 /warm-handoff
-Lies die geltenden AGENTS.md-Dateien (oder CLAUDE.md, wo ein Projekt noch eine nutzt) und das vollständige gespeicherte Handoff unter <ABSOLUTE_HANDOFF_PATH>. Erhalte Nutzeroriginale, prüfe aktuellen Git- und Teststand und arbeite nur innerhalb der genannten Autorisierung weiter. Nutze den Claude Code-Adapter und schreibe vor Abschluss den geforderten dauerhaften Bericht.
+Lies die geltenden AGENTS.md-Dateien und das vollständige gespeicherte Handoff unter <ABSOLUTE_HANDOFF_PATH>. Erhalte Nutzeroriginale, prüfe aktuellen Git- und Teststand und arbeite nur innerhalb der genannten Autorisierung weiter. Nutze den Claude Code-Adapter und schreibe vor Abschluss den geforderten dauerhaften Bericht.
 ```
 
 ### Kurzes Deutsch (`compact-de`)
@@ -96,7 +96,7 @@ Lies die geltenden AGENTS.md-Dateien (oder CLAUDE.md, wo ein Projekt noch eine n
 <!-- prompt:compact-de-claude -->
 ```text
 /warm-handoff-de
-Lies die geltenden AGENTS.md-Dateien (oder CLAUDE.md, wo ein Projekt noch eine nutzt) und das vollständige gespeicherte Handoff unter <ABSOLUTE_HANDOFF_PATH>. Arbeite auf Deutsch, erhalte Nutzeroriginale und bleibe in der genannten Autorisierung. Nutze den Claude Code-Adapter und schreibe vor Abschluss den geforderten dauerhaften Bericht.
+Lies die geltenden AGENTS.md-Dateien und das vollständige gespeicherte Handoff unter <ABSOLUTE_HANDOFF_PATH>. Arbeite auf Deutsch, erhalte Nutzeroriginale und bleibe in der genannten Autorisierung. Nutze den Claude Code-Adapter und schreibe vor Abschluss den geforderten dauerhaften Bericht.
 ```
 
 ### Vollständiges Englisch (`full-en`)
@@ -104,7 +104,7 @@ Lies die geltenden AGENTS.md-Dateien (oder CLAUDE.md, wo ein Projekt noch eine n
 <!-- prompt:full-en-claude -->
 ```text
 /warm-handoff-full
-Lies die geltenden AGENTS.md-Dateien (oder CLAUDE.md, wo ein Projekt noch eine nutzt) und das vollständige gespeicherte Handoff unter <ABSOLUTE_HANDOFF_PATH>. Nutze den vollständigen englischen Ablauf, erhalte Nutzeroriginale und bleibe in der genannten Autorisierung. Nutze den Claude Code-Adapter und schreibe vor Abschluss den geforderten dauerhaften Bericht.
+Lies die geltenden AGENTS.md-Dateien und das vollständige gespeicherte Handoff unter <ABSOLUTE_HANDOFF_PATH>. Nutze den vollständigen englischen Ablauf, erhalte Nutzeroriginale und bleibe in der genannten Autorisierung. Nutze den Claude Code-Adapter und schreibe vor Abschluss den geforderten dauerhaften Bericht.
 ```
 
 ### Vollständiges Deutsch (`full-de`)
@@ -112,7 +112,7 @@ Lies die geltenden AGENTS.md-Dateien (oder CLAUDE.md, wo ein Projekt noch eine n
 <!-- prompt:full-de-claude -->
 ```text
 /warm-handoff-full-de
-Lies die geltenden AGENTS.md-Dateien (oder CLAUDE.md, wo ein Projekt noch eine nutzt) und das vollständige gespeicherte Handoff unter <ABSOLUTE_HANDOFF_PATH>. Nutze den vollständigen deutschen Ablauf, erhalte Nutzeroriginale und bleibe in der genannten Autorisierung. Nutze den Claude Code-Adapter und schreibe vor Abschluss den geforderten dauerhaften Bericht.
+Lies die geltenden AGENTS.md-Dateien und das vollständige gespeicherte Handoff unter <ABSOLUTE_HANDOFF_PATH>. Nutze den vollständigen deutschen Ablauf, erhalte Nutzeroriginale und bleibe in der genannten Autorisierung. Nutze den Claude Code-Adapter und schreibe vor Abschluss den geforderten dauerhaften Bericht.
 ```
 
 <!-- section:REFERENCES -->

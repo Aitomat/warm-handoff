@@ -10,7 +10,7 @@ Use this variant when introducing or auditing the workflow. For routine turns, p
 <!-- rule:WH-01 -->
 ## 1. Establish scope
 
-1. Read the repository's instruction files before the handoff.
+1. Read the repository's `AGENTS.md` before the handoff — the one shared instruction file for Codex, Claude Code, and every other agent. A `CLAUDE.md` is optional and at most a pointer or symlink to it.
 2. Identify the newest handoff, its named feedback or interjection file, and any later user messages.
 3. Write down the objective, allowed and prohibited actions, owned paths, expected artifacts, test commands, and delivery boundary.
 4. Inspect the current branch, worktree, and relevant files before believing completion claims.

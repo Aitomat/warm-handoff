@@ -23,7 +23,8 @@ class PublicSurfaceTests(unittest.TestCase):
         self.assertIn("references/codex.md", compact)
         self.assertIn("references/claude-code.md", compact)
         self.assertNotIn("CLAUDE.md", compact)
-        self.assertNotIn("AGENTS.md", compact)
+        # 27.09.2026: AGENTS.md ist die eine gemeinsame Anweisungsdatei fuer alle Agenten.
+        self.assertIn("AGENTS.md", compact)
 
     def test_readme_exposes_variants_prompts_and_deferred_spanish(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")

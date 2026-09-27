@@ -10,7 +10,7 @@ Nutze diese Variante zur Einführung oder Prüfung des Ablaufs. Für Routinerund
 <!-- rule:WH-01 -->
 ## 1. Umfang feststellen
 
-1. Lies vor dem Handoff die Anweisungsdateien des Repositorys.
+1. Lies vor dem Handoff die `AGENTS.md` des Repositorys — die eine gemeinsame Anweisungsdatei für Codex, Claude Code und alle anderen Agenten. Eine `CLAUDE.md` ist optional und höchstens Verweis oder Symlink darauf.
 2. Bestimme das jüngste Handoff, die darin benannte Feedback- oder Zwischenrufe-Datei und spätere Nutzernachrichten.
 3. Halte Ziel, erlaubte und verbotene Aktionen, eigene Pfade, erwartete Artefakte, Prüfkommandos und Liefergrenze fest.
 4. Prüfe aktuellen Branch, Arbeitsbaum und relevante Dateien, bevor du Erledigt-Aussagen glaubst.

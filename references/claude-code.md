@@ -3,7 +3,7 @@
 <!-- rule:CLA-01 -->
 ## Instructions and capabilities
 
-Read the applicable `AGENTS.md` (current Claude Code versions load it as project instructions, so one file serves Codex and Claude users; read `CLAUDE.md` too where a project still has one) and current user instructions. Inspect the Claude Code version, enabled tools, permissions, agent features, and workspace limits actually present. Invoke `/warm-handoff` where slash-command skills are supported. Treat hooks, agent teams, subagents, worktrees, and cache controls as version- and configuration-dependent.
+Read the applicable `AGENTS.md` and current user instructions. `AGENTS.md` is the one shared instruction file: current Claude Code versions load it as project instructions, so one file serves Codex, Claude, and other agents. Do not create a separate `CLAUDE.md`; if a project keeps one, it is only a pointer or symlink to `AGENTS.md`. Inspect the Claude Code version, enabled tools, permissions, agent features, and workspace limits actually present. Invoke `/warm-handoff` where slash-command skills are supported. Treat hooks, agent teams, subagents, worktrees, and cache controls as version- and configuration-dependent.
 
 <!-- rule:CLA-02 -->
 ## Agents and permissions

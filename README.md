@@ -4,7 +4,7 @@
 
 Warm Handoff preserves user input and verified project state across pauses. It also defines safe, evidence-based work waves for Codex and Claude Code without treating either host as the core workflow.
 
-Every change to an active rule is also carried into `AGENTS.md` for Codex users.
+Every change to an active rule is also carried into `AGENTS.md`. `AGENTS.md` is the one shared instruction file for Codex, Claude Code, and other agents; current Claude Code versions read it too. A `CLAUDE.md` is optional — at most a one-line pointer or a symlink to `AGENTS.md`.
 
 <!-- section:SURFACES -->
 ## Choose a surface
@@ -88,7 +88,7 @@ Read the applicable AGENTS.md files and the complete saved handoff at <ABSOLUTE_
 <!-- prompt:compact-en-claude -->
 ```text
 /warm-handoff
-Read the applicable AGENTS.md files (or CLAUDE.md where a project still uses one) and the complete saved handoff at <ABSOLUTE_HANDOFF_PATH>. Preserve user originals, verify current Git and test state, and continue only within the stated authorization. Use the Claude Code adapter and write the requested durable report before completion.
+Read the applicable AGENTS.md files and the complete saved handoff at <ABSOLUTE_HANDOFF_PATH>. Preserve user originals, verify current Git and test state, and continue only within the stated authorization. Use the Claude Code adapter and write the requested durable report before completion.
 ```
 
 ### Compact German (`compact-de`)
@@ -96,7 +96,7 @@ Read the applicable AGENTS.md files (or CLAUDE.md where a project still uses one
 <!-- prompt:compact-de-claude -->
 ```text
 /warm-handoff-de
-Read the applicable AGENTS.md files (or CLAUDE.md where a project still uses one) and the complete saved handoff at <ABSOLUTE_HANDOFF_PATH>. Work in German, preserve user originals, and continue only within the stated authorization. Use the Claude Code adapter and write the requested durable report before completion.
+Read the applicable AGENTS.md files and the complete saved handoff at <ABSOLUTE_HANDOFF_PATH>. Work in German, preserve user originals, and continue only within the stated authorization. Use the Claude Code adapter and write the requested durable report before completion.
 ```
 
 ### Full English (`full-en`)
@@ -104,7 +104,7 @@ Read the applicable AGENTS.md files (or CLAUDE.md where a project still uses one
 <!-- prompt:full-en-claude -->
 ```text
 /warm-handoff-full
-Read the applicable AGENTS.md files (or CLAUDE.md where a project still uses one) and the complete saved handoff at <ABSOLUTE_HANDOFF_PATH>. Apply the full English workflow, preserve user originals, and continue only within the stated authorization. Use the Claude Code adapter and write the requested durable report before completion.
+Read the applicable AGENTS.md files and the complete saved handoff at <ABSOLUTE_HANDOFF_PATH>. Apply the full English workflow, preserve user originals, and continue only within the stated authorization. Use the Claude Code adapter and write the requested durable report before completion.
 ```
 
 ### Full German (`full-de`)
@@ -112,7 +112,7 @@ Read the applicable AGENTS.md files (or CLAUDE.md where a project still uses one
 <!-- prompt:full-de-claude -->
 ```text
 /warm-handoff-full-de
-Read the applicable AGENTS.md files (or CLAUDE.md where a project still uses one) and the complete saved handoff at <ABSOLUTE_HANDOFF_PATH>. Apply the full German workflow, preserve user originals, and continue only within the stated authorization. Use the Claude Code adapter and write the requested durable report before completion.
+Read the applicable AGENTS.md files and the complete saved handoff at <ABSOLUTE_HANDOFF_PATH>. Apply the full German workflow, preserve user originals, and continue only within the stated authorization. Use the Claude Code adapter and write the requested durable report before completion.
 ```
 
 <!-- section:REFERENCES -->
