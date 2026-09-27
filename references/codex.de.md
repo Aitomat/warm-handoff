@@ -31,3 +31,17 @@ Behandle Modellverfügbarkeit, Kontextkapazität, Reasoning-Steuerung, Caching, 
 Am 11.09.2026 anhand offizieller OpenAI-Dokumentation geprüft: Die öffentlichen API-Modellseiten nennen für GPT-6 Astra und GPT-5.6 Sol Kontextfenster von 1.050.000 Token. Das ist nur API-Spezifikation. OpenAIs Prompt-Caching-Leitfaden beschreibt API-Caching und ist keine Garantie für eine Codex-Abonnementsitzung.
 
 Quellen: [GPT-6 Astra](https://developers.openai.com/api/docs/models/gpt-6-astra), [GPT-5.6 Sol](https://developers.openai.com/api/docs/models/gpt-5.6-sol), [Prompt-Caching](https://developers.openai.com/api/docs/guides/prompt-caching).
+
+<!-- rule:CDX-05 -->
+## Harte Regeln für einen Codex-Chef
+
+Eine Codex-Chefsitzung überspringt genau diese Punkte gern. Jeder ist eine Schranke, kein Rat; ein Handoff, dem einer fehlt, ist nicht fertig.
+
+- [ ] Jeder Zeitstempel kommt beim Schreiben aus `date`, nie aus einer Schätzung.
+- [ ] Erste Zeile jedes Handoffs, Berichts und jeder Zwischenrufe-Datei: der eigene absolute Pfad; zweite Zeile: der Stand aus `date`.
+- [ ] Das neue Handoff entsteht direkt im Archivordner des Projekts und wird nie verschoben; ein beantwortetes Handoff wird nie überschrieben.
+- [ ] Genau ein Eingang: bis zum Wellenstart der Handoff-Fuß, danach die Zwischenrufe-Datei bis zum nächsten Handoff.
+- [ ] Vor dem Schreiben das [Handoff-Format](handoff-format.de.md) vollständig öffnen; „Ich kenne das Format" zählt nicht.
+- [ ] Den Vorgänger ungefiltert lesen, erste bis letzte Zeile — nichts abschneiden, nicht nur nach Antwortmarkern greppen.
+- [ ] Bündel am Wellenende: bauen, installieren, im Rahmen der Freigabe committen und pushen, Handoff schreiben und öffnen — in einem Durchgang; ausstehende Berichte kommen unter „Laufend und ausstehend".
+- [ ] RTF nur über `scripts/handoff-rtf.sh`.

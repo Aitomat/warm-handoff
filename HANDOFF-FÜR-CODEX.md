@@ -12,6 +12,19 @@ Englische Fassung: [HANDOFF-FOR-CODEX.md](HANDOFF-FOR-CODEX.md).
 
 Sprache deutsch. Zeitstempel überall als `TT.MM.JJJJ, HH:MM`.
 
+## 0. Harte Regeln — jedes Kästchen abhaken
+
+Genau diese Punkte hat ein Codex-Chef schon übersprungen. Die Checkliste steht im
+[Codex-Adapter](references/codex.de.md) (Regel CDX-05); kurz:
+
+- [ ] Zeitstempel aus `date`, nie geschätzt.
+- [ ] Erste Zeile = absoluter Pfad des Dokuments, zweite Zeile = Stand.
+- [ ] Neues Handoff direkt im Archivordner; nie verschieben, nie ein beantwortetes überschreiben.
+- [ ] Ein Eingang: bis Wellenstart der Handoff-Fuß, danach die Zwischenrufe-Datei.
+- [ ] Zuerst das [Handoff-Format](references/handoff-format.de.md) vollständig öffnen.
+- [ ] Den Vorgänger ungefiltert lesen, erste bis letzte Zeile.
+- [ ] Bündel am Wellenende: bauen, installieren, pushen, Handoff — in einem Durchgang.
+
 ## 1. Vorher lesen — vollständig, nicht geraten
 
 - Den **benannten** Vorgänger-Handoff, nicht den mit dem neuesten Änderungsdatum.

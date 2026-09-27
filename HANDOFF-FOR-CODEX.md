@@ -7,6 +7,19 @@ top to bottom. It is a short form, not a replacement: the binding texts are
 [wave execution](references/wave-execution.md).
 German edition: [HANDOFF-FÜR-CODEX.md](HANDOFF-FÜR-CODEX.md).
 
+## 0. Hard rules — tick every box
+
+A Codex lead has skipped exactly these before. The checklist is in the
+[Codex adapter](references/codex.md) (rule CDX-05); in short:
+
+- [ ] Timestamps from `date`, never estimated.
+- [ ] First line = absolute path of the document, second line = as-of time.
+- [ ] New handoff directly in the archive folder; never moved, never overwriting an answered one.
+- [ ] One inbox: handoff footer until wave start, then the interjections file.
+- [ ] Open [handoff format](references/handoff-format.md) in full first.
+- [ ] Read the predecessor unfiltered, first line to last.
+- [ ] Bundle at wave end: build, install, push, handoff — in one pass.
+
 ## 1. Read everything first — never guess the source
 
 - The **named** predecessor handoff, not the one with the newest timestamp.

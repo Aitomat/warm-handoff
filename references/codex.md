@@ -31,3 +31,17 @@ Treat model availability, context capacity, reasoning controls, caching, quotas,
 Verified 2026-09-11 against official OpenAI documentation: the public API model pages list GPT-6 Astra and GPT-5.6 Sol with 1,050,000-token context windows. This is API specification only. OpenAI's prompt-caching guide describes API caching, not a guarantee about a Codex subscription session.
 
 Sources: [GPT-6 Astra](https://developers.openai.com/api/docs/models/gpt-6-astra), [GPT-5.6 Sol](https://developers.openai.com/api/docs/models/gpt-5.6-sol), [Prompt caching](https://developers.openai.com/api/docs/guides/prompt-caching).
+
+<!-- rule:CDX-05 -->
+## Hard rules for a Codex lead
+
+A Codex lead session tends to skip these. Each one is a gate, not advice; a handoff that misses one is not finished.
+
+- [ ] Every timestamp comes from `date` at the moment of writing, never from an estimate.
+- [ ] First line of every handoff, report, and interjections file: its own absolute path; second line: the as-of time from `date`.
+- [ ] The new handoff is created directly in the project's archive folder and never moved; an answered handoff is never overwritten.
+- [ ] Exactly one inbox: the handoff footer until wave start, then the interjections file until the next handoff.
+- [ ] Before writing, open [handoff format](handoff-format.md) in full; "I know the format" does not count.
+- [ ] Read the predecessor unfiltered, first line to last — no truncation, no grep for answer markers only.
+- [ ] Bundle at wave end: build, install, commit and push within the authorization, write and open the handoff in one pass; outstanding reports go under "Running and pending".
+- [ ] RTF only through `scripts/handoff-rtf.sh`.
