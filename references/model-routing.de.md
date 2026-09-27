@@ -19,6 +19,8 @@ Wähle ein Modell nach benötigter Denktiefe, Latenz, Werkzeugnutzung und belegt
 
 Schließt der Nutzer ein Modell aus, wird es für keine Aufgabe eingesetzt, auch nicht als Unteragent-Vorgabe oder als Ausweichweg. Ausnahme ist nur, wenn er es für eine bestimmte Aufgabe ausdrücklich wieder nennt. Die Ausschlussliste gehört ins Gedächtnis oder in die Projektanweisungen, nicht in diesen Skill. Eine Effort-Stufe gilt nur dann als vergeben, wenn der Host sie wirklich setzt. Übernimmt ein Unteragenten-Werkzeug die Stufe der Hauptsitzung, steht „low/medium/high“ im Auftrag nur als Bitte. Das wird so gemeldet, und für echte Stufen dient ein Start mit ausdrücklichem Parameter, zum Beispiel ein Kommandozeilen-Agent mit `--effort`. Zusätzliche Wächter über Themen-Wächtern sind kein Standard: Jeder Themen-Wächter beweist, baut, testet und berichtet selbst, und die Vollsuite beim Merge ist die gemeinsame Prüfung.
 
+Standardbesetzung (Nutzerentscheidung 27.09.2026; in den Projektanweisungen ersetzen, wenn deine abweicht): Chef und Wächter laufen auf Claude Opus 5.5 mit Effort medium. Schwieriges eskaliert zu Opus mit Effort high oder zu Codex GPT-6 Astra mit Effort medium. Fable nur, wenn der Nutzer es für die Aufgabe nennt. Das Agent-Werkzeug übernimmt den Effort der Hauptsitzung; eine echte Stufe braucht deshalb einen eigenen Start: `claude -p --model opus --effort high` (oder `medium`).
+
 <!-- rule:MR-03 -->
 ## Aktuell geprüfte Hinweise
 

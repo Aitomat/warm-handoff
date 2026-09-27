@@ -2,6 +2,8 @@
 
 Read `SKILL.md` in full before working on this repository. Its six rules and the references they name are binding here for Codex too; use `references/codex.md` as the host adapter. User instructions and the actual host permissions take precedence. Every change to an active rule must also be reflected in this file.
 
+This `AGENTS.md` is the one shared instruction file for Codex, Claude Code, and other agents; current Claude Code versions read it as project instructions. Do not add a separate `CLAUDE.md`; if one exists, it is only a pointer or symlink to this file.
+
 ## Scope and resumption
 
 - Read the complete latest saved handoff, later user messages, applicable project instructions, and the designated feedback source. Preserve original user text verbatim. A handoff does not add authorization.
@@ -20,3 +22,8 @@ Read `SKILL.md` in full before working on this repository. Its six rules and the
 - Only one build runs at a time; enforce the lock in the project's test script, not just a prompt. Smoke-build before workers start. A final build counts only after reaching tests; repeat it if tooling aborts earlier or code changes afterwards. Topic guardians build at the end with targeted tests; the merge guardian runs the full suite. **Give the longest-running guardian/largest topic first access to the build slot, then the next largest.** Workers do not build. Wait in the foreground as specified in `references/wave-execution.md`.
 - Never overwrite an answered handoff. Create the new Markdown source directly in the project's archive folder with its absolute path as the first line, followed by the date; create a new editable RTF when requested. Use only `scripts/handoff-rtf.sh` for handoff and Zwischenrufe RTFs. Preserve text behind `>>>` as black on gold at 18 pt; verify text roundtrip and links. Archive answered handoffs with `mv`, never `rm`.
 - Do not install optional helpers without permission. Before completion, reread changed feedback, inspect Git status, run the relevant checks, write the durable report, and state completed, pending, and running work with evidence. Use system time for timestamps. A clean wave proceeds through build, install, publication, and handoff within its authorization; ask for direction on an unclean finish.
+
+## Codex lead checklist and models
+
+- A Codex lead ticks every box of CDX-05 in `references/codex.md`: timestamps from `date`; first line absolute path, second line as-of time; new handoff directly in the archive folder; one inbox; open `references/handoff-format.md` first; read the predecessor unfiltered; bundle build, install, push, and handoff at wave end.
+- Model default (MR-04): Claude Opus 5.5 at medium effort; escalate to Opus at high effort or Codex GPT-6 Astra at medium; Fable only on explicit request. A real effort level needs its own launch, `claude -p --model opus --effort …`, because the Agent tool inherits the main session's effort.
