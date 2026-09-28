@@ -3,7 +3,7 @@
 <!-- rule:HF-01 -->
 ## New revision, clear entry point
 
-Create a new dated file for every handoff. Never overwrite an answered source. Put a copyable first line with the absolute path of the new file. Include project, date, and revision in the title.
+Create a new dated file for every handoff. Never overwrite an answered source. Put a copyable first line with the absolute path of the new file. In the RTF twin that first line is the RTF's own absolute path as a link; the Markdown path does not appear there (`scripts/handoff-rtf.sh` swaps it; user 2026-09-28 02:52). The Markdown keeps its own path. Include project, date, and revision in the title.
 
 **Read only the saved state.** Saving is the user's release; text left unsaved in
 an editor has not been read. Ask for the save, or mark the gap explicitly as a

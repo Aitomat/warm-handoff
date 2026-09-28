@@ -140,12 +140,17 @@ def project_base(source, explicit=None):
 
 
 def render(source, output, project_root=None):
+    given = Path(source).expanduser().absolute()
     source = Path(source).resolve(strict=True)
     if Path(output).exists() or Path(output).is_symlink():
         raise FileExistsError(f'Existing answer document protected: {output}')
     base = project_base(source, project_root)
     future = Path(output).resolve()
     lines = source.read_text(encoding='utf-8').splitlines()
+    # Pfadzeile: Im RTF-Zwilling steht oben der eigene RTF-Pfad, nicht der
+    # MD-Pfad (Yasin, 28.09.2026: "Punkt M D ist halt nicht der Dateiname dieser R T F").
+    if lines and lines[0].strip().strip('`') in (str(source), str(given)):
+        lines[0] = str(future)
     body, visible, links = [], [], []
     fence = None
     user_original = False

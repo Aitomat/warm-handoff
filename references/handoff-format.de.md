@@ -3,7 +3,7 @@
 <!-- rule:HF-01 -->
 ## Neue Revision, klarer Eingang
 
-Erzeuge für jede Übergabe eine neue datierte Datei. Überschreibe nie eine beantwortete Quelle. Setze eine kopierbare erste Zeile mit dem absoluten Pfad der neuen Datei. Nenne Projekt, Datum und Revision im Titel.
+Erzeuge für jede Übergabe eine neue datierte Datei. Überschreibe nie eine beantwortete Quelle. Setze eine kopierbare erste Zeile mit dem absoluten Pfad der neuen Datei. Im RTF-Zwilling ist diese erste Zeile der eigene absolute RTF-Pfad als Link; der MD-Pfad erscheint dort nicht (`scripts/handoff-rtf.sh` tauscht ihn; Nutzer 28.09.2026, 02:52). Das MD behält seinen eigenen Pfad. Nenne Projekt, Datum und Revision im Titel.
 
 **Lies nur den gespeicherten Stand.** Das Speichern ist die Freigabe des Nutzers;
 ungespeicherter Text in einem Editor ist nicht gelesen. Bitte um das Speichern
