@@ -1,0 +1,30 @@
+.........FF..
+======================================================================
+FAIL: test_englischer_sammlungsfuss (test_handoff_pruefen.SammlungPruefenTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/pro16/Code/warm-handoff-w96/tests/test_handoff_pruefen.py", line 124, in test_englischer_sammlungsfuss
+    self.assertEqual(result.returncode, 0, result.stdout)
+AssertionError: 1 != 0 : ── Vorgänger: /tmp/warm-handoff-sammlung-kf_gfp25/_handoff-alt.md
+   kein SAMMLUNG-Banner gefunden — Nutzereingaben dieses Vorgängers von Hand abgleichen.
+
+ACHTUNG: 1 Zeile(n) fehlen im neuen Handoff.
+Wörtlich nachtragen, NICHT umformulieren, dann erneut prüfen.
+
+
+======================================================================
+FAIL: test_neue_antwortfelder_werden_nicht_uebersehen (test_handoff_pruefen.SammlungPruefenTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/pro16/Code/warm-handoff-w96/tests/test_handoff_pruefen.py", line 118, in test_neue_antwortfelder_werden_nicht_uebersehen
+    self.assertEqual(result.returncode, 1, result.stdout)
+AssertionError: 0 != 1 : ── Vorgänger: /tmp/warm-handoff-sammlung-4l6y_7r2/_handoff-alt.md
+   0 Sammlungszeilen geprüft, 0 fehlen.
+
+OK — die Sammlungen beider Vorgänger sind im neuen Handoff enthalten.
+
+
+----------------------------------------------------------------------
+Ran 13 tests in 1.462s
+
+FAILED (failures=2)

@@ -1,0 +1,16 @@
+...F...........
+======================================================================
+FAIL: test_linklabel_ist_keine_zweite_linkquelle (test_w96_scripts.W96RenderTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/pro16/Code/warm-handoff-w96/tests/test_w96_scripts.py", line 34, in test_linklabel_ist_keine_zweite_linkquelle
+    data, text = self.render(f'[**{label}**](https://example.com/check)')
+  File "/Users/pro16/Code/warm-handoff-w96/tests/test_w96_scripts.py", line 22, in render
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 2 != 0 : FAILED: RTF hyperlink field verification failed
+
+
+----------------------------------------------------------------------
+Ran 15 tests in 2.399s
+
+FAILED (failures=1)

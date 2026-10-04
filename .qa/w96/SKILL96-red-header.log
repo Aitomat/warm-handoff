@@ -1,0 +1,32 @@
+.F....E..........
+======================================================================
+ERROR: test_ungueltiges_datum_ist_befund_statt_absturz (test_handoff_pruefen.HandoffPruefenTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/pro16/Code/warm-handoff-w96/tests/test_handoff_pruefen.py", line 69, in test_ungueltiges_datum_ist_befund_statt_absturz
+    befunde = self.befunde(handoff(self.md, 'r', stand='32.10.2026, 04:55'))
+  File "/Users/pro16/Code/warm-handoff-w96/tests/test_handoff_pruefen.py", line 51, in befunde
+    return handoff_pruefen.pruefe_md(self.md, text, JETZT)
+  File "/Users/pro16/Code/warm-handoff-w96/scripts/handoff-pruefen.py", line 86, in pruefe_md
+    zeitpunkt = datetime(jahr, monat, tag, stunde, minute)
+ValueError: day is out of range for month
+
+======================================================================
+FAIL: test_englische_standzeile_wird_akzeptiert (test_handoff_pruefen.HandoffPruefenTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/pro16/Code/warm-handoff-w96/tests/test_handoff_pruefen.py", line 66, in test_englische_standzeile_wird_akzeptiert
+    self.assertEqual(self.befunde(text), [])
+AssertionError: Lists differ: ['Standzeile: Zeile 2 muss „Stand: TT.MM.JJJJ, HH:MM“ aus `date` sein.'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'Standzeile: Zeile 2 muss „Stand: TT.MM.JJJJ, HH:MM“ aus `date` sein.'
+
+- ['Standzeile: Zeile 2 muss „Stand: TT.MM.JJJJ, HH:MM“ aus `date` sein.']
++ []
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.895s
+
+FAILED (failures=1, errors=1)

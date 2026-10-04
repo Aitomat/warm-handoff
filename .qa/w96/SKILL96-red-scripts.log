@@ -1,0 +1,85 @@
+FF.F.FFFFF
+======================================================================
+FAIL: test_agenten_fettdruck_wird_gesetzt (test_w96_scripts.W96RenderTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/pro16/Code/warm-handoff-w96/tests/test_w96_scripts.py", line 28, in test_agenten_fettdruck_wird_gesetzt
+    self.assertEqual(text.strip(), 'Vorher Wichtig danach.')
+AssertionError: 'Vorher **Wichtig** danach.' != 'Vorher Wichtig danach.'
+- Vorher **Wichtig** danach.
+?        --       --
++ Vorher Wichtig danach.
+
+
+======================================================================
+FAIL: test_fettdruck_in_linkbeschriftung_bleibt_klickbar (test_w96_scripts.W96RenderTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/pro16/Code/warm-handoff-w96/tests/test_w96_scripts.py", line 33, in test_fettdruck_in_linkbeschriftung_bleibt_klickbar
+    self.assertEqual(text.strip(), 'Prüfung')
+AssertionError: '**Prüfung**' != 'Prüfung'
+- **Prüfung**
+? --       --
++ Prüfung
+
+
+======================================================================
+FAIL: test_tabellen_werden_als_beschriftete_zeilen_lesbar (test_w96_scripts.W96RenderTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/pro16/Code/warm-handoff-w96/tests/test_w96_scripts.py", line 39, in test_tabellen_werden_als_beschriftete_zeilen_lesbar
+    self.assertEqual(text.strip(), 'Thema · Status\nThema: C; Status: fertig\nThema: D; Status: offen')
+AssertionError: '| Thema | Status |\n| :--- | ---: |\n| C | **fertig** |\n| D | offen |' != 'Thema · Status\nThema: C; Status: fertig\nThema: D; Status: offen'
+- | Thema | Status |
+? --      ^       --
++ Thema · Status
+?       ^
++ Thema: C; Status: fertig
++ Thema: D; Status: offen- | :--- | ---: |
+- | C | **fertig** |
+- | D | offen |
+
+======================================================================
+FAIL: test_gespeicherter_stand_bekommt_antwort_und_neuen_marker (test_w96_scripts.W96ZwischenrufeTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/pro16/Code/warm-handoff-w96/tests/test_w96_scripts.py", line 102, in test_gespeicherter_stand_bekommt_antwort_und_neuen_marker
+    self.assertIn('ZWISCHENRUFE BIS HIER BEARBEITET', text)
+AssertionError: 'ZWISCHENRUFE BIS HIER BEARBEITET' not found in 'Gespeicherte Nutzereingabe\n\n— übernommen bis hier, 21:30 —\n\nAntwort Claude, 04.10.2026-21:30:\nGeplant als Thema X.\n\n— ab hier wieder Zwischenrufe —\n\n>>>\n'
+
+======================================================================
+FAIL: test_keine_neuen_zwischenrufe_werden_vermerkt (test_w96_scripts.W96ZwischenrufeTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/pro16/Code/warm-handoff-w96/tests/test_w96_scripts.py", line 111, in test_keine_neuen_zwischenrufe_werden_vermerkt
+    self.assertIn('Neue Zwischenrufe gelesen: nein', self.inbox.read_text())
+AssertionError: 'Neue Zwischenrufe gelesen: nein' not found in 'Gespeicherte Nutzereingabe\n\n— übernommen bis hier, 21:30 —\n\nAntwort Claude, 04.10.2026-21:30:\nGeplant als Thema X.\n\n— ab hier wieder Zwischenrufe —\n\n>>>\n'
+
+======================================================================
+FAIL: test_rtf_ist_kein_zwischenrufe_eingang (test_w96_scripts.W96ZwischenrufeTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/pro16/Code/warm-handoff-w96/tests/test_w96_scripts.py", line 117, in test_rtf_ist_kein_zwischenrufe_eingang
+    self.assertNotEqual(result.returncode, 0)
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_unbekannter_editorzustand_blockiert_anhaengen (test_w96_scripts.W96ZwischenrufeTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/pro16/Code/warm-handoff-w96/tests/test_w96_scripts.py", line 94, in test_unbekannter_editorzustand_blockiert_anhaengen
+    self.assertNotEqual(result.returncode, 0)
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_ungespeichertes_wird_weder_gesichert_noch_angefasst (test_w96_scripts.W96ZwischenrufeTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/pro16/Code/warm-handoff-w96/tests/test_w96_scripts.py", line 86, in test_ungespeichertes_wird_weder_gesichert_noch_angefasst
+    self.assertNotEqual(result.returncode, 0)
+AssertionError: 0 == 0
+
+----------------------------------------------------------------------
+Ran 10 tests in 2.543s
+
+FAILED (failures=8)

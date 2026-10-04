@@ -1,0 +1,16 @@
+.F..............
+======================================================================
+FAIL: test_antwort_mit_inline_code_und_markdownlink_bleibt_woertlich (test_w96_scripts.W96RenderTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/pro16/Code/warm-handoff-w96/tests/test_w96_scripts.py", line 74, in test_antwort_mit_inline_code_und_markdownlink_bleibt_woertlich
+    self.assertEqual(text.strip(), original)
+AssertionError: '>>>Userantwort: **Wichtig** Code Link' != '>>>Userantwort: **Wichtig** `Code` [Link](https://example.com/check)'
+- >>>Userantwort: **Wichtig** Code Link
++ >>>Userantwort: **Wichtig** `Code` [Link](https://example.com/check)
+
+
+----------------------------------------------------------------------
+Ran 16 tests in 1.949s
+
+FAILED (failures=1)
