@@ -17,7 +17,7 @@ answers.
 <!-- rule:HF-02 -->
 ## Required sections
 
-1. **Preserved user input:** the complete verbatim collection from the previous revision, without interpretation.
+1. **Preserved user input:** the complete verbatim collection of what is new since the previous revision, without interpretation; older originals by link only (HF-08).
 2. **Objective and authorization:** desired outcome, allowed and prohibited actions, and file ownership.
 3. **Verified state:** branch or HEAD, changed files, passing checks, and evidence paths.
 4. **Running and pending:** started work, dependencies, unknown state, and real blockers.
@@ -65,7 +65,7 @@ Read the previous handoff unfiltered, first line to last, before writing the new
 
 The eight required sections above are the minimum. The shipped order is:
 
-1. Copyable absolute path — 2. Editing note — WITHOUT its own `>>>` line below it (BE and BF carried a meaningless gold line in the header; user 2026-09-14 23:14). The first `>>>User answer:` belongs under the first question — 3. The state in three sentences — 4. Objective and authorization — 5. Verified state — 6. Running and pending — 7. The user's collection, verbatim, separated by source — 8. What I made of it — 9. Decisions and questions with `>>>User answer:` — 10. Test list with `>>>User answer:` per item — 11. The through-line — 12. Short roadmap — 13. Measurement of the wave — 14. Main documents and further documents — 15. Memory (durable/session) — 16. Logbook — 17. `COLLECTION FOR THE NEXT HANDOFF`.
+1. Copyable absolute path — 2. Editing note — WITHOUT its own `>>>` line below it (BE and BF carried a meaningless gold line in the header; user 2026-09-14 23:14). The first `>>>User answer:` belongs under the first question — 3. The state in three sentences — 4. Objective and authorization — 5. Verified state — 6. Running and pending — 7. The user's collection, verbatim, separated by source, new input only (HF-08) — 8. What I made of it — 9. Decisions and questions with `>>>User answer:` — 10. Test list with `>>>User answer:` per item — 11. The through-line — 12. Short roadmap — 13. Measurement of the wave — 14. Main documents and further documents — 15. Memory (durable/session) — 16. Logbook — 17. `COLLECTION FOR THE NEXT HANDOFF`.
 
 A missing section means the handoff is not finished. Check the list against the file before rendering.
 
@@ -88,6 +88,37 @@ into the chat:
 The user must never write anything twice. If they had to paste interjections
 into the chat because you missed them, that belongs in the wave's measurement as
 a failure.
+
+<!-- rule:HF-08 -->
+## Carry only new input verbatim, link the older (2026-10-04)
+
+The verbatim collection holds only what the user saved or wrote **since the
+previous handoff**: the answers in the predecessor's answer fields, its collection
+footer, the wave's Zwischenrufe file, and the chat messages of the wave. Originals
+that the predecessor had itself carried over from earlier revisions are NOT copied
+again. They stay in the archived predecessor, which is never changed or deleted.
+One line replaces them:
+
+`Older originals: <absolute path of the predecessor>, section "<name>"`
+
+Reason, in the user's words (2026-10-04 17:01): "was bringt es uns denn, wenn es
+im Handoff drin ist, das haben wir doch schon im alten Handoff drin". Measured on
+the handoff that triggered the rule: 110 kB, a large part of it originals copied
+for the second and third time.
+
+Three conditions keep this lossless:
+
+1. **Every wish from an older original that is still open gets its own row under
+   "Running and pending"**, with its source (handoff revision and time). A wish
+   that lives only inside an old original is lost, because the next session reads
+   the new handoff, not the chain behind it.
+2. **Reading stays complete (HF-05).** The saving is in the new document, not in
+   the reading of the predecessor.
+3. **The link must resolve.** If the predecessor is missing or was moved, carry
+   its originals verbatim once more instead of linking into nothing.
+
+`scripts/sammlung-pruefen.sh` checks the immediate predecessor only, for the same
+reason.
 
 See also [wave execution](wave-execution.md), [evidence scope](evidence-scope.md), and [RTF on macOS](rtf-macos.md).
 

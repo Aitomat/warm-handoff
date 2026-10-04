@@ -18,7 +18,7 @@ parallele Eingänge verlieren Antworten.
 <!-- rule:HF-02 -->
 ## Pflichtabschnitte
 
-1. **Erhaltene Nutzereingaben:** vollständige wörtliche Sammlung aus der vorherigen Revision, ohne Deutung.
+1. **Erhaltene Nutzereingaben:** vollständige wörtliche Sammlung dessen, was seit der vorherigen Revision neu ist, ohne Deutung; ältere Originale nur per Verweis (HF-08).
 2. **Ziel und Autorisierung:** gewünschtes Ergebnis, erlaubte und verbotene Aktionen, Dateibesitz.
 3. **Verifizierter Stand:** Branch/HEAD, geänderte Dateien, bestandene Prüfungen und Belegpfade.
 4. **Laufend und offen:** gestartete Arbeit, Abhängigkeiten, unbekannter Stand und echte Blocker.
@@ -59,7 +59,7 @@ Die acht Pflichtabschnitte oben sind das Minimum. Die ausgelieferte Reihenfolge 
    noch das kopieren kann"). Die erste `>>>Userantwort:` gehört unter die erste
    Frage — 2. Bearbeitungshinweis — 3. Der Stand in drei Sätzen — 4. Ziel und
    Autorisierung — 5. Verifizierter Stand — 6. Laufend und offen — 7. Sammlung des
-   Nutzers, wörtlich, nach Quelle getrennt — 8. Was ich daraus gemacht habe —
+   Nutzers, wörtlich, nach Quelle getrennt, nur neue Eingaben (HF-08) — 8. Was ich daraus gemacht habe —
    9. Entscheidungen und Fragen mit `>>>Userantwort:` — 10. Testliste mit
    `>>>Userantwort:` je Punkt — 11. Der rote Faden — 12. Kurz-Roadmap —
    13. Messung der Welle — 14. Hauptdokumente und weitere Dokumente —
@@ -87,5 +87,36 @@ Antwort in dieselbe Datei — nicht nur in den Chat:
 Der Nutzer muss nie zweimal schreiben. Musste er Zwischenrufe in den Chat
 kopieren, weil du sie übersehen hast, gehört das als Fehler in die Messung der
 Welle.
+
+<!-- rule:HF-08 -->
+## Nur neue Eingaben wörtlich übernehmen, Älteres verlinken (04.10.2026)
+
+Die wörtliche Sammlung enthält nur, was der Nutzer **seit dem vorherigen Handoff**
+gespeichert oder geschrieben hat: die Antworten in den Antwortfeldern des
+Vorgängers, dessen Sammlungs-Fußbereich, die Zwischenrufe-Datei der Welle und die
+Chatnachrichten der Welle. Originale, die der Vorgänger selbst schon aus früheren
+Revisionen übernommen hatte, werden NICHT noch einmal kopiert. Sie bleiben im
+archivierten Vorgänger, der nie geändert oder gelöscht wird. Eine Zeile ersetzt sie:
+
+`Ältere Originale: <absoluter Pfad des Vorgängers>, Abschnitt „<Name>“`
+
+Begründung in Yasins Worten (04.10.2026, 17:01): „was bringt es uns denn, wenn es
+im Handoff drin ist, das haben wir doch schon im alten Handoff drin“. Gemessen am
+Handoff, das die Regel ausgelöst hat: 110 kB, ein großer Teil davon zum zweiten
+und dritten Mal kopierte Originale.
+
+Drei Bedingungen halten das verlustfrei:
+
+1. **Jeder noch offene Wunsch aus einem älteren Original bekommt eine eigene Zeile
+   unter „Laufend und offen“**, mit Quelle (Handoff-Revision und Uhrzeit). Ein
+   Wunsch, der nur in einem alten Original steht, ist verloren, weil die nächste
+   Sitzung das neue Handoff liest und nicht die Kette dahinter.
+2. **Das Lesen bleibt vollständig (HF-05).** Gespart wird im neuen Dokument, nicht
+   beim Lesen des Vorgängers.
+3. **Der Verweis muss auflösbar sein.** Fehlt der Vorgänger oder wurde er
+   verschoben, werden seine Originale noch einmal wörtlich übernommen, statt ins
+   Leere zu verweisen.
+
+`scripts/sammlung-pruefen.sh` prüft aus demselben Grund nur den direkten Vorgänger.
 
 Siehe auch [Wellen-Ausführung](wave-execution.de.md), [Beleggrenzen](evidence-scope.de.md) und [RTF unter macOS](rtf-macos.de.md).

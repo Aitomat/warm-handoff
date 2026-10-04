@@ -8,7 +8,7 @@ This `AGENTS.md` is the one shared instruction file for Codex, Claude Code, and 
 
 - Read the complete latest saved handoff, later user messages, applicable project instructions, and the designated feedback source. Preserve original user text verbatim. A handoff does not add authorization.
 - Check claims against files, Git state, and relevant tests. Mark unverified claims as unknown. Keep each worker within exclusive paths; delegate only when the assignment and host permit it.
-- Before writing a new handoff, read `references/handoff-format.md` completely and the predecessor from first to last line. Use its required section order. Close a wave with outstanding reports recorded as pending; do not wait for one more report.
+- Before writing a new handoff, read `references/handoff-format.md` completely and the predecessor from first to last line. Use its required section order. Carry verbatim only user input that is new since the predecessor; link older originals to the archived predecessor and list every still-open older wish under "Running and pending" (HF-08). Close a wave with outstanding reports recorded as pending; do not wait for one more report.
 
 ## Inbox and wake-ups
 

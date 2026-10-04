@@ -10,9 +10,12 @@
 # Aufruf:
 #   sammlung-pruefen.sh <neues-handoff.md> [vorgaenger1.md] [vorgaenger2.md]
 #
-# Ohne Vorgänger-Argumente werden die beiden Handoffs genommen, die im selben
-# Verzeichnis nach Änderungszeit direkt vor dem neuen liegen
-# (Muster `_handoff-*.md`, das neue selbst ausgenommen).
+# Ohne Vorgänger-Argumente wird nur der DIREKTE Vorgänger genommen, also das
+# Handoff, das im selben Verzeichnis nach Änderungszeit direkt vor dem neuen liegt
+# (Muster `_handoff-*.md`, das neue selbst ausgenommen). Seit HF-08 (Yasin,
+# 04.10.2026 17:01) übernimmt ein Handoff nur die neuen Eingaben wörtlich; ältere
+# Originale bleiben im archivierten Vorgänger und werden verlinkt. Wer weiter
+# zurück prüfen will, nennt die Vorgänger ausdrücklich als Argumente.
 #
 # Rückgabe: 0 = alles übernommen · 1 = Zeilen fehlen · 2 = Aufrufproblem.
 # PFLICHTSCHRITT: vor dem Finalisieren jedes Handoffs laufen lassen.
@@ -36,7 +39,7 @@ else
   while IFS= read -r f; do
     [ "$f" = "$neu_abs" ] && continue
     vorgaenger+=("$f")
-    [ "${#vorgaenger[@]}" -ge 2 ] && break
+    [ "${#vorgaenger[@]}" -ge 1 ] && break
   done < <(ls -t "$verz"/_handoff-*.md 2>/dev/null)
 fi
 
