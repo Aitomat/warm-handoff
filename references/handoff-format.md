@@ -65,7 +65,7 @@ Read the previous handoff unfiltered, first line to last, before writing the new
 
 The eight required sections above are the minimum. The shipped order is:
 
-1. Copyable absolute path — 2. Editing note — WITHOUT its own `>>>` line below it (BE and BF carried a meaningless gold line in the header; user 2026-09-14 23:14). The first `>>>User answer:` belongs under the first question — 3. The state in three sentences — 4. Objective and authorization — 5. Verified state — 6. Running and pending — 7. The user's collection, verbatim, separated by source, new input only (HF-08) — 8. What I made of it — 9. Decisions and questions with `>>>User answer:` — 10. Test list with `>>>User answer:` per item — 11. The through-line — 12. Short roadmap — 13. Measurement of the wave — 14. Main documents and further documents — 15. Memory (durable/session) — 16. Logbook — 17. `COLLECTION FOR THE NEXT HANDOFF`.
+1. Header: own absolute path, as-of line (HF-01), then the copy line `Ich habe das Handoff bearbeitet: <absolute path to the .rtf>` — 2. Editing note — WITHOUT its own `>>>` line below it (BE and BF carried a meaningless gold line in the header; user 2026-09-14 23:14). The first `>>>User answer:` belongs under the first question — 3. The state in three sentences — 4. Objective and authorization — 5. Verified state — 6. Running and pending — 7. The user's collection, verbatim, separated by source, new input only (HF-08) — 8. What I made of it — 9. Decisions and questions with `>>>User answer:` — 10. Test list with `>>>User answer:` per item — 11. The through-line — 12. Short roadmap — 13. Measurement of the wave — 14. Main documents and further documents — 15. Memory (durable/session) — 16. Logbook — 17. `COLLECTION FOR THE NEXT HANDOFF`.
 
 A missing section means the handoff is not finished. Check the list against the file before rendering.
 
@@ -119,6 +119,15 @@ Three conditions keep this lossless:
 
 `scripts/sammlung-pruefen.sh` checks the immediate predecessor only, for the same
 reason.
+
+<!-- rule:HF-09 -->
+## Revision ID, header, and addenda (2026-10-02)
+
+A revision carries its ID consistently: in the file name (`…-2026-10-02-r.md` and `.rtf`), the title, the copy line, and the editing note. The header is: line 1 the document's own absolute path, line 2 `Stand:` from `date`, then `Ich habe das Handoff bearbeitet: <own .rtf path>`, then the title.
+
+- Never create a new revision as a copy of the previous one with only the path line replaced. Whoever copies replaces every self-reference (title, "answer in …", "x replaces y", measurement row, document list) and checks afterwards. Evidence: handoff r of the website session carried the title "(q)" and sent answers to q.
+- An addendum after rendering goes into the Markdown and becomes a new revision through `scripts/handoff-rtf.sh`. Never write straight into the RTF: Markdown and RTF drift apart, and whoever writes the next handoff from the Markdown loses the addendum.
+- Run `scripts/handoff-pruefen.py <handoff.md>` before and after rendering; it checks path, as-of line, revision ID, copy line, header self-references, and section order. Pass answered predecessors to `scripts/sammlung-pruefen.sh` as the saved RTF, because the agent's Markdown does not contain the answers.
 
 See also [wave execution](wave-execution.md), [evidence scope](evidence-scope.md), and [RTF on macOS](rtf-macos.md).
 

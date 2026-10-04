@@ -49,7 +49,8 @@ Lies das vorherige Handoff ungefiltert von der ersten bis zur letzten Zeile, bev
 
 Die acht Pflichtabschnitte oben sind das Minimum. Die ausgelieferte Reihenfolge lautet:
 
-1. **Kopierzeile ganz oben** — eine einzige, vollständig markierbare Zeile, die der
+1. **Kopf mit Kopierzeile** — Zeile 1 der eigene Pfad, Zeile 2 der Stand (HF-01),
+   darunter eine einzige, vollständig markierbare Zeile, die der
    Nutzer ohne Nachbearbeitung in den Chat kopieren kann:
    `Ich habe das Handoff bearbeitet: <absoluter Pfad zur .rtf>`
    Sie ersetzt den früheren nackten Pfad und ist KEINE Goldzeile — kein `>>>`
@@ -118,5 +119,14 @@ Drei Bedingungen halten das verlustfrei:
    Leere zu verweisen.
 
 `scripts/sammlung-pruefen.sh` prüft aus demselben Grund nur den direkten Vorgänger.
+
+<!-- rule:HF-09 -->
+## Kennung, Kopf und Nachträge (02.10.2026)
+
+Eine Revision trägt ihre Kennung überall gleich: im Dateinamen (`…-2026-10-02-r.md` und `.rtf`), im Titel, in der Kopierzeile und im Bearbeitungshinweis. Der Kopf lautet: Zeile 1 der eigene absolute Pfad, Zeile 2 `Stand:` aus `date`, dann `Ich habe das Handoff bearbeitet: <eigener .rtf-Pfad>`, dann der Titel.
+
+- Eine neue Revision entsteht nie als Kopie der vorigen, in der nur die Pfadzeile ersetzt wird. Wer kopiert, ersetzt jeden Selbstverweis (Titel, „Antworten bitte im …“, „x ersetzt y“, Messzeile, Dokumentliste) und prüft danach. Beleg: Handoff r der Website-Session trug Titel „(q)“ und schickte die Antworten nach q.
+- Ein Nachtrag nach dem Rendern kommt ins Markdown und wird eine neue Revision über `scripts/handoff-rtf.sh`. Nie direkt ins RTF schreiben: sonst laufen MD und RTF auseinander, und wer das nächste Handoff aus dem MD schreibt, verliert den Nachtrag.
+- Vor dem Rendern und danach `scripts/handoff-pruefen.py <handoff.md>` laufen lassen; es prüft Pfad, Stand, Kennung, Kopierzeile, Selbstverweise im Kopf und die Abschnittsfolge. Beantwortete Vorgänger als gespeichertes RTF an `scripts/sammlung-pruefen.sh` übergeben, denn das Agenten-MD enthält die Antworten nicht.
 
 Siehe auch [Wellen-Ausführung](wave-execution.de.md), [Beleggrenzen](evidence-scope.de.md) und [RTF unter macOS](rtf-macos.de.md).

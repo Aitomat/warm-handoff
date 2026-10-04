@@ -190,10 +190,12 @@ def render(source, output, project_root=None):
         heading = re.match(r'^(#{1,6})\s+(.*)', line)
         if heading:
             line = heading.group(2)
-        if line.startswith('> Ich habe das Handoff beantwortet:'):
+        if re.match(r'^> Ich habe das Handoff (?:bearbeitet|beantwortet):', line):
             line = line[2:]
         # Kopierzeile ist eine ungeteilte Pfadangabe, auch mit Leerzeichen.
-        copyline = re.match(r'^(Ich habe das Handoff beantwortet: )(.+)$', line)
+        # HF-06 schreibt „bearbeitet“ vor (Yasin 15.09.2026); „beantwortet“ bleibt
+        # für ältere Handoffs gültig (Website-Sessions 02.10.2026).
+        copyline = re.match(r'^(Ich habe das Handoff (?:bearbeitet|beantwortet): )(.+)$', line)
         if copyline:
             raw = copyline.group(2).strip('`')
             destination = target(raw, base, future)

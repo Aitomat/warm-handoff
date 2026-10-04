@@ -48,16 +48,17 @@ Genau diese Punkte hat ein Codex-Chef schon übersprungen. Die Checkliste steht 
 
 ## 2. Die Pflichtblöcke — in dieser Reihenfolge
 
-1. **Kopierzeile ganz oben**, eine ungeteilte Zeile:
-   `Ich habe das Handoff beantwortet: /absoluter/Pfad/zur/neuen.rtf`
-   Danach Titel, gemessene Zeit mit Zeitzone, Vorgänger, Hinweis auf `>>>`-Felder.
+1. **Kopf:** Zeile 1 der eigene absolute Pfad, Zeile 2 `Stand:` aus `date`,
+   danach die **Kopierzeile** als eine ungeteilte Zeile:
+   `Ich habe das Handoff bearbeitet: /absoluter/Pfad/zur/neuen.rtf`
+   Danach Titel **mit der eigenen Kennung** (Dateiname `…-r.md` → Titel nennt `r`), gemessene Zeit mit Zeitzone, Vorgänger, Hinweis auf `>>>`-Felder.
 2. **Der Stand in drei Sätzen** — Ziel, überprüfter Stand, nächste Aktion; dazu
    Modus (Zwischenstand / fortsetzbar / abgeschlossen) und gültige Autorisierung.
 3. **Was noch im Tank ist** — Messquelle, Alter, Umfang; sonst „nicht gemessen".
 4. **Erwartete Agenten-Ergebnisse** — ID, Besitzer, beobachteter Status,
    Worktree/Branch/Basis, Berichtspfad, bekannte Laufzeitgrenzen.
-5. **Deine Sammlung aus dem letzten Handoff (wörtlich kopiert)** und
-   **Was ich daraus gemacht habe** — jedes Original mit Status und Beleg.
+5. **Neue Nutzereingaben seit dem Vorgänger (wörtlich, HF-08)** und
+   **Was ich daraus gemacht habe** — jedes neue Original mit Status und Beleg. Ältere Originale bleiben per Verweis im archivierten Vorgänger; jeder noch offene ältere Wunsch steht mit Quelle unter „Laufend und offen“.
 6. **Vorige Testantworten — was daraus wurde** und **Testliste vN** mit leeren
    `>>>Userantwort:`-Feldern. Kein offener Test gilt als bestanden.
 7. **Fragen an dich** mit `>>>Antwort:`; optionale Fragen getrennt von den
@@ -82,7 +83,7 @@ Eingang. Zwei parallele Eingänge haben schon Antworten verschluckt.
 Agentenmeldung warten: Handoff schreiben, öffnen, pushen, melden. Offene
 Meldungen stehen unter „Laufend und offen"; sie halten den Abschluss nicht auf.
 
-## 3. Die drei Skripte
+## 3. Die vier Skripte
 
 Immer benutzen, nie von Hand nachbauen.
 
@@ -90,7 +91,8 @@ Immer benutzen, nie von Hand nachbauen.
 | --- | --- | --- |
 | [`handoff-rtf.sh`](scripts/handoff-rtf.sh) | Markdown → RTF-Zwilling: klickbare Linkfelder, 18 pt, goldene Antwortabsätze | `scripts/handoff-rtf.sh docs/handoff-neu.md /projekt/handoff-neu.rtf --project-root /projekt` |
 | [`handoff-inputs.py`](scripts/handoff-inputs.py) | Momentaufnahme der gespeicherten Quellen mit Hash und Zeitpunkt, bevor gelesen und geschrieben wird | `python3 scripts/handoff-inputs.py …` |
-| [`sammlung-pruefen.sh`](scripts/sammlung-pruefen.sh) | **Pflichtschritt vor dem Finalisieren:** vergleicht die `>>>`-Zeilen der Vorgänger mit dem neuen Handoff und nennt, was fehlt | `scripts/sammlung-pruefen.sh docs/handoff-neu.md [vorgaenger1.md] [vorgaenger2.md]` |
+| [`handoff-pruefen.py`](scripts/handoff-pruefen.py) | **Pflichtschritt vor und nach dem Rendern:** Pfad- und Standzeile, Kennung im Titel, Kopierzeile, Selbstverweise im Kopf, Abschnittsfolge HF-06; mit RTF-Zwilling auch dessen Kopf | `python3 scripts/handoff-pruefen.py docs/handoff-neu.md` |
+| [`sammlung-pruefen.sh`](scripts/sammlung-pruefen.sh) | **Pflichtschritt vor dem Finalisieren:** vergleicht die neuen Antwortfelder und den letzten Sammlungsfuß des direkten Vorgängers (HF-08) mit dem neuen Handoff und nennt, was fehlt | `scripts/sammlung-pruefen.sh docs/handoff-neu.md [vorgaenger.rtf]` — beantwortete Vorgänger als gespeichertes RTF übergeben |
 
 Für die offene Zwischenrufe-Datei zusätzlich
 [`zwischenrufe-antwort.sh`](scripts/zwischenrufe-antwort.sh): **nur anhängen**,
@@ -136,7 +138,7 @@ antwortet**. Vollständig in [RTF unter macOS](references/rtf-macos.de.md).
 
 ## 5. Vor der Übergabe
 
-- `sammlung-pruefen.sh` gelaufen und sauber.
+- `handoff-pruefen.py` und `sammlung-pruefen.sh` gelaufen und sauber.
 - Alle Quellen erneut auf Nachträge geprüft, Originale Punkt für Punkt abgeglichen.
 - Lokale Links geprüft; echte Commit-/Push-Belege im Bericht, keine erfundenen Hashes.
 - Nur eigene Pfade geändert.

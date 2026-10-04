@@ -44,16 +44,18 @@ A Codex lead has skipped exactly these before. The checklist is in the
 
 ## 2. The required blocks, in this order
 
-1. **Copy line at the very top**, one unbroken line pointing at the new editable
-   answer file. Then title, measured time with time zone, predecessor, and a note
+1. **Header:** line 1 the document's own absolute path, line 2 `Stand:` from
+   `date`, then the **copy line** as one unbroken line pointing at the new
+   editable answer file: `Ich habe das Handoff bearbeitet: /absolute/path/new.rtf`.
+   Then the title **carrying the file's own revision ID** (`…-r.md` → title names `r`), measured time with time zone, predecessor, and a note
    about the `>>>` answer fields.
 2. **State in three sentences** — objective, verified state, next action; plus
    mode (interim / resumable / complete) and the authorization in force.
 3. **Remaining budget** — measurement source, age, scope; otherwise "not measured".
 4. **Expected agent results** — ID, owner, observed status, worktree/branch/base,
    report path, known runtime limits.
-5. **Your collection from the last handoff (copied verbatim)** and **what I did
-   with it** — every original mapped to a status and evidence.
+5. **New user input since the predecessor (verbatim, HF-08)** and **what I did
+   with it** — every new original mapped to a status and evidence. Older originals stay linked in the archived predecessor; every still-open older wish appears under "Running and pending" with its source.
 6. **Previous test answers — what came of them** and **test list vN** with empty
    `>>>Userantwort:` fields. No open test counts as passed.
 7. **Questions for you** with `>>>Antwort:`; keep optional questions apart from
@@ -78,7 +80,7 @@ swallowed answers.
 report: write the handoff, open it, push, report. Outstanding reports belong
 under "running and pending"; they do not hold up completion.
 
-## 3. The three scripts
+## 3. The four scripts
 
 Always use them; never rebuild them by hand.
 
@@ -86,7 +88,8 @@ Always use them; never rebuild them by hand.
 | --- | --- | --- |
 | [`handoff-rtf.sh`](scripts/handoff-rtf.sh) | Markdown → RTF twin: clickable link fields, 18 pt, gold answer paragraphs | `scripts/handoff-rtf.sh docs/handoff-new.md /project/handoff-new.rtf --project-root /project` |
 | [`handoff-inputs.py`](scripts/handoff-inputs.py) | Snapshot of the saved sources with hash and timestamp before reading and writing | `python3 scripts/handoff-inputs.py …` |
-| [`sammlung-pruefen.sh`](scripts/sammlung-pruefen.sh) | **Required step before finalizing:** compares the `>>>` lines of the predecessors with the new handoff and names what is missing | `scripts/sammlung-pruefen.sh docs/handoff-new.md [prev1.md] [prev2.md]` |
+| [`handoff-pruefen.py`](scripts/handoff-pruefen.py) | **Required before and after rendering:** path and as-of lines, revision ID in the title, copy line, self-references in the header, HF-06 section order; with an RTF twin also its header | `python3 scripts/handoff-pruefen.py docs/handoff-new.md` |
+| [`sammlung-pruefen.sh`](scripts/sammlung-pruefen.sh) | **Required step before finalizing:** compares the new answer fields and final collection footer of the immediate predecessor (HF-08) with the new handoff and names what is missing | `scripts/sammlung-pruefen.sh docs/handoff-new.md [prev.rtf]` — pass answered predecessors as the saved RTF |
 
 For the open Zwischenrufe file also use
 [`zwischenrufe-antwort.sh`](scripts/zwischenrufe-antwort.sh): **append only**,
@@ -130,7 +133,7 @@ Full detail in [RTF on macOS](references/rtf-macos.md).
 
 ## 5. Before handing over
 
-- `sammlung-pruefen.sh` has run and is clean.
+- `handoff-pruefen.py` and `sammlung-pruefen.sh` have run and are clean.
 - All sources rechecked for late additions; originals reconciled point by point.
 - Local links checked; real commit/push evidence in the report, no invented hashes.
 - Only owned paths changed.

@@ -96,6 +96,17 @@ class RenderTests(unittest.TestCase):
         self.assertIn('\\fs36', self.output.read_text())
         self.assertIn('\\highlight1', self.output.read_text())
 
+    def test_copy_line_bearbeitet_links_own_rtf_with_spaces(self):
+        # HF-06 schreibt „bearbeitet“ vor; der Renderer kannte nur „beantwortet“
+        # und liess den Pfad mit Leerzeichen dann als unverlinkten Klartext stehen
+        # (Website-Session 02.10.2026, Pfade unter „Ronald Audio Trabajos“).
+        self.output = self.root / 'Ordner mit Leerzeichen' / 'neu.rtf'
+        self.output.parent.mkdir()
+        copy = 'Ich habe das Handoff bearbeitet: ' + str(self.output)
+        result = self.run_render(copy + '\n# Titel\n>>>')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn('HYPERLINK "' + self.output.as_uri() + '"', self.output.read_text())
+
     def test_web_only_document_and_url_punctuation(self):
         result = self.run_render('https://example.com/path?x=1&y=2.\n>>>')
         self.assertEqual(result.returncode, 0, result.stderr)
