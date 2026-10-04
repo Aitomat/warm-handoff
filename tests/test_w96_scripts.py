@@ -68,6 +68,12 @@ class W96RenderTests(unittest.TestCase):
         self.assertIn('**Code**', text)
         self.assertIn('**kein Fett**', text)
 
+    def test_antwort_mit_inline_code_und_markdownlink_bleibt_woertlich(self):
+        original = '>>>Userantwort: **Wichtig** `Code` [Link](https://example.com/check)'
+        data, text = self.render(original)
+        self.assertEqual(text.strip(), original)
+        self.assertIn('HYPERLINK "https://example.com/check"', data)
+
     def test_tabellensyntax_in_antwortfortsetzung_bleibt_woertlich(self):
         markdown = '>>>Userantwort:\n| A | B |\n| --- | --- |\n| x | y |\n'
         _, text = self.render(markdown)

@@ -69,7 +69,7 @@ TOKEN = re.compile(
     r'|(?<![\w~/.-])(?:[\w.-]+/)*[\w.-]+\.(?:md|rtf|txt|sh|py|swift|json|csv|html|png|jpg|jpeg|pdf|plist|yml|yaml)(?![\w/])')
 
 
-def inline(line, base, links, future=None, formatting=True):
+def inline(line, base, links, future=None, formatting=True, literal=False):
     encoded, plain, cursor = [], [], 0
     for match in TOKEN.finditer(line):
         encoded.append(rtf(line[cursor:match.start()]))
@@ -104,14 +104,15 @@ def inline(line, base, links, future=None, formatting=True):
                         raise
                     destination = target(raw.rsplit(' — ', 1)[1].strip().strip('„“”«»\"\''), base, future)
         elif match.group('label') is not None:
-            label = match.group('label')
+            label = match.group(0) if literal else match.group('label')
             destination = target(match.group('dest'), base, future)
         elif match.group('code') is not None:
-            label = match.group('code')
-            candidate = base / label
-            if label.startswith(('/', '~/','https://','http://')) or candidate.exists():
+            code = match.group('code')
+            label = match.group(0) if literal else code
+            candidate = base / code
+            if code.startswith(('/', '~/','https://','http://')) or candidate.exists():
                 try:
-                    destination = target(label, base, future)
+                    destination = target(code, base, future)
                 except (OSError, ValueError):
                     destination = None  # z. B. Pfad mit Leerzeichen, an der Wortgrenze abgeschnitten
         else:
@@ -125,7 +126,7 @@ def inline(line, base, links, future=None, formatting=True):
         if destination:
             links.append(destination)
             shown = rtf(label)
-            if formatting and match.group('label') is not None:
+            if formatting and not literal and match.group('label') is not None:
                 shown, label = styled_label(label)
             encoded.append('{\\field{\\*\\fldinst HYPERLINK "' + rtf(destination) + '"}{\\fldrslt ' + shown + '}}')
         else:
@@ -299,7 +300,8 @@ def render(source, output, project_root=None):
             encoded = rtf(copyline.group(1)) + '{\\field{\\*\\fldinst HYPERLINK "' + rtf(destination) + '"}{\\fldrslt ' + rtf(raw) + '}}'
         else:
             encoded, plain = inline(line, base, links, future,
-                                    formatting=not (line.startswith('>>>') or continuation_for_line))
+                                    formatting=not (line.startswith('>>>') or continuation_for_line),
+                                    literal=line.startswith('>>>') or continuation_for_line)
         style = '\\fs48\\b ' if heading else '\\fs36 '
         is_answer_marker = line.startswith('>>>')
         is_answer = is_answer_marker or (continuation_for_line and not heading)
