@@ -24,7 +24,7 @@ import subprocess
 import sys
 
 BUCHSTABE = 'A-Za-z0-9ÄÖÜäöüß'
-STAND = re.compile(r'^Stand:\s*(\d{2})\.(\d{2})\.(\d{4}),?\s+(\d{2}):(\d{2})')
+STAND = re.compile(r'^(?:Stand|As of):\s*(\d{2})\.(\d{2})\.(\d{4}),?\s+(\d{2}):(\d{2})')
 KOPIERZEILE = re.compile(r'^(?:>\s*)?Ich habe das Handoff (?:bearbeitet|beantwortet):\s*`?(.+?)`?\s*$')
 BANNER = 'SAMMLUNG FÜR DAS NÄCHSTE HANDOFF'
 BANNER_EN = 'COLLECTION FOR THE NEXT HANDOFF'
@@ -83,9 +83,13 @@ def pruefe_md(md, text, jetzt):
         befunde.append('Standzeile: Zeile 2 muss „Stand: TT.MM.JJJJ, HH:MM“ aus `date` sein.')
     else:
         tag, monat, jahr, stunde, minute = map(int, stand.groups())
-        zeitpunkt = datetime(jahr, monat, tag, stunde, minute)
-        if zeitpunkt > jetzt + timedelta(minutes=2):
-            befunde.append(f'Standzeile: {zeitpunkt:%d.%m.%Y, %H:%M} liegt in der Zukunft — geschätzt statt aus `date`.')
+        try:
+            zeitpunkt = datetime(jahr, monat, tag, stunde, minute)
+        except ValueError:
+            befunde.append('Standzeile: Datum oder Uhrzeit ungültig.')
+        else:
+            if zeitpunkt > jetzt + timedelta(minutes=2):
+                befunde.append(f'Standzeile: {zeitpunkt:%d.%m.%Y, %H:%M} liegt in der Zukunft — geschätzt statt aus `date`.')
 
     kennung = kennung_aus_name(md)
     titel = next((z for z in zeilen if z.startswith('# ')), None)

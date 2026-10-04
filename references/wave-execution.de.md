@@ -5,6 +5,10 @@
 
 Eine Welle beginnt erst, nachdem der Nutzer Ziel und Nebenwirkungen autorisiert hat. Speichere vor dem Start der Arbeiter einen Plan. Halte je Paket fest: ID, Ergebnis, exklusive Pfade, Abhängigkeiten, Akzeptanzkriterien, gegebenenfalls Modell oder Effort, verbotene Aktionen und Berichtspfad.
 
+Arbeiteraufträge dürfen die geltenden Nutzerregeln nicht still einschränken. Engere Dateigrenzen sind möglich, das Abschalten einer Nutzerregel nicht; bei einem Konflikt mit Hostrechten die Regel und den offenen Schritt ausdrücklich nennen.
+
+Vor dem Start Pläne, Berichte und Handoffs auf vergebene Wellennummern prüfen und die nächste freie Nummer im Plan reservieren. Je Projekt gilt eine gemeinsame Folge für alle Hosts und Sitzungen: „Welle 9“ und „Codex-Welle 9“ dürfen keine verschiedenen Wellen sein. Fortsetzungen derselben Welle behalten ihre Nummer; die Vergabe serialisieren.
+
 <!-- rule:WV-02 -->
 ## Kapazität und Besitz
 
@@ -99,6 +103,8 @@ Starte unabhängige Pakete nur gemeinsam, wenn der Host es unterstützt. Arbeite
 
 <!-- rule:WV-05 -->
 ## Kommunikation
+
+Beim Wellenstart die Zwischenrufe-Datei als `.md` im Projektstamm anlegen und öffnen, nie als RTF-Eingang; sie ist bis zum nächsten Handoff der einzige Eingang. Nur gespeicherte Ergänzungen lesen; Antworten in dieselbe Markdown-Datei anhängen, mit `Neue Zwischenrufe gelesen: ja/nein`, `ZWISCHENRUFE BIS HIER BEARBEITET — <Uhrzeit>` und `AB HIER NEUE ZWISCHENRUFE` plus leerer `>>>`-Zeile. Bei ungespeichertem oder unbekanntem Editorstand das Anhängen zurückstellen; nie selbst speichern oder schließen. Nach HF-07.
 
 Nutze die automatische Fertigmeldung des Hosts für Routineergebnisse. Melde echte Blocker, Entscheidungen mit Umfangsänderung oder wesentliche Risiken. Halte den Nutzerfaden auf Entscheidungen und belegte Ergebnisse ausgerichtet. Nutzeranweisungen haben für den jeweiligen Ablauf Vorrang vor allgemeinen Delegationsempfehlungen. Prüfe bei jedem Aufwachen der Hauptsession die Änderungszeit der Zwischenrufe-Datei und lies sie, wenn sie sich geändert hat, bevor du handelst oder meldest. Nie die Datei selbst überwachen: kein Monitor, kein Dateiwächter, kein Speicher-Hook darf die Session wecken, weil der Nutzer Cmd-S gedrückt hat — Speichern ist keine Anfrage und darf nichts kosten (Nutzerregel vom 23.09.2026). Nur bei einem ohnehin stattfindenden Aufwachen lesen.
 
@@ -231,6 +237,10 @@ Themen:
   beide dieselbe Datei anfassen, und die Restprozesse des fertigen Arbeiters
   beenden, bevor sein Verzeichnis weitergenutzt wird (nach Shells suchen, deren
   Kommando seine Logdatei nennt, nicht nur nach dem Ordner).
+- **Die Welle nach erwarteter Dauer ordnen, Längstes zuerst.** Beim Planen die
+  Themendauer schätzen und die drei oder vier längsten Themen zuerst starten;
+  kurze Themen einzeln über die übrigen freien Plätze nachziehen. Gib dem
+  längsten Themen-Wächter zuerst den Bau-Slot, danach dem nächstgrößten.
 - **Früh mergen, spät bauen.** Jedes fertige Thema sofort in den Wellen-Branch
   mergen, nur Merge, kein Bau; Konflikte zeigen sich dann einzeln. Merge-Nachricht
   ausdrücklich mitgeben: Die Standardnachricht verliert Pflicht-Trailer
@@ -283,7 +293,7 @@ es installiert wird, und den Exit-Code direkt aus dem Lauf abgreifen statt aus
 einer Zusammenfassungszeile, die abgeschnitten oder umgeschrieben sein kann.
 
 Der Eingang folgt derselben Uhr wie die Welle: Zwischen Handoff und Wellenstart
-ist das Handoff der einzige Eingang; die Zwischenrufe-Datei entsteht mit dem
+ist das Handoff der einzige Eingang; die Zwischenrufe-Datei als `.md` entsteht mit dem
 Wellenstart und ist bis zum nächsten Handoff der einzige Eingang.
 
 Siehe [Codex](codex.de.md), [Claude Code](claude-code.de.md), [Modellrouting](model-routing.de.md) und [Beleggrenzen](evidence-scope.de.md).

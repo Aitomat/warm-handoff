@@ -61,6 +61,7 @@ RESET = '\\plain\\f0\\cf2'
 
 
 TOKEN = re.compile(
+    r'(?P<bold>(?<!\\)\*\*(?=\S).+?(?<=\S)\*\*)|'
     r'(?P<marker>⟦\s*(?P<kind>Screenshot|Bild|Datei|Dokument|Kopie|Video|Audio)\s*:\s*(?P<marked>.*?)\s*⟧)'
     r'|\[(?P<label>[^\]\n]+)\]\((?P<dest><[^>\n]+>|[^)\s]+)\)'
     r'|`(?P<code>[^`\n]+)`|https?://[^\s<>]+'
@@ -68,14 +69,23 @@ TOKEN = re.compile(
     r'|(?<![\w~/.-])(?:[\w.-]+/)*[\w.-]+\.(?:md|rtf|txt|sh|py|swift|json|csv|html|png|jpg|jpeg|pdf|plist|yml|yaml)(?![\w/])')
 
 
-def inline(line, base, links, future=None):
+def inline(line, base, links, future=None, formatting=True):
     encoded, plain, cursor = [], [], 0
     for match in TOKEN.finditer(line):
         encoded.append(rtf(line[cursor:match.start()]))
         plain.append(line[cursor:match.start()])
         label, destination = match.group(0), None
         tail = ''
-        if match.group('marker') is not None:
+        if match.group('bold') is not None:
+            if formatting:
+                inner, label = inline(label[2:-2], base, links, future, formatting=False)
+                encoded.append('{\\b ' + inner + '}')
+            else:
+                encoded.append(rtf(label))
+            plain.append(label)
+            cursor = match.end()
+            continue
+        elif match.group('marker') is not None:
             raw = match.group('marked').strip().strip('„“”«»\"\'')
             if match.group('kind') == 'Kopie':
                 # Kopie-Marker sind häufig wörtliche Zitate, keine Dateiangaben.
@@ -114,7 +124,10 @@ def inline(line, base, links, future=None):
                     destination = None  # nicht existierender oder abgeschnittener Pfad bleibt Klartext
         if destination:
             links.append(destination)
-            encoded.append('{\\field{\\*\\fldinst HYPERLINK "' + rtf(destination) + '"}{\\fldrslt ' + rtf(label) + '}}')
+            shown = rtf(label)
+            if formatting and match.group('label') is not None:
+                shown, label = styled_label(label)
+            encoded.append('{\\field{\\*\\fldinst HYPERLINK "' + rtf(destination) + '"}{\\fldrslt ' + shown + '}}')
         else:
             encoded.append(rtf(label))
         plain.append(label)
@@ -125,6 +138,64 @@ def inline(line, base, links, future=None):
     plain.append(line[cursor:])
     return ''.join(encoded), ''.join(plain)
 
+
+def styled_label(label):
+    """Fett in Beschriftungen, ohne aus ihrem Text weitere Links zu erzeugen."""
+    encoded, plain, cursor = [], [], 0
+    for match in TOKEN.finditer(label):
+        gap = label[cursor:match.start()]
+        encoded.append(rtf(gap))
+        plain.append(gap)
+        raw = match.group(0)
+        if match.group('bold') is not None:
+            raw = raw[2:-2]
+            encoded.append('{\\b ' + rtf(raw) + '}')
+        else:
+            encoded.append(rtf(raw))
+        plain.append(raw)
+        cursor = match.end()
+    encoded.append(rtf(label[cursor:]))
+    plain.append(label[cursor:])
+    return ''.join(encoded), ''.join(plain)
+
+
+def table_cells(line):
+    """Pipe-Zellen; Pipes in Inline-Code und maskierte Pipes bleiben Inhalt."""
+    if '|' not in line:
+        return None
+    cells, part = [], []
+    ticks = ''
+    index = 0
+    while index < len(line):
+        char = line[index]
+        if char == '\\' and index + 1 < len(line) and line[index + 1] == '|':
+            part.append('|')
+            index += 2
+            continue
+        if char == '`':
+            end = index
+            while end < len(line) and line[end] == '`':
+                end += 1
+            run = line[index:end]
+            if not ticks:
+                ticks = run
+            elif ticks == run:
+                ticks = ''
+            part.append(run)
+            index = end
+            continue
+        if char == '|' and not ticks:
+            cells.append(''.join(part).strip())
+            part = []
+        else:
+            part.append(char)
+        index += 1
+    cells.append(''.join(part).strip())
+    if line.lstrip().startswith('|'):
+        cells = cells[1:]
+    if line.rstrip().endswith('|'):
+        cells = cells[:-1]
+    return cells if len(cells) >= 2 else None
 
 def project_base(source, explicit=None):
     """Git-Projektwurzel (auch Worktree-.git-Datei), sonst Quellverzeichnis."""
@@ -155,7 +226,10 @@ def render(source, output, project_root=None):
     fence = None
     user_original = False
     answer_continuation = False
-    for line in lines:
+    table_skip = set()
+    for index, line in enumerate(lines):
+        if index in table_skip:
+            continue
         continuation_for_line = answer_continuation
         answer_continuation = False
         if fence is None and not user_original and line == '<!-- answer:end -->':
@@ -187,6 +261,27 @@ def render(source, output, project_root=None):
             body.append('{\\pard' + RESET + '\\fs30 ' + rtf(line) + '\\par}\n')
             visible.append(line)
             continue
+        # Tabellen als beschriftete Absätze: lange Zellen umbrechen natürlich,
+        # ohne rohe Markdown-Trennzeilen. Nutzerantworten bleiben wörtlich.
+        cells = table_cells(line)
+        separator = table_cells(lines[index + 1]) if index + 1 < len(lines) else None
+        if (not continuation_for_line and not line.startswith('>>>') and cells and separator
+                and len(cells) == len(separator)
+                and all(re.fullmatch(r':?-{3,}:?', cell) for cell in separator)):
+            table_lines = [' · '.join(cells)]
+            table_skip.add(index + 1)
+            for row_index in range(index + 2, len(lines)):
+                row = table_cells(lines[row_index])
+                if not row or len(row) != len(cells) or lines[row_index].startswith('>>>'):
+                    break
+                table_skip.add(row_index)
+                table_lines.append('; '.join(f'{label}: {value}' if label else value
+                                             for label, value in zip(cells, row)))
+            for table_line in table_lines:
+                encoded, plain = inline(table_line, base, links, future)
+                body.append('{\\pard' + RESET + '\\fs36 ' + encoded + '\\par}\n')
+                visible.append(plain)
+            continue
         heading = re.match(r'^(#{1,6})\s+(.*)', line)
         if heading:
             line = heading.group(2)
@@ -203,7 +298,8 @@ def render(source, output, project_root=None):
             plain = copyline.group(1) + raw
             encoded = rtf(copyline.group(1)) + '{\\field{\\*\\fldinst HYPERLINK "' + rtf(destination) + '"}{\\fldrslt ' + rtf(raw) + '}}'
         else:
-            encoded, plain = inline(line, base, links, future)
+            encoded, plain = inline(line, base, links, future,
+                                    formatting=not (line.startswith('>>>') or continuation_for_line))
         style = '\\fs48\\b ' if heading else '\\fs36 '
         is_answer_marker = line.startswith('>>>')
         is_answer = is_answer_marker or (continuation_for_line and not heading)

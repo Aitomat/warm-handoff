@@ -5,7 +5,7 @@
 
 RTF ist ein optionaler editierbarer Zwilling eines vom Agenten geschriebenen Markdown-Handoffs. Er benötigt macOS, Python 3, Bash und `textutil`.
 
-Erzeuge Handoff- und Zwischenrufe-RTFs ausschließlich über `scripts/handoff-rtf.sh`, aus dem Repository oder installierten Skillverzeichnis mit absoluten Quell-/Zielpfaden. Baue RTF nicht von Hand nach und rufe `render_rtf.py` nicht direkt auf; `textutil` dient nur dem Lesen und Prüfen.
+Erzeuge angeforderte Handoff-RTFs ausschließlich über `scripts/handoff-rtf.sh`, aus dem Repository oder installierten Skillverzeichnis mit absoluten Quell-/Zielpfaden. Baue RTF nicht von Hand nach und rufe `render_rtf.py` nicht direkt auf; `textutil` dient nur dem Lesen und Prüfen.
 
 Cmd-S gibt gespeicherte Nutzereingaben innerhalb der bestehenden Autorisierung frei. Halte genau einen aktiven Zwischenrufe-Eingang: Handoff-Fußbereich oder vereinbarte Datei; der andere Ort verlinkt nur darauf. Archiviere beantwortete Handoffs im Archivordner des Projekts per `mv`, nie `rm`; verschiebe nicht die aktive Nutzereingabedatei.
 
@@ -21,6 +21,8 @@ Der Ausgabepfad muss neu sein. Der Renderer verweigert bestehende Dateien und Sy
 ## Wörtliche Eingänge und Links
 
 Umschließe erhaltenen Nutzertext mit `<!-- user-original:start -->` und `<!-- user-original:end -->`. Sein sichtbarer Text bleibt wörtlich. Markdownlinks, unterstützte Dokumentmarker, URLs, Pfade in Inline-Code und echte absolute Pfade bleiben Linkkandidaten. Schrägstrich-Komposita wie `Root-/Arbeiterverbrauch` oder `Token-/Kosten-Telemetrie` sind Fließtext und dürfen nicht als Wurzelpfade gelesen werden.
+
+Agententext setzt `**fett**` als Fettdruck; Markdown-Tabellen werden als beschriftete Zeilen mit umbrechenden Zellen ausgegeben. Nutzeroriginale, Antwortfelder und Code bleiben wörtlich.
 
 <!-- rule:RT-03 -->
 ## Goldene Antwortfortsetzung
@@ -38,7 +40,7 @@ GOLD-Zustand unten für Cocoa-Zeichenschattierung; `\highlight` allein reicht ni
 als Schwarz gelesen statt als „kein Hintergrund"; `\plain` ist deshalb der
 einzige saubere Reset. Beleg über `textutil -convert html -stdout DATEI.rtf`: die
 Antwortklasse trägt 18 px Schrift und den goldenen Hintergrund, Agententext
-keinen. Dieselbe Goldregel gilt für die Zwischenrufe-RTF, nicht nur den Handoff.
+keinen.
 
 <!-- rule:RT-03b -->
 ## Schwarz auf Gold, 18 pt, für Text hinter `>>>` (Beleg W58-E1, 13.09.2026)
@@ -110,21 +112,8 @@ sonst offen lassen. Gilt für jedes Dokument, dessen Pfad in einer Antwort
 genannt wird.
 
 <!-- rule:RT-07 -->
-## Zwischenrufe als Markdown, Antworten direkt in die Datei
+## Zwischenrufe sind der Markdown-Eingang
 
-Ein Projekt kann die Zwischenrufe-Datei als schlichte `.md` führen statt als
-RTF-Zwilling; der Renderer verweigert zu Recht das Anhängen an ein bestehendes
-RTF, ein RTF-Eingang lässt sich also nicht an Ort und Stelle beantworten.
-Antwortblock sicher anhängen — nie Ungespeichertes anfassen:
+Beim Wellenstart die Zwischenrufe-Datei als `.md` im Projektstamm anlegen und öffnen, nie als RTF-Eingang; sie ist bis zum nächsten Handoff der einzige Eingang. Nur gespeicherte Ergänzungen lesen; Antworten in dieselbe Markdown-Datei anhängen, mit `Neue Zwischenrufe gelesen: ja/nein`, `ZWISCHENRUFE BIS HIER BEARBEITET — <Uhrzeit>` und `AB HIER NEUE ZWISCHENRUFE` plus leerer `>>>`-Zeile. Bei ungespeichertem oder unbekanntem Editorstand das Anhängen zurückstellen; nie selbst speichern oder schließen. Nach HF-07.
 
-```sh
-M=$(osascript -e 'tell application "TextEdit" to get modified of (first document whose path contains "<dateiname>")')
-# nur wenn M gleich "false": ohne Speichern schließen, anhängen, neu öffnen
-osascript -e 'tell application "TextEdit" to close (every document whose path contains "<dateiname>") saving no'
-cat >> "<voller pfad>" <<'EOT'   # Heredoc in Anführungszeichen: Backticks und $ bleiben wörtlich
-…
-EOT
-open -a TextEdit "<voller pfad>"
-```
-
-Ist `modified` gleich `true`: nicht schließen, im Chat antworten, beim nächsten Aufwachen anhängen.
+Zum sicheren Anhängen `scripts/zwischenrufe-antwort.sh` nutzen. Der Helfer prüft den exakten Dokumentpfad, verweigert RTF und unbekannten Editorstand und speichert niemals Nutzereingaben. Bei sicher gespeichertem Stand das eigene Dokument ohne Speichern schließen, nur anhängen und neu öffnen.

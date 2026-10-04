@@ -32,10 +32,12 @@ Before acting:
 - mark stale, unknown, or unverified state honestly;
 - keep secrets and irrelevant transcript material out of the next handoff.
 
-Use a new dated handoff instead of editing an answered source. The opening copy line should identify the new absolute handoff path. Include the preserved user collection, current objective and constraints, verified delivered work, pending or running work, open decisions, test instructions, concise memory, and the collection area for the next session. See [handoff format](references/handoff-format.md). **Mandatory (2026-09-14):** Read `references/handoff-format.md` in full before writing, and read the previous handoff unfiltered — never truncate lines, never grep only for `>>>User answer:`. The mandatory 17-part section order lives in the reference (HF-06). At the end of a wave, do not wait for agent reports; close out.
+Carry only new user input verbatim; link older originals in the archived predecessor and list every still-open older wish with its source under "Running and pending" (HF-08). Use a new dated handoff instead of editing an answered source. The opening copy line should identify the new absolute handoff path. Include the preserved user collection, current objective and constraints, verified delivered work, pending or running work, open decisions, test instructions, concise memory, and the collection area for the next session. See [handoff format](references/handoff-format.md). **Mandatory (2026-09-14):** Read `references/handoff-format.md` in full before writing, and read the previous handoff unfiltered — never truncate lines, never grep only for `>>>User answer:`. The mandatory 17-part section order lives in the reference (HF-06). At the end of a wave, do not wait for agent reports; close out.
 
 <!-- rule:WH-03 -->
 ## 3. Work inside authorization
+
+Worker briefs keep applicable user rules binding; a lead must not silently disable them. Record any conflict with host permissions. Wave numbers share one project-wide sequence across hosts; reserve the next unused number in the saved plan (WV-01).
 
 Continue until the authorized outcome is complete. A useful work packet has one concrete objective, exclusive files, dependencies, acceptance criteria, prohibited actions, and a required report. Split work only when packets are independent. Respect the host's actual agent slots and the machine's resource limits; labels or plans cannot create capacity.
 
@@ -45,6 +47,8 @@ Select models by task shape and verified availability, not folklore. Separate pu
 
 <!-- rule:WH-04 -->
 ## 4. Preserve document safety
+
+At wave start, create and open the interjections file as `.md` in the project root, never as an RTF inbox; it is the only inbox until the next handoff. Read only saved additions; append replies in that same Markdown file with `Neue Zwischenrufe gelesen: ja/nein`, `ZWISCHENRUFE BIS HIER BEARBEITET — <time>`, and `AB HIER NEUE ZWISCHENRUFE` plus an empty `>>>` line. If the editor has unsaved input or its state is unknown, defer the append; never save or close it. Follow HF-07.
 
 Markdown is the agent-authored source. An RTF twin can be the user's editable response document on macOS. Never overwrite an existing answer file or follow an output symlink. Render to a temporary file, verify the text roundtrip and hyperlink fields, then publish exclusively.
 
@@ -65,6 +69,8 @@ Opening TextEdit or changing tab groups is a UI action and needs the task's auth
 
 <!-- rule:WH-06 -->
 ## 6. Close with evidence
+
+On actual wake-ups, compare inbox modification time and read only changed saved additions. Leave unchanged files closed; saving never wakes a session.
 
 At the last safe checkpoint:
 

@@ -5,6 +5,10 @@
 
 A wave begins only after the user authorizes its objective and side effects. Persist a plan before starting workers. For every packet record: ID, outcome, exclusive paths, dependencies, acceptance criteria, model or effort when relevant, prohibited actions, and report path.
 
+Worker briefs must not silently restrict applicable user rules. Narrower file ownership is allowed, disabling a user rule is not; name any conflict with host permissions and leave the affected step explicitly pending.
+
+Before starting, check plans, reports, and handoffs for assigned wave numbers and reserve the next unused number in the plan. Each project has one sequence across hosts and sessions: "Wave 9" and "Codex Wave 9" cannot be different waves. A continuation keeps its wave number; serialize allocation.
+
 <!-- rule:WV-02 -->
 ## Capacity and ownership
 
@@ -93,6 +97,8 @@ Start independent packets together only when the host supports it. Workers must 
 
 <!-- rule:WV-05 -->
 ## Communication
+
+At wave start, create and open the interjections file as `.md` in the project root, never as an RTF inbox; it is the only inbox until the next handoff. Read only saved additions; append replies in that same Markdown file with `Neue Zwischenrufe gelesen: ja/nein`, `ZWISCHENRUFE BIS HIER BEARBEITET — <time>`, and `AB HIER NEUE ZWISCHENRUFE` plus an empty `>>>` line. If the editor has unsaved input or its state is unknown, defer the append; never save or close it. Follow HF-07.
 
 Let host completion delivery carry routine results. Send updates for a real blocker, a decision that changes scope, or a material risk. Keep the user-facing thread focused on choices and verified outcomes. User instructions override generic delegation preferences for that workflow. On every wake-up of the main session, check the interjections file's modification time and read it if it changed, before acting or reporting (user rule of 2026-09-13). Never watch the file itself: no monitor, file watcher, or save hook may wake the session because the user pressed Cmd-S — a save is not a request and must cost nothing (user rule of 2026-09-23). Read it only on a wake-up that happens anyway.
 
@@ -215,6 +221,7 @@ ten topics:
   or two for the short ones, fed one at a time. Starting the quick topics first leaves the long ones to
   finish alone at the end, and the wave's bundle waits for a single straggler. In his words: "die drei
   längsten zuerst starten und die kurzen immer nur einzeln im fünften Slot laufen lassen".
+- Give the longest-running topic guardian first access to the build slot, then the next largest.
 - **Every launcher must close the agent's stdin** (`< /dev/null`). Measured 2026-09-22: six agents launched
   without it printed `Reading additional input from stdin...` and then sat for three and a half hours with
   0.16 s of CPU time, while the build slot stayed free. A hung agent looks exactly like a busy one.
@@ -268,7 +275,7 @@ it, and read the exit code directly from the run rather than from a summary line
 that can be truncated or rewritten.
 
 The inbox follows the same clock as the wave: between handoff and wave start the
-handoff is the only inbox; the interjections file is created at wave start and is
+handoff is the only inbox; the interjections file is created and opened as `.md` at wave start and is
 the only inbox until the next handoff.
 
 See [Codex](codex.md), [Claude Code](claude-code.md), [model routing](model-routing.md), and [evidence scope](evidence-scope.md).

@@ -80,6 +80,10 @@ swallowed answers.
 report: write the handoff, open it, push, report. Outstanding reports belong
 under "running and pending"; they do not hold up completion.
 
+At wave start, create and open the interjections file as `.md` in the project root, never as an RTF inbox; it is the only inbox until the next handoff. Read only saved additions; append replies in that same Markdown file with `Neue Zwischenrufe gelesen: ja/nein`, `ZWISCHENRUFE BIS HIER BEARBEITET — <time>`, and `AB HIER NEUE ZWISCHENRUFE` plus an empty `>>>` line. If the editor has unsaved input or its state is unknown, defer the append; never save or close it. Follow HF-07.
+
+Worker briefs keep applicable user rules binding; a lead must not silently disable them. Record any conflict with host permissions. Wave numbers share one project-wide sequence across hosts; reserve the next unused number in the saved plan (WV-01).
+
 ## 3. The four scripts
 
 Always use them; never rebuild them by hand.
@@ -108,20 +112,7 @@ Full detail in [RTF on macOS](references/rtf-macos.md).
 - The renderer **refuses any existing target**, symlinks included. A new version
   gets a new file name; the answered file stays untouched.
 - Pass `--project-root` when the project root is known.
-- **Gold is mandatory, including as the document default.** `>>>` paragraphs and
-  `user-original` blocks are gold; beyond that the document default itself is
-  18 pt gold, so **pasted and typed text** in an answer field is 18 pt gold too
-  instead of falling back to 12 pt with no background. Agent text, headings and
-  code blocks reset with `\pard\plain\f0\cf2`. The same gold rule applies to the
-  **Zwischenrufe RTF**, not only to the handoff.
-- **Text pasted behind `>>>` is black on gold, 18 pt** (evidence W58-E1,
-  2026-09-13). Colour table `;gold;black;`; the gold character state is
-  `\cb1\cbpat1\chshdng0\chcbpat1\highlight1\cf2`, the reset is `\plain\f0\cf2`,
-  and answer paragraphs are emitted as `RESET + \fs36 + GOLD` (`\fs36` = 18 pt).
-  `\chshdng0\chcbpat1` is the only character-level shading Cocoa paints, `\cf2`
-  keeps the user's typing black, and `\cb0` would read as black — so never use it
-  as a reset. Verify these control words in the bundled renderer; generation
-  remains exclusively through `scripts/handoff-rtf.sh`.
+- Behind `>>>`, pasted and typed text stays black on gold at 18 pt, including continuation and the document default. Agent text resets the background; exact control words and evidence scopes are in RT-03/RT-03b of the RTF reference linked above. Interjections stay `.md`.
 - **Archive answered handoffs in `handoff-archiv/`** of the same project
   (`mv`, never `rm`; user 2026-09-13 03:31).
 - After generating, `grep -c "file://" FILE.rtf` must be > 0 as soon as the

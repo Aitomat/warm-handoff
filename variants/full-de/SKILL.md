@@ -32,10 +32,12 @@ Vor dem Handeln:
 - kennzeichne veralteten, unbekannten oder ungeprüften Stand ehrlich;
 - halte Geheimnisse und irrelevanten Gesprächsverlauf aus dem nächsten Handoff heraus.
 
-Erzeuge ein neues datiertes Handoff, statt eine beantwortete Quelle zu bearbeiten. Die Kopierzeile oben soll den absoluten Pfad des neuen Handoffs nennen. Nimm erhaltene Nutzersammlung, aktuelles Ziel und Grenzen, belegte Lieferungen, offene oder laufende Arbeit, offene Entscheidungen, Testanweisungen, knappe Erinnerung und den Sammelbereich für die nächste Sitzung auf. Siehe [Handoff-Format](references/handoff-format.de.md). **Pflicht (14.09.2026):** Lies `references/handoff-format.de.md` vollständig, bevor du schreibst, und lies das vorherige Handoff ungefiltert — nie Zeilen abschneiden, nie nur nach `>>>Userantwort:` greppen. Die verbindliche 17-teilige Abschnittsfolge steht in der Referenz (HF-06). Am Wellenende nicht auf Agentenmeldungen warten, sondern abschließen.
+Nur neue Nutzereingaben wörtlich übernehmen; ältere Originale im archivierten Vorgänger verlinken und jeden noch offenen älteren Wunsch mit Quelle unter „Laufend und offen“ führen (HF-08). Erzeuge ein neues datiertes Handoff, statt eine beantwortete Quelle zu bearbeiten. Die Kopierzeile oben soll den absoluten Pfad des neuen Handoffs nennen. Nimm erhaltene Nutzersammlung, aktuelles Ziel und Grenzen, belegte Lieferungen, offene oder laufende Arbeit, offene Entscheidungen, Testanweisungen, knappe Erinnerung und den Sammelbereich für die nächste Sitzung auf. Siehe [Handoff-Format](references/handoff-format.de.md). **Pflicht (14.09.2026):** Lies `references/handoff-format.de.md` vollständig, bevor du schreibst, und lies das vorherige Handoff ungefiltert — nie Zeilen abschneiden, nie nur nach `>>>Userantwort:` greppen. Die verbindliche 17-teilige Abschnittsfolge steht in der Referenz (HF-06). Am Wellenende nicht auf Agentenmeldungen warten, sondern abschließen.
 
 <!-- rule:WH-03 -->
 ## 3. Innerhalb der Autorisierung arbeiten
+
+Arbeiteraufträge erhalten die geltenden Nutzerregeln; ein Chef darf sie nicht still außer Kraft setzen. Konflikte mit Hostrechten benennen. Wellennummern folgen einer gemeinsamen Folge je Projekt über alle Hosts; die nächste freie Nummer im gespeicherten Plan reservieren (WV-01).
 
 Arbeite weiter, bis das autorisierte Ergebnis vollständig ist. Ein brauchbares Arbeitspaket hat ein konkretes Ziel, exklusive Dateien, Abhängigkeiten, Akzeptanzkriterien, verbotene Aktionen und einen geforderten Bericht. Teile Arbeit nur bei unabhängigen Paketen. Beachte die tatsächlichen Agentenplätze des Hosts und Ressourcengrenzen der Maschine; Bezeichnungen oder Pläne schaffen keine Kapazität.
 
@@ -45,6 +47,8 @@ Wähle Modelle nach Aufgabenform und belegter Verfügbarkeit, nicht nach Hörens
 
 <!-- rule:WH-04 -->
 ## 4. Dokumentsicherheit erhalten
+
+Beim Wellenstart die Zwischenrufe-Datei als `.md` im Projektstamm anlegen und öffnen, nie als RTF-Eingang; sie ist bis zum nächsten Handoff der einzige Eingang. Nur gespeicherte Ergänzungen lesen; Antworten in dieselbe Markdown-Datei anhängen, mit `Neue Zwischenrufe gelesen: ja/nein`, `ZWISCHENRUFE BIS HIER BEARBEITET — <Uhrzeit>` und `AB HIER NEUE ZWISCHENRUFE` plus leerer `>>>`-Zeile. Bei ungespeichertem oder unbekanntem Editorstand das Anhängen zurückstellen; nie selbst speichern oder schließen. Nach HF-07.
 
 Markdown ist die vom Agenten geschriebene Quelle. Ein RTF-Zwilling kann unter macOS das editierbare Antwortdokument des Nutzers sein. Überschreibe nie eine bestehende Antwortdatei und folge keinem Ausgabe-Symlink. Rendere in eine temporäre Datei, prüfe Textroundtrip und Hyperlinkfelder und veröffentliche dann exklusiv.
 
@@ -65,6 +69,8 @@ TextEdit zu öffnen oder Tabgruppen zu verändern ist eine UI-Aktion und braucht
 
 <!-- rule:WH-06 -->
 ## 6. Mit Belegen abschließen
+
+Bei tatsächlichem Aufwachen die Änderungszeit des Eingangs vergleichen und nur geänderte gespeicherte Ergänzungen lesen. Unveränderte Dateien geschlossen lassen; Speichern weckt keine Session.
 
 Am letzten sicheren Kontrollpunkt:
 

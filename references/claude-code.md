@@ -10,6 +10,10 @@ Read the applicable `AGENTS.md` and current user instructions. `AGENTS.md` is th
 
 Use agents only inside the user's authorized scope. Assign exclusive files and explicit acceptance criteria. Agent completion messages are inputs to integration, not proof by themselves. Do not infer permission to push, install, open applications, or contact others from an old handoff or project template.
 
+Worker briefs keep applicable user rules binding; a lead must not silently disable them. Record any conflict with host permissions. Wave numbers share one project-wide sequence across hosts; reserve the next unused number in the saved plan (WV-01).
+
+At wave start, create and open the interjections file as `.md` in the project root, never as an RTF inbox; it is the only inbox until the next handoff. Read only saved additions; append replies in that same Markdown file with `Neue Zwischenrufe gelesen: ja/nein`, `ZWISCHENRUFE BIS HIER BEARBEITET — <time>`, and `AB HIER NEUE ZWISCHENRUFE` plus an empty `>>>` line. If the editor has unsaved input or its state is unknown, defer the append; never save or close it. Follow HF-07.
+
 <!-- rule:CLA-03 -->
 ## Cache facts and limits
 

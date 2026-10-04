@@ -52,7 +52,9 @@ class PublicSurfaceTests(unittest.TestCase):
 
     def test_package_manifests_build_offline_without_historical_helpers(self):
         forbidden = {"docs/.sol-err", "scripts/codex-limit.sh", "scripts/skills-uebersicht.sh"}
-        safe_scripts = {"scripts/handoff-rtf.sh", "scripts/render_rtf.py", "scripts/handoff_common.py"}
+        safe_scripts = {"scripts/handoff-rtf.sh", "scripts/render_rtf.py", "scripts/handoff_common.py",
+                        "scripts/handoff-pruefen.py", "scripts/sammlung-pruefen.sh",
+                        "scripts/sammlung_pruefen.py", "scripts/zwischenrufe-antwort.sh"}
         for package_id, package in MATRIX["packages"].items():
             resources = package["resources"]
             self.assertFalse(forbidden.intersection(resources), package_id)

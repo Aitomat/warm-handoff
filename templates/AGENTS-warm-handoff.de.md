@@ -12,6 +12,8 @@
 
 - Erzeuge jedes RTF-Handoff mit `scripts/handoff-rtf.sh` aus dem Skill-Verzeichnis gemäß [RTF-Sicherheit](../references/rtf-macos.de.md); ersetze dies nie durch direkte Erzeugung mit `textutil`.
 
+Beim Wellenstart die Zwischenrufe-Datei als `.md` im Projektstamm anlegen und öffnen, nie als RTF-Eingang; sie ist bis zum nächsten Handoff der einzige Eingang. Nur gespeicherte Ergänzungen lesen; Antworten in dieselbe Markdown-Datei anhängen, mit `Neue Zwischenrufe gelesen: ja/nein`, `ZWISCHENRUFE BIS HIER BEARBEITET — <Uhrzeit>` und `AB HIER NEUE ZWISCHENRUFE` plus leerer `>>>`-Zeile. Bei ungespeichertem oder unbekanntem Editorstand das Anhängen zurückstellen; nie selbst speichern oder schließen. Nach HF-07.
+
 <!-- rule:AG-02 -->
 ## Umfang und Besitz
 
@@ -19,6 +21,8 @@
 - Jede beschreibbare Datei gehört genau einem Agenten. Stoppe und melde, bevor du einen fremden Pfad berührst.
 - Leite keine Erlaubnis zu Installation, Veröffentlichung, Push, UI-Steuerung, Kontaktaufnahme oder destruktiver Arbeit ab.
 - Serialisiere Kommandos mit gemeinsamem `[Build-Lock oder veränderlicher Ressource]`.
+
+Arbeiteraufträge erhalten die geltenden Nutzerregeln; ein Chef darf sie nicht still außer Kraft setzen. Konflikte mit Hostrechten benennen. Wellennummern folgen einer gemeinsamen Folge je Projekt über alle Hosts; die nächste freie Nummer im gespeicherten Plan reservieren (WV-01).
 
 <!-- rule:AG-03 -->
 ## Optionaler Wächtermodus

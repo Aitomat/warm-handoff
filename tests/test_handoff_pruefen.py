@@ -61,6 +61,14 @@ class HandoffPruefenTests(unittest.TestCase):
         self.assertIn('fremde Kennung „(q)“', text)
         self.assertIn('Revision „q“ statt „r“', text)
 
+    def test_englische_standzeile_wird_akzeptiert(self):
+        text = handoff(self.md, 'r').replace('Stand:', 'As of:')
+        self.assertEqual(self.befunde(text), [])
+
+    def test_ungueltiges_datum_ist_befund_statt_absturz(self):
+        befunde = self.befunde(handoff(self.md, 'r', stand='32.10.2026, 04:55'))
+        self.assertTrue(any('ungültig' in b for b in befunde), befunde)
+
     def test_fehlende_kopierzeile_wird_erkannt(self):
         befunde = self.befunde(handoff(self.md, 'r', kopierzeile=False))
         self.assertTrue(any(b.startswith('Kopierzeile') for b in befunde), befunde)
@@ -117,6 +125,29 @@ class SammlungPruefenTests(unittest.TestCase):
         result = self.run_check(alt, '# Neu\n')
         self.assertEqual(result.returncode, 1, result.stdout)
         self.assertIn('Dieser neue Fehler bleibt offen', result.stdout)
+
+    def test_automatisch_nur_direkten_vorgaenger_pruefen(self):
+        a = self.root / '_handoff-a.md'
+        b = self.root / '_handoff-b.md'
+        neu = self.root / '_handoff-neu.md'
+        a.write_text('SAMMLUNG FÜR DAS NÄCHSTE HANDOFF\n>>>Ältere erledigte Eingabe\n')
+        b.write_text('SAMMLUNG FÜR DAS NÄCHSTE HANDOFF\n>>>Neue frische Eingabe\n')
+        # Deterministische Reihenfolge ohne sleep oder Annahme zur Uhr.
+        import os
+        os.utime(a, ns=(1, 1))
+        os.utime(b, ns=(2, 2))
+        neu.write_text('Neue frische Eingabe\n')
+        result = subprocess.run(['bash', str(SCRIPTS / 'sammlung-pruefen.sh'), str(neu)],
+                                capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stdout)
+        self.assertNotIn('Ältere erledigte Eingabe', result.stdout)
+
+    def test_fehlender_vorgaenger_ist_befund(self):
+        neu = self.root / '_handoff-neu.md'
+        neu.write_text('Neu')
+        result = subprocess.run(['bash', str(SCRIPTS / 'sammlung-pruefen.sh'), str(neu),
+                                 str(self.root / 'fehlt.md')], capture_output=True, text=True)
+        self.assertNotEqual(result.returncode, 0)
 
     def test_englischer_sammlungsfuss(self):
         alt = '## COLLECTION FOR THE NEXT HANDOFF\n>>>Keep this new idea\n'

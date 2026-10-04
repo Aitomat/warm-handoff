@@ -12,6 +12,8 @@ Copy only the rules the project adopts. Replace bracketed placeholders. This tem
 
 - Generate every RTF handoff with `scripts/handoff-rtf.sh` from the skill directory, following [RTF safety](../references/rtf-macos.md); never substitute direct `textutil` generation.
 
+At wave start, create and open the interjections file as `.md` in the project root, never as an RTF inbox; it is the only inbox until the next handoff. Read only saved additions; append replies in that same Markdown file with `Neue Zwischenrufe gelesen: ja/nein`, `ZWISCHENRUFE BIS HIER BEARBEITET — <time>`, and `AB HIER NEUE ZWISCHENRUFE` plus an empty `>>>` line. If the editor has unsaved input or its state is unknown, defer the append; never save or close it. Follow HF-07.
+
 <!-- rule:AG-02 -->
 ## Scope and ownership
 
@@ -19,6 +21,8 @@ Copy only the rules the project adopts. Replace bracketed placeholders. This tem
 - One agent owns each writable file. Stop and report before touching an unowned path.
 - Never infer permission to install, publish, push, control UI, contact others, or perform destructive work.
 - Serialize commands that share `[build lock or mutable resource]`.
+
+Worker briefs keep applicable user rules binding; a lead must not silently disable them. Record any conflict with host permissions. Wave numbers share one project-wide sequence across hosts; reserve the next unused number in the saved plan (WV-01).
 
 <!-- rule:AG-03 -->
 ## Optional guardian mode

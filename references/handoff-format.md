@@ -71,23 +71,11 @@ A missing section means the handoff is not finished. Check the list against the 
 
 
 <!-- rule:HF-07 -->
-## Answer inside the Zwischenrufe file (2026-09-14)
+## Answer the interjections Markdown file
 
-The Zwischenrufe file is a conversation, not a letterbox. Once you have read and
-acted on saved interjections, write your answer into that same file — not only
-into the chat:
+At wave start, create and open the interjections file as `.md` in the project root, never as an RTF inbox; it is the only inbox until the next handoff. Read only saved additions; append replies in that same Markdown file with `Neue Zwischenrufe gelesen: ja/nein`, `ZWISCHENRUFE BIS HIER BEARBEITET — <time>`, and `AB HIER NEUE ZWISCHENRUFE` plus an empty `>>>` line. If the editor has unsaved input or its state is unknown, defer the append; never save or close it.
 
-1. Below the answered interjections add a block
-   `ZWISCHENRUFE BIS HIER BEARBEITET — <time>` with your answers: one sentence
-   per point saying what became of it (done, scheduled as topic X, declined with
-   a reason).
-2. Below that the marker `AB HIER NEUE ZWISCHENRUFE` and one empty `>>>` line.
-3. Only then report in chat. The user sees at a glance what arrived, without
-   searching the chat history.
-
-The user must never write anything twice. If they had to paste interjections
-into the chat because you missed them, that belongs in the wave's measurement as
-a failure.
+When modification time is unchanged, do not reopen or rewrite the file. If changed saved state contains no new user input, record "nein". Answer short items promptly; schedule longer ones into the next wave.
 
 <!-- rule:HF-08 -->
 ## Carry only new input verbatim, link the older (2026-10-04)
@@ -131,21 +119,7 @@ A revision carries its ID consistently: in the file name (`…-2026-10-02-r.md` 
 
 See also [wave execution](wave-execution.md), [evidence scope](evidence-scope.md), and [RTF on macOS](rtf-macos.md).
 
-### Path line at the very top of every document (user, 2026-09-16 20:36)
-
-Every document you create or revise — plan, report, concept, roadmap, handoff,
-Zwischenrufe — starts with **its own absolute path** as the very first line,
-nothing above it, not even a heading. Below that the as-of date, then the heading:
-
-```markdown
-/absolute/path/to/project/docs/plans/wave-plan.md
-Stand: DD.MM.YYYY, HH:MM
-
-# Document heading
-```
-
-Reason, in the user's words: he wants to copy the top line and have the path with
-it instead of hunting for it. When a document moves, the line moves with it.
+Document path and as-of lines follow RT-05 in [RTF on macOS](rtf-macos.md).
 
 ### Timestamp on every NEW request (user, 2026-09-16 21:58)
 

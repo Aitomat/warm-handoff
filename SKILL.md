@@ -5,7 +5,7 @@ description: Preserve user input and verified work across pauses, resume safely,
 
 # Warm Handoff
 
-Use this compact entry point for routine work. Read only the reference needed for the current action. The `warm-handoff-full` variant covers teaching, adoption, and audits.
+Read the relevant reference for routine work; use `warm-handoff-full` for teaching or audits.
 
 <!-- rule:WH-01 -->
 ## 1. Establish scope
@@ -28,9 +28,11 @@ Three stop rules when you write a handoff:
 <!-- rule:WH-03 -->
 ## 3. Work inside authorization
 
+Worker briefs keep applicable user rules binding; a lead must not silently disable them. Record any conflict with host permissions. Wave numbers share one project-wide sequence across hosts; reserve the next unused number in the saved plan (WV-01).
+
 Make progress until the authorized outcome is complete. Split independent work only when the host and assignment allow it. Give each worker exclusive paths, acceptance criteria, and explicit file boundaries; never exceed actual concurrency. Guardians are optional coordination roles, not a default layer. Keep shared resources serialized.
 
-Builds are the scarce resource, and the limit is memory, not agent count: **one build at a time**, with the lock in the project's test script, not in a worker prompt — a prompt is a request, a script is a gate. A final build counts only when it reached the tests; a run that dies earlier must be repeated, and whoever changes anything afterwards builds again. Keep builds in the foreground, cap how many workers run at once, and smoke-build once before the first worker starts.
+One build at a time, locked by the project test script. A final build counts only after reaching tests; rerun after later changes. Build in the foreground and smoke-build before the first worker starts.
 
 For pre-flight checklists, the lock snippet, worker briefs, and wave choreography, read [wave execution](references/wave-execution.md). For model selection and changing platform facts, read [model routing](references/model-routing.md) and [evidence scope](references/evidence-scope.md).
 
@@ -41,9 +43,9 @@ Never overwrite a user's answered handoff. Write a new Markdown source and, on m
 
 Text pasted or typed behind `>>>` must stay black on gold at 18 pt; the exact control words are in [RTF on macOS](references/rtf-macos.md). Create a new handoff directly in the project's archive folder and never move it afterwards — every move breaks a path the document was already linked under; archive answered handoffs with `mv`, never `rm`. Every document begins with its own absolute path as the first line, then its as-of date. When you change a document the user may have open, close and reopen it for him, but never touch unsaved input.
 
-Keep exactly one inbox at a time, switched by the wave clock: between handoff and wave start the handoff is the only inbox; the interjections file is created at wave start and is the only inbox until the next handoff. Answer short items at once; schedule longer ones into the next wave.
+Until wave start the handoff footer is the only inbox. At wave start, create and open the interjections file as `.md` in the project root, never as an RTF inbox; it is the only inbox until the next handoff. Read only saved additions; append replies in that same Markdown file with `Neue Zwischenrufe gelesen: ja/nein`, `ZWISCHENRUFE BIS HIER BEARBEITET — <time>`, and `AB HIER NEUE ZWISCHENRUFE` plus an empty `>>>` line. If the editor has unsaved input or its state is unknown, defer the append; never save or close it. Follow HF-07.
 
-Read [RTF on macOS](references/rtf-macos.md) before rendering or opening documents. Generate handoff and interjection twins exclusively through `scripts/handoff-rtf.sh` from the skill directory. Cmd-S releases saved input within the existing authorization.
+Read [RTF on macOS](references/rtf-macos.md) before rendering or opening documents. Generate requested handoff RTF twins exclusively through `scripts/handoff-rtf.sh` from the skill directory. Cmd-S releases saved input within the existing authorization.
 
 <!-- rule:WH-05 -->
 ## 5. Use optional helpers deliberately
@@ -57,6 +59,6 @@ Before completion, reread the designated feedback source, inspect status, run th
 
 On every wake-up of the main session — a worker notification, a timer, a resumed turn — compare the modification time of the designated interjections file against the last read. Changed: read the saved additions before acting or reporting. Unchanged: leave it closed. Saved state only; the user's save is the release. Never watch the file: a save is not a request and must wake nothing.
 
-Finish a clean wave without asking: all workers done and the full suite green means build, install, publish, and write the handoff. Ask only on an unclean finish — red tests, an unresolved finding, a blocked worker — and then name what is missing and propose a next step.
+Close a clean wave within authorization: with workers done and the full suite green, build, install, publish, and write the handoff. For red tests, unresolved findings, or blocked workers, name the gap and propose the next step.
 
 Spanish localization is deferred. Audio, video, and website material are outside this skill.

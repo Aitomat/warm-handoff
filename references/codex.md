@@ -16,6 +16,10 @@ Write required plans and reports before claiming completion. Verify persisted fi
 
 For every RTF handoff, invoke `scripts/handoff-rtf.sh SOURCE NEW_OUTPUT` from the skill directory; follow [RTF safety](rtf-macos.md). Never generate the final RTF directly with `textutil`: it is only a reader/verification tool in this workflow.
 
+Worker briefs keep applicable user rules binding; a lead must not silently disable them. Record any conflict with host permissions. Wave numbers share one project-wide sequence across hosts; reserve the next unused number in the saved plan (WV-01).
+
+At wave start, create and open the interjections file as `.md` in the project root, never as an RTF inbox; it is the only inbox until the next handoff. Read only saved additions; append replies in that same Markdown file with `Neue Zwischenrufe gelesen: ja/nein`, `ZWISCHENRUFE BIS HIER BEARBEITET — <time>`, and `AB HIER NEUE ZWISCHENRUFE` plus an empty `>>>` line. If the editor has unsaved input or its state is unknown, defer the append; never save or close it. Follow HF-07.
+
 <!-- rule:CDX-03 -->
 ## Agents and guardian mode
 
@@ -40,7 +44,7 @@ A Codex lead session tends to skip these. Each one is a gate, not advice; a hand
 - [ ] Every timestamp comes from `date` at the moment of writing, never from an estimate.
 - [ ] First line of every handoff, report, and interjections file: its own absolute path; second line: the as-of time from `date`.
 - [ ] The new handoff is created directly in the project's archive folder and never moved; an answered handoff is never overwritten.
-- [ ] Exactly one inbox: the handoff footer until wave start, then the interjections file until the next handoff.
+- [ ] Exactly one inbox: the handoff footer until wave start, then the interjections file as `.md` until the next handoff.
 - [ ] Before writing, open [handoff format](handoff-format.md) in full; "I know the format" does not count.
 - [ ] Read the predecessor unfiltered, first line to last — no truncation, no grep for answer markers only.
 - [ ] Bundle at wave end: build, install, commit and push within the authorization, write and open the handoff in one pass; outstanding reports go under "Running and pending".

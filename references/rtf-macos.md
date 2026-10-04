@@ -5,7 +5,7 @@
 
 RTF is an optional editable twin of an agent-authored Markdown handoff. It requires macOS, Python 3, Bash, and `textutil`.
 
-Generate handoff and Zwischenrufe RTFs exclusively through `scripts/handoff-rtf.sh`, run from the repository or installed skill directory with absolute source/output paths. Do not rebuild RTF by hand or invoke `render_rtf.py` directly; use `textutil` only to read and verify.
+Generate requested handoff RTFs exclusively through `scripts/handoff-rtf.sh`, run from the repository or installed skill directory with absolute source/output paths. Do not rebuild RTF by hand or invoke `render_rtf.py` directly; use `textutil` only to read and verify.
 
 Cmd-S releases saved user input within the existing authorization. Keep exactly one active interjections inbox: the handoff footer or the agreed file; the other only links to it. Archive answered handoffs in the project's archive folder using `mv`, never `rm`; do not move the active user input file.
 
@@ -22,6 +22,8 @@ The output path must be new. The renderer refuses existing files and symlinks, w
 
 Wrap preserved user text in `<!-- user-original:start -->` and `<!-- user-original:end -->`. Its visible text stays literal. Markdown links, supported document markers, URLs, paths in inline code, and real absolute paths remain link candidates. Slash compounds such as `root-/worker usage` or `token-/cost telemetry` are prose and must not be parsed as root paths.
 
+Agent text renders `**bold**` as bold; Markdown tables become labeled rows whose cells wrap naturally. User originals, answer fields, and code remain literal.
+
 <!-- rule:RT-03 -->
 ## Gold answer continuation
 
@@ -37,8 +39,7 @@ blocks reset with `\pard\plain\f0\cf2`. Use the complete GOLD state below for
 Cocoa character shading; `\highlight` alone is insufficient, and `\cb0` reads as
 black rather than "no background", so `\plain` is the only clean reset. Verify
 with `textutil -convert html -stdout FILE.rtf`: the answer class carries an
-18 px font and the gold background, agent text carries no background. The same
-gold rule applies to the Zwischenrufe RTF, not only to the handoff.
+18 px font and the gold background, agent text carries no background.
 
 <!-- rule:RT-03b -->
 ## Black on gold, 18 pt, for text pasted behind `>>>` (evidence W58-E1, 2026-09-13)
@@ -109,21 +110,8 @@ the handoff, read what is saved and otherwise leave them open. Applies to every
 document whose path you name in a reply.
 
 <!-- rule:RT-07 -->
-## Interjections as Markdown, with answers written into the file
+## Interjections use the Markdown inbox
 
-A project may keep the interjections file as a plain `.md` instead of an RTF
-twin; the renderer rightly refuses to append to an existing RTF, so an RTF inbox
-cannot be answered in place. Append an answer block safely — never touch unsaved
-input:
+At wave start, create and open the interjections file as `.md` in the project root, never as an RTF inbox; it is the only inbox until the next handoff. Read only saved additions; append replies in that same Markdown file with `Neue Zwischenrufe gelesen: ja/nein`, `ZWISCHENRUFE BIS HIER BEARBEITET — <time>`, and `AB HIER NEUE ZWISCHENRUFE` plus an empty `>>>` line. If the editor has unsaved input or its state is unknown, defer the append; never save or close it. Follow HF-07.
 
-```sh
-M=$(osascript -e 'tell application "TextEdit" to get modified of (first document whose path contains "<filename>")')
-# only when M is "false": close without saving, append, reopen
-osascript -e 'tell application "TextEdit" to close (every document whose path contains "<filename>") saving no'
-cat >> "<full path>" <<'EOT'   # quoted heredoc: backticks and $ stay literal
-…
-EOT
-open -a TextEdit "<full path>"
-```
-
-If `modified` is `true`, do not close: answer in chat and append on the next wake-up.
+Use `scripts/zwischenrufe-antwort.sh` for safe appending. It checks the exact document path, refuses RTF and unknown editor state, and never saves user input. Only with a confirmed saved state, close that document without saving, append, and reopen it.

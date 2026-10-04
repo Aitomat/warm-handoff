@@ -83,6 +83,10 @@ Eingang. Zwei parallele Eingänge haben schon Antworten verschluckt.
 Agentenmeldung warten: Handoff schreiben, öffnen, pushen, melden. Offene
 Meldungen stehen unter „Laufend und offen"; sie halten den Abschluss nicht auf.
 
+Beim Wellenstart die Zwischenrufe-Datei als `.md` im Projektstamm anlegen und öffnen, nie als RTF-Eingang; sie ist bis zum nächsten Handoff der einzige Eingang. Nur gespeicherte Ergänzungen lesen; Antworten in dieselbe Markdown-Datei anhängen, mit `Neue Zwischenrufe gelesen: ja/nein`, `ZWISCHENRUFE BIS HIER BEARBEITET — <Uhrzeit>` und `AB HIER NEUE ZWISCHENRUFE` plus leerer `>>>`-Zeile. Bei ungespeichertem oder unbekanntem Editorstand das Anhängen zurückstellen; nie selbst speichern oder schließen. Nach HF-07.
+
+Arbeiteraufträge erhalten die geltenden Nutzerregeln; ein Chef darf sie nicht still außer Kraft setzen. Konflikte mit Hostrechten benennen. Wellennummern folgen einer gemeinsamen Folge je Projekt über alle Hosts; die nächste freie Nummer im gespeicherten Plan reservieren (WV-01).
+
 ## 3. Die vier Skripte
 
 Immer benutzen, nie von Hand nachbauen.
@@ -113,20 +117,7 @@ antwortet**. Vollständig in [RTF unter macOS](references/rtf-macos.de.md).
 - `--project-root` angeben, wenn die Projektwurzel bekannt ist.
 - Pfade mit Leerzeichen als `[Label](<docs/Fragen an Yasin.md>)`, in Backticks
   oder als `⟦Screenshot: /absoluter/Pfad mit Leerzeichen.png⟧`.
-- **Gold ist Pflicht, und zwar auch für den Dokumentstandard.** `>>>`-Absätze und
-  `user-original`-Blöcke sind golden; darüber hinaus ist der Dokumentstandard
-  selbst 18 pt Gold, damit **eingefügter (Cmd-V) und getippter Text** im
-  Antwortfeld ebenfalls 18 pt Gold ist und nicht auf 12 pt ohne Farbe zurückfällt.
-  Agententext, Überschriften und Codeblöcke setzen mit `\pard\plain\f0\cf2` zurück.
-  Dieselbe Goldregel gilt für die **Zwischenrufe-RTF**, nicht nur für den Handoff.
-- **Hinter `>>>` eingefügter Text ist schwarz auf Gold, 18 pt** (Beleg W58-E1,
-  13.09.2026). Farbtabelle `;gold;schwarz;`; der goldene Zeichenzustand ist
-  `\cb1\cbpat1\chshdng0\chcbpat1\highlight1\cf2`, der Reset `\plain\f0\cf2`,
-  Antwortabsätze werden als `RESET + \fs36 + GOLD` geschrieben (`\fs36` = 18 pt).
-  Nur `\chshdng0\chcbpat1` färbt in Cocoa auf Zeichenebene, `\cf2` hält
-  Nutzertext schwarz, und `\cb0` würde als Schwarz gelesen — nie als Reset
-  verwenden. Prüfe diese Steuerworte im mitgelieferten Renderer; die Erzeugung
-  erfolgt weiterhin ausschließlich über `scripts/handoff-rtf.sh`.
+- Hinter `>>>` bleibt eingefügter und getippter Text schwarz auf Gold in 18 pt, einschließlich Fortsetzung und Dokumentstandard. Agententext setzt den Hintergrund zurück; die exakten Steuerworte und Beleggrenzen stehen in RT-03/RT-03b der oben verlinkten RTF-Referenz. Zwischenrufe bleiben `.md`.
 - **Beantwortete Handoffs nach `handoff-archiv/`** des Projekts ablegen
   (`mv`, nie `rm`; Yasin 13.09.2026 03:31).
 - Nach dem Erzeugen `grep -c "file://" DATEI.rtf`: > 0, sobald das Dokument

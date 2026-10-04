@@ -39,6 +39,11 @@ Nenne eine Arbeit nur erledigt, wenn ein Artefakt, Commit, Status oder Test das 
 
 Beantwortete Handoffs nach `handoff-archiv/` des Projekts ablegen (anlegen, falls nicht vorhanden) und mit `mv` verschieben, nie mit `rm` (Yasin 13.09.2026 03:31). Ein neues Handoff ist immer eine NEUE Datei; das alte erst archivieren, wenn seine Antworten übernommen sind.
 
+**Ein neues Handoff direkt in `handoff-archiv/` anlegen**, nicht zuerst im
+Projektstamm und später verschieben: Jeder Umzug bricht bereits verlinkte Pfade.
+Markdown und angeforderte RTF-Zwillinge entstehen von Anfang an dort. Die
+Zwischenrufe-Datei bleibt als `.md` im Projektstamm; der Nutzer räumt sie selbst weg.
+
 <!-- rule:HF-05 -->
 ## Vollständig lesen, nicht gefiltert (14.09.2026)
 
@@ -53,7 +58,7 @@ Die acht Pflichtabschnitte oben sind das Minimum. Die ausgelieferte Reihenfolge 
    darunter eine einzige, vollständig markierbare Zeile, die der
    Nutzer ohne Nachbearbeitung in den Chat kopieren kann:
    `Ich habe das Handoff bearbeitet: <absoluter Pfad zur .rtf>`
-   Sie ersetzt den früheren nackten Pfad und ist KEINE Goldzeile — kein `>>>`
+   Sie ergänzt die erste Pfadzeile und ist KEINE Goldzeile — kein `>>>`
    davor (Yasin 14.09.2026 23:14: die `>>>`-Zeile im Kopf „macht keinen Sinn";
    Yasin 15.09.2026 23:04: „oben schreiben wir doch eigentlich normalerweise hin,
    ich habe das Handoff bearbeitet, und dann kommt der Handoff-Link, damit ich nur
@@ -71,23 +76,11 @@ Fehlt einer, ist das Handoff nicht fertig. Vor dem Rendern die Liste gegen die D
 
 
 <!-- rule:HF-07 -->
-## Die Zwischenrufe-Datei beantworten (14.09.2026)
+## Die Zwischenrufe-Datei als Markdown beantworten
 
-Die Zwischenrufe-Datei ist kein Briefkasten, sondern ein Gespräch. Wenn du
-gespeicherte Zwischenrufe gelesen und bearbeitet hast, schreibst du deine
-Antwort in dieselbe Datei — nicht nur in den Chat:
+Beim Wellenstart die Zwischenrufe-Datei als `.md` im Projektstamm anlegen und öffnen, nie als RTF-Eingang; sie ist bis zum nächsten Handoff der einzige Eingang. Nur gespeicherte Ergänzungen lesen; Antworten in dieselbe Markdown-Datei anhängen, mit `Neue Zwischenrufe gelesen: ja/nein`, `ZWISCHENRUFE BIS HIER BEARBEITET — <Uhrzeit>` und `AB HIER NEUE ZWISCHENRUFE` plus leerer `>>>`-Zeile. Bei ungespeichertem oder unbekanntem Editorstand das Anhängen zurückstellen; nie selbst speichern oder schließen.
 
-1. Unter die beantworteten Zwischenrufe kommt ein Block
-   `ZWISCHENRUFE BIS HIER BEARBEITET — <Uhrzeit>` mit deinen Antworten:
-   je Punkt ein Satz, was daraus wurde (umgesetzt, geplant als Thema X,
-   abgelehnt mit Grund).
-2. Darunter die Marke `AB HIER NEUE ZWISCHENRUFE` und eine leere `>>>`-Zeile.
-3. Erst dann im Chat melden. Der Nutzer sieht so in einem Blick, was
-   angekommen ist, ohne den Chatverlauf zu durchsuchen.
-
-Der Nutzer muss nie zweimal schreiben. Musste er Zwischenrufe in den Chat
-kopieren, weil du sie übersehen hast, gehört das als Fehler in die Messung der
-Welle.
+Bei unveränderter Änderungszeit die Datei nicht neu öffnen oder beschreiben. Bei geändertem Stand ohne neue Nutzereingaben „nein“ vermerken. Kurzes sofort beantworten, Längeres in die nächste Welle einplanen.
 
 <!-- rule:HF-08 -->
 ## Nur neue Eingaben wörtlich übernehmen, Älteres verlinken (04.10.2026)
@@ -130,3 +123,11 @@ Eine Revision trägt ihre Kennung überall gleich: im Dateinamen (`…-2026-10-0
 - Vor dem Rendern und danach `scripts/handoff-pruefen.py <handoff.md>` laufen lassen; es prüft Pfad, Stand, Kennung, Kopierzeile, Selbstverweise im Kopf und die Abschnittsfolge. Beantwortete Vorgänger als gespeichertes RTF an `scripts/sammlung-pruefen.sh` übergeben, denn das Agenten-MD enthält die Antworten nicht.
 
 Siehe auch [Wellen-Ausführung](wave-execution.de.md), [Beleggrenzen](evidence-scope.de.md) und [RTF unter macOS](rtf-macos.de.md).
+
+Pfad- und Standzeilen jedes Dokuments folgen RT-05 in [RTF unter macOS](rtf-macos.de.md).
+
+### Zeitstempel auf jede NEUE Anfrage
+
+Die erste Zeile der ersten Antwort auf eine neue Nutzernachricht trägt
+`Name, TT.MM.JJJJ-HH:MM`, nicht jede Zwischenmeldung derselben Antwortkette.
+Die Zeit kommt nur aus `date "+%d.%m.%Y-%H:%M"`, niemals aus einer Schätzung.

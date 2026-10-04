@@ -28,9 +28,11 @@ Drei Stopp-Regeln, wenn du ein Handoff schreibst:
 <!-- rule:WH-03 -->
 ## 3. Innerhalb der Autorisierung arbeiten
 
+Arbeiteraufträge erhalten die geltenden Nutzerregeln; ein Chef darf sie nicht still außer Kraft setzen. Konflikte mit Hostrechten benennen. Wellennummern folgen einer gemeinsamen Folge je Projekt über alle Hosts; die nächste freie Nummer im gespeicherten Plan reservieren (WV-01).
+
 Arbeite weiter, bis das autorisierte Ergebnis vollständig ist. Teile unabhängige Arbeit nur auf, wenn Host und Auftrag es erlauben. Gib jedem Arbeiter exklusive Pfade, Akzeptanzkriterien und ausdrückliche Dateigrenzen; überschreite nie die tatsächliche Parallelkapazität. Wächter sind optionale Koordinatoren und keine Standardschicht. Serialisiere gemeinsam genutzte Ressourcen.
 
-Builds sind die knappe Ressource, und die Grenze ist der Speicher, nicht die Zahl der Agenten: **ein Bau gleichzeitig**, mit der Sperre im Testskript des Projekts statt im Auftrag eines Arbeiters — ein Auftrag ist eine Bitte, ein Skript ist ein Tor. Ein Abschlussbau zählt nur, wenn er die Tests erreicht hat; ein Lauf, der vorher abbricht, wird wiederholt, und wer danach noch etwas ändert, baut erneut. Baue im Vordergrund, begrenze die Zahl gleichzeitiger Arbeiter und fahre einen Rauchtest, bevor der erste Arbeiter startet.
+Ein Bau gleichzeitig, mit Sperre im Projekt-Testskript. Nur ein bis zu den Tests gelangter Abschlussbau zählt; nach späteren Änderungen erneut prüfen. Im Vordergrund bauen und vor dem ersten Arbeiter einen Rauchtest fahren.
 
 Vorflug-Listen, Slot-Sperre, Arbeiteraufträge und Wellen-Choreografie stehen in [Wellen-Ausführung](references/wave-execution.de.md). Für Modellwahl und veränderliche Plattformfakten lies [Modellrouting](references/model-routing.de.md) und [Beleggrenzen](references/evidence-scope.de.md).
 
@@ -41,9 +43,9 @@ Vorflug-Listen, Slot-Sperre, Arbeiteraufträge und Wellen-Choreografie stehen in
 
 Hinter `>>>` eingefügter oder getippter Text muss schwarz auf Gold in 18 pt bleiben; die genauen Steuerworte stehen in [RTF unter macOS](references/rtf-macos.de.md). Lege ein neues Handoff direkt im Archivordner des Projekts an und verschiebe es danach nie — jedes Verschieben bricht einen Pfad, unter dem das Dokument schon verlinkt war; beantwortete Handoffs wandern per `mv` dorthin, nie per `rm`. Jedes Dokument beginnt mit seinem eigenen absoluten Pfad als erster Zeile, darunter das Stand-Datum. Änderst du ein Dokument, das der Nutzer offen haben könnte, schließe und öffne es für ihn — aber fasse nie Ungespeichertes an.
 
-Halte genau einen Eingang, zeitlich getrennt durch die Wellenuhr: Zwischen Handoff und Wellenstart ist das Handoff der einzige Eingang; die Zwischenrufe-Datei entsteht mit dem Wellenstart und ist bis zum nächsten Handoff der einzige Eingang. Kurzes beantwortest du sofort, Längeres planst du in die nächste Welle.
+Bis zum Wellenstart ist der Handoff-Fuß der einzige Eingang. Beim Wellenstart die Zwischenrufe-Datei als `.md` im Projektstamm anlegen und öffnen, nie als RTF-Eingang; sie ist bis zum nächsten Handoff der einzige Eingang. Nur gespeicherte Ergänzungen lesen; Antworten in dieselbe Markdown-Datei anhängen, mit `Neue Zwischenrufe gelesen: ja/nein`, `ZWISCHENRUFE BIS HIER BEARBEITET — <Uhrzeit>` und `AB HIER NEUE ZWISCHENRUFE` plus leerer `>>>`-Zeile. Bei ungespeichertem oder unbekanntem Editorstand das Anhängen zurückstellen; nie selbst speichern oder schließen. Nach HF-07.
 
-Lies [RTF unter macOS](references/rtf-macos.de.md), bevor du renderst oder Dokumente öffnest. Erzeuge Handoff- und Zwischenrufe-Zwillinge ausschließlich über `scripts/handoff-rtf.sh` aus dem Skillverzeichnis. Cmd-S gibt gespeicherte Eingaben innerhalb der bestehenden Autorisierung frei.
+Lies [RTF unter macOS](references/rtf-macos.de.md), bevor du renderst oder Dokumente öffnest. Erzeuge angeforderte Handoff-RTF-Zwillinge ausschließlich über `scripts/handoff-rtf.sh` aus dem Skillverzeichnis. Cmd-S gibt gespeicherte Eingaben innerhalb der bestehenden Autorisierung frei.
 
 <!-- rule:WH-05 -->
 ## 5. Optionale Hilfen bewusst einsetzen
