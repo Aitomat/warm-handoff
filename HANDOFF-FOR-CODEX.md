@@ -93,7 +93,7 @@ Always use them; never rebuild them by hand.
 | [`handoff-rtf.sh`](scripts/handoff-rtf.sh) | Markdown → RTF twin: clickable link fields, 18 pt, gold answer paragraphs | `scripts/handoff-rtf.sh docs/handoff-new.md /project/handoff-new.rtf --project-root /project` |
 | [`handoff-inputs.py`](scripts/handoff-inputs.py) | Snapshot of the saved sources with hash and timestamp before reading and writing | `python3 scripts/handoff-inputs.py …` |
 | [`handoff-pruefen.py`](scripts/handoff-pruefen.py) | **Required before and after rendering:** path and as-of lines, revision ID in the title, copy line, self-references in the header, HF-06 section order; with an RTF twin also its header | `python3 scripts/handoff-pruefen.py docs/handoff-new.md` |
-| [`sammlung-pruefen.sh`](scripts/sammlung-pruefen.sh) | **Required step before finalizing:** compares the new answer fields and final collection footer of the immediate predecessor (HF-08) with the new handoff and names what is missing | `scripts/sammlung-pruefen.sh docs/handoff-new.md [prev.rtf]` — pass answered predecessors as the saved RTF |
+| [`sammlung-pruefen.sh`](scripts/sammlung-pruefen.sh) | **Required step before finalizing:** requires the immediate predecessor's final collection footer verbatim, checks the reference to its answer fields, and reports answers repeated verbatim (HF-08) | `scripts/sammlung-pruefen.sh docs/handoff-new.md [prev.rtf]` — pass answered predecessors as the saved RTF |
 
 For the open Zwischenrufe file also use
 [`zwischenrufe-antwort.sh`](scripts/zwischenrufe-antwort.sh): **append only**,

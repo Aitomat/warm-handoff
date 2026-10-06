@@ -96,7 +96,7 @@ Immer benutzen, nie von Hand nachbauen.
 | [`handoff-rtf.sh`](scripts/handoff-rtf.sh) | Markdown → RTF-Zwilling: klickbare Linkfelder, 18 pt, goldene Antwortabsätze | `scripts/handoff-rtf.sh docs/handoff-neu.md /projekt/handoff-neu.rtf --project-root /projekt` |
 | [`handoff-inputs.py`](scripts/handoff-inputs.py) | Momentaufnahme der gespeicherten Quellen mit Hash und Zeitpunkt, bevor gelesen und geschrieben wird | `python3 scripts/handoff-inputs.py …` |
 | [`handoff-pruefen.py`](scripts/handoff-pruefen.py) | **Pflichtschritt vor und nach dem Rendern:** Pfad- und Standzeile, Kennung im Titel, Kopierzeile, Selbstverweise im Kopf, Abschnittsfolge HF-06; mit RTF-Zwilling auch dessen Kopf | `python3 scripts/handoff-pruefen.py docs/handoff-neu.md` |
-| [`sammlung-pruefen.sh`](scripts/sammlung-pruefen.sh) | **Pflichtschritt vor dem Finalisieren:** vergleicht die neuen Antwortfelder und den letzten Sammlungsfuß des direkten Vorgängers (HF-08) mit dem neuen Handoff und nennt, was fehlt | `scripts/sammlung-pruefen.sh docs/handoff-neu.md [vorgaenger.rtf]` — beantwortete Vorgänger als gespeichertes RTF übergeben |
+| [`sammlung-pruefen.sh`](scripts/sammlung-pruefen.sh) | **Pflichtschritt vor dem Finalisieren:** verlangt den letzten Sammlungsfuß des direkten Vorgängers wörtlich, prüft den Verweis auf dessen Antwortfelder und meldet wörtlich wiederholte Antworten (HF-08) | `scripts/sammlung-pruefen.sh docs/handoff-neu.md [vorgaenger.rtf]` — beantwortete Vorgänger als gespeichertes RTF übergeben |
 
 Für die offene Zwischenrufe-Datei zusätzlich
 [`zwischenrufe-antwort.sh`](scripts/zwischenrufe-antwort.sh): **nur anhängen**,

@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""HF-08-Abgleich neuer gespeicherter Eingaben; eine Heuristik, kein Vollbeweis."""
+"""HF-08-Abgleich neuer gespeicherter Eingaben; eine Heuristik, kein Vollbeweis.
+
+Seit W97 (Yasin, 06.10.2026, T34): Antworten in den Antwortfeldern des Vorgängers
+werden NICHT wörtlich übernommen, nur verwiesen („was ich daraus gemacht habe“).
+Wörtlich verlangt wird nur der Sammlungsfuß des Vorgängers."""
 from pathlib import Path
 import re
 import subprocess
@@ -11,8 +15,11 @@ ABSCHNITT = re.compile(r"^(?:#{1,6}\s|Entscheidungen und Fragen|Decisions and qu
 LEERE_MARKER = re.compile(r"^>>>(?:Userantwort:|User answer:|Antwort:)?\s*$", re.I)
 
 
+WOERTLICH_MIN = 40  # kürzere Antworten („Ja“, „OK“) sind kein Wiederholungsbeleg
+
+
 def neue_eingaben(text):
-    """Alte Sammlung ausschließen, neue >>>-Felder und letzten Fuß aufnehmen."""
+    """Liefert (antwortfelder, fuss): beide als Liste (Originalzeile, Kern)."""
     zeilen = text.splitlines()
     banner = [i for i, z in enumerate(zeilen) if BANNER.fullmatch(z.strip())]
     if not banner:
@@ -20,6 +27,7 @@ def neue_eingaben(text):
     fuss = banner[-1]
     original = alt = antwort = False
     eingaben = []
+    antworten = []
     for i, zeile in enumerate(zeilen):
         z = zeile.strip()
         if z == '<!-- user-original:start -->':
@@ -50,8 +58,8 @@ def neue_eingaben(text):
         # Präfix ist ein Antwortfeld, der folgende Text bleibt wörtlich.
         z = re.sub(r'^>>>(?:Userantwort:|User answer:|Antwort:)?\s*', '', z, flags=re.I)
         if z:
-            eingaben.append((zeile.strip(), z))
-    return eingaben
+            (eingaben if i > fuss else antworten).append((zeile.strip(), z))
+    return antworten, eingaben
 
 
 def klartext(pfad):
@@ -80,20 +88,28 @@ def main(argv=None):
             if alt.with_suffix('.rtf').is_file():
                 alt = alt.with_suffix('.rtf')
         print(f'── Vorgänger: {alt}')
-        eingaben = neue_eingaben(klartext(alt))
+        antworten, eingaben = neue_eingaben(klartext(alt))
         fehlt = [original for original, kern in eingaben if kern not in neu_text]
+        doppelt = [original for original, kern in antworten
+                   if len(kern) >= WOERTLICH_MIN and kern in neu_text]
+        verweis_fehlt = bool(antworten) and alt.stem not in neu_text
     except (OSError, ValueError, subprocess.SubprocessError) as error:
         print(f'BEFUND: {error}')
         return 1
     for zeile in fehlt:
         print(f'   FEHLT: {zeile}')
-    print(f'   {len(eingaben)} neue Eingabezeilen geprüft, {len(fehlt)} fehlen.')
-    if fehlt:
-        print('Neue Eingaben wörtlich nachtragen; ältere Originale nur verlinken (HF-08).')
+    for zeile in doppelt:
+        print(f'   WÖRTLICH WIEDERHOLT: {zeile}')
+    if verweis_fehlt:
+        print(f'   VERWEIS FEHLT: Antworten des Vorgängers nur mit Quelle „{alt.stem}“ verweisen.')
+    print(f'   {len(eingaben)} Sammlungszeilen geprüft, {len(fehlt)} fehlen; '
+          f'{len(antworten)} Antwortfelder nur als Verweis erwartet, {len(doppelt)} wörtlich wiederholt.')
+    if fehlt or doppelt or verweis_fehlt:
+        print('Sammlungsfuß wörtlich nachtragen; Antworten des Vorgängers nicht wiederholen, '
+              'nur je Punkt „was ich daraus gemacht habe“ mit Quelle (HF-08).')
         return 1
-    print('OK — neue Eingaben des direkten Vorgängers enthalten; ältere Originale nicht erneut verlangt (HF-08).')
+    print('OK — Sammlungsfuß enthalten, Antworten des Vorgängers nur verwiesen (HF-08).')
     return 0
-
 
 if __name__ == '__main__':
     sys.exit(main())

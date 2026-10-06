@@ -80,9 +80,20 @@ When modification time is unchanged, do not reopen or rewrite the file. If chang
 <!-- rule:HF-08 -->
 ## Carry only new input verbatim, link the older (2026-10-04)
 
-The verbatim collection holds only what the user saved or wrote **since the
-previous handoff**: the answers in the predecessor's answer fields, its collection
-footer, the wave's Zwischenrufe file, and the chat messages of the wave. Originals
+The verbatim collection holds only what the user entered **after the previous
+handoff**: its collection footer, the wave's Zwischenrufe file, and the chat
+messages of the wave. **Answers, questions, and test answers from the
+predecessor's answer fields are NOT repeated verbatim** — neither as a section
+"<id> — new answers" nor in the collection. They appear only under "What I made
+of it", one line per item with its source:
+
+`F2 → skill shortened, rule HF-08 sharpened (source: _handoff-<project>-<date>-CL, F2)`
+
+User, 2026-10-06 02:42 (T34): "Ich brauch nicht, dass du die alten Handoff-Dateien
+Fragen und Antworten und Tests mitnimmst"; likewise 2026-10-04 23:43: "keine
+Wiederholungen vom alten Handoff". `sammlung-pruefen.sh` therefore requires only the
+collection footer verbatim, checks that the answer fields are referenced by the
+predecessor's name, and reports answers repeated verbatim (40+ characters) as a finding. Originals
 that the predecessor had itself carried over from earlier revisions are NOT copied
 again. They stay in the archived predecessor, which is never changed or deleted.
 One line replaces them:

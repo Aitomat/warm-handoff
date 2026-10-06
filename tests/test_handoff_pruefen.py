@@ -116,15 +116,30 @@ class SammlungPruefenTests(unittest.TestCase):
                '<!-- user-original:end -->\n'
                '## Entscheidungen und Fragen\n>>>Userantwort: Neue Entscheidung behalten\n\n'
                '## SAMMLUNG FÜR DAS NÄCHSTE HANDOFF\n>>>Neuer Wunsch erhalten\n')
-        result = self.run_check(alt, 'Neue Entscheidung behalten\nNeuer Wunsch erhalten\n')
+        result = self.run_check(alt, 'F1 umgesetzt (Quelle: _handoff-alt, F1)\nNeuer Wunsch erhalten\n')
         self.assertEqual(result.returncode, 0, result.stdout)
 
-    def test_neue_antwortfelder_werden_nicht_uebersehen(self):
+    def test_antwortfelder_nur_verweisen_kein_fehlalarm(self):
+        # W97/T34: Antworten des Vorgängers werden nicht wörtlich wiederholt.
+        alt = ('## Testliste\n>>>Userantwort: Dieser neue Fehler bleibt offen und muss behoben werden\n\n'
+               '## SAMMLUNG FÜR DAS NÄCHSTE HANDOFF\n>>>\n')
+        result = self.run_check(alt, '# Neu\nT1 behoben (Quelle: _handoff-alt, T1)\n')
+        self.assertEqual(result.returncode, 0, result.stdout)
+
+    def test_antwortfelder_ohne_verweis_sind_befund(self):
         alt = ('## Testliste\n>>>Userantwort: Dieser neue Fehler bleibt offen\n\n'
                '## SAMMLUNG FÜR DAS NÄCHSTE HANDOFF\n>>>\n')
         result = self.run_check(alt, '# Neu\n')
         self.assertEqual(result.returncode, 1, result.stdout)
-        self.assertIn('Dieser neue Fehler bleibt offen', result.stdout)
+        self.assertIn('VERWEIS FEHLT', result.stdout)
+
+    def test_woertlich_wiederholte_antwort_ist_befund(self):
+        antwort = 'Diese ganzen Fragen und Antworten von der letzten Session brauchen wir nicht'
+        alt = (f'## Entscheidungen und Fragen\n>>>Userantwort: {antwort}\n\n'
+               '## SAMMLUNG FÜR DAS NÄCHSTE HANDOFF\n>>>\n')
+        result = self.run_check(alt, f'# Neu\nCL — neue Antworten (_handoff-alt)\n{antwort}\n')
+        self.assertEqual(result.returncode, 1, result.stdout)
+        self.assertIn('WÖRTLICH WIEDERHOLT', result.stdout)
 
     def test_automatisch_nur_direkten_vorgaenger_pruefen(self):
         a = self.root / '_handoff-a.md'

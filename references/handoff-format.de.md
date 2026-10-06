@@ -85,10 +85,20 @@ Bei unveränderter Änderungszeit die Datei nicht neu öffnen oder beschreiben. 
 <!-- rule:HF-08 -->
 ## Nur neue Eingaben wörtlich übernehmen, Älteres verlinken (04.10.2026)
 
-Die wörtliche Sammlung enthält nur, was der Nutzer **seit dem vorherigen Handoff**
-gespeichert oder geschrieben hat: die Antworten in den Antwortfeldern des
-Vorgängers, dessen Sammlungs-Fußbereich, die Zwischenrufe-Datei der Welle und die
-Chatnachrichten der Welle. Originale, die der Vorgänger selbst schon aus früheren
+Die wörtliche Sammlung enthält nur, was der Nutzer **nach dem vorherigen Handoff**
+neu eingegeben hat: dessen Sammlungs-Fußbereich, die Zwischenrufe-Datei der Welle
+und die Chatnachrichten der Welle. **Antworten, Fragen und Testantworten aus den
+Antwortfeldern des Vorgängers werden NICHT wörtlich wiederholt** — weder als
+Abschnitt „<Kennung> — neue Antworten“ noch in der Sammlung. Sie erscheinen nur
+unter „Was ich daraus gemacht habe“, eine Zeile je Punkt mit Quelle:
+
+`F2 → Skill gekürzt, Regel HF-08 geschärft (Quelle: _handoff-<projekt>-<datum>-CL, F2)`
+
+Yasin, 06.10.2026, 02:42 (T34): „Ich brauch nicht, dass du die alten Handoff-Dateien
+Fragen und Antworten und Tests mitnimmst“; ebenso 04.10.2026, 23:43: „keine
+Wiederholungen vom alten Handoff“. `sammlung-pruefen.sh` verlangt deshalb nur den
+Sammlungsfuß wörtlich, prüft für die Antwortfelder den Verweis auf den Vorgänger
+und meldet wörtlich wiederholte Antworten (ab 40 Zeichen) als Befund. Originale, die der Vorgänger selbst schon aus früheren
 Revisionen übernommen hatte, werden NICHT noch einmal kopiert. Sie bleiben im
 archivierten Vorgänger, der nie geändert oder gelöscht wird. Eine Zeile ersetzt sie:
 
