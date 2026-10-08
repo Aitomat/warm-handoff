@@ -6,6 +6,20 @@ Warm Handoff preserves user input and verified project state across pauses. It a
 
 Every change to an active rule is also carried into `AGENTS.md`. `AGENTS.md` is the one shared instruction file for Codex, Claude Code, and other agents; current Claude Code versions read it too. A `CLAUDE.md` is optional — at most a one-line pointer or a symlink to `AGENTS.md`.
 
+## Why an interjections file and a handoff
+
+Agents work for hours; the human should not sit and wait for them. Warm Handoff gives him two plain documents instead of a chat he has to watch:
+
+- **The handoff** is the bridge between sessions. It carries what was verified, what is still running or open, and the questions the next session must answer. The user answers in it at his own pace; saving (Cmd-S) is the release. RTF handoffs stay in the archive for good, as the project's documentation.
+- **The interjections file** is the inbox while a wave runs. Every idea, correction, or question that comes to mind goes in there and is saved; the lead picks it up on its next wake-up without being interrupted.
+
+The advantage: **the human stays creative while the agents work.** He can keep thinking, dictating, and adding for hours, and nothing gets lost, because:
+
+1. **Questions first.** The lead filters the user's new questions out of the answered handoff and answers what it can at once, in the chat and as a copy in the interjections file, in parallel with the wave start. Deeper answers follow from the topic agents. Questions answered hours later are questions already forgotten.
+2. **Late ideas still land.** An interjection for an assignment that has not started yet goes into its brief as an addendum; one for a running assignment becomes a follow-up.
+3. **Small things do not wait.** One of the parallel agent slots works only through small tasks, one after another, while the long, hard topics start first on the others.
+4. **Every new request is stamped.** Each first reply starts with `Name, DD.MM.YYYY-HH:MM` from the system clock, so the user can see when work started and count his requests.
+
 <!-- section:SURFACES -->
 ## Choose a surface
 

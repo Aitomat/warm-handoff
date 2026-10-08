@@ -32,3 +32,5 @@ Quellen: [Claude-Code-Prompt-Caching](https://code.claude.com/docs/en/prompt-cac
 ## Handoff-Grenze
 
 Schreibe vor Komprimierung, Modellwechsel oder Ende eines langen Laufs das neue Handoff und prüfe es auf dem Datenträger. Erhalte die vollständige Nutzersammlung, nenne versionsgebundene Annahmen und trenne veröffentlichte Plattformfakten von aktuellen Sitzungsmesswerten.
+
+Claude-Sessions laufen lang und verlieren den Anfrage-Stempel leicht: Die erste Antwort auf jede neue Nutzernachricht beginnt mit `Name, TT.MM.JJJJ-HH:MM` aus `date` (HF-09), auch tief in einer Welle.

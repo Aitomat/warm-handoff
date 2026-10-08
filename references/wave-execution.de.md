@@ -296,4 +296,13 @@ Der Eingang folgt derselben Uhr wie die Welle: Zwischen Handoff und Wellenstart
 ist das Handoff der einzige Eingang; die Zwischenrufe-Datei als `.md` entsteht mit dem
 Wellenstart und ist bis zum nächsten Handoff der einzige Eingang.
 
+<!-- rule:WV-13 -->
+## Zwischenrufe in der Welle: Fragen zuerst, Nachtrag, Kleine-Aufgaben-Spur (Nutzer, 08.10.2026)
+
+Der Sinn der Zwischenrufe-Datei: Der Nutzer bleibt stundenlang kreativ, während die Agenten arbeiten. Drei Regeln verhindern, dass das ins Stocken gerät:
+
+- **Fragen zuerst.** Liest der Chef ein beantwortetes Handoff oder neue Zwischenrufe, filtert er zuerst alle NEUEN Fragen des Nutzers heraus. Was er selbst beantworten kann, beantwortet er sofort, parallel zum Wellenstart: im Chat und als Kopie in der Zwischenrufe-Datei unter `Antworten zu deinen Fragen A, B, C …`. Tiefere Antworten liefern später die Fachagenten. In seinen Worten (22:50): „sobald dann so eine Zeit vergeht dazwischen vergisst man schon wieder was man gefragt hat“.
+- **Nachtrag oder Folgeauftrag.** Ein Zwischenruf zu einem noch nicht gestarteten Auftrag kommt als datierter `Nachtrag` mit der wörtlichen Quellzeile in dessen Auftragsdatei. Einer zu einem laufenden Auftrag wird ein Folgeauftrag; den Auftrag eines laufenden Arbeiters nie ändern.
+- **Kleine-Aufgaben-Spur.** Von N gleichzeitigen Agentenplätzen bekommt einer nur kleine Aufgaben, eine nach der anderen (Fragen, kleine Fixes), damit Kleines nicht bis zum Wellenende wartet. Lange und schwierige Aufträge starten zuerst auf den übrigen Plätzen (WV-10).
+
 Siehe [Codex](codex.de.md), [Claude Code](claude-code.de.md), [Modellrouting](model-routing.de.md) und [Beleggrenzen](evidence-scope.de.md).

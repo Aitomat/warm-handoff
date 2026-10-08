@@ -141,3 +141,19 @@ Pfad- und Standzeilen jedes Dokuments folgen RT-05 in [RTF unter macOS](rtf-maco
 Die erste Zeile der ersten Antwort auf eine neue Nutzernachricht trägt
 `Name, TT.MM.JJJJ-HH:MM`, nicht jede Zwischenmeldung derselben Antwortkette.
 Die Zeit kommt nur aus `date "+%d.%m.%Y-%H:%M"`, niemals aus einer Schätzung.
+
+Das gilt für **jede** neue Nutzernachricht, auch für einen Zwischenruf, den der Chef als neue
+Anfrage beantwortet, und in langen Sessions genauso wie bei der ersten Antwort: Der Nutzer zählt
+an diesen Stempeln seine Anfragen (08.10.2026 22:35: „Der signalisiert mir halt, wie viel Anfragen
+das insgesamt waren“).
+
+<!-- rule:HF-10 -->
+## Das Archiv behält das RTF; die Sammlung bleibt (Nutzer, 08.10.2026)
+
+- **RTF-Handoffs bleiben dauerhaft im Archivordner** als Dokumentation des Projekts. Neue
+  Handoffs entstehen dort (WH-04), verschoben wird also nie.
+- **Markdown-Quellen darf der Nutzer selbst löschen; der Agent löscht nie** ein Handoff, weder MD
+  noch RTF.
+- **Die wörtliche Sammlung bleibt in jedem Handoff** (nur neue Eingaben, HF-08). „Was ich daraus
+  gemacht habe“ ist die kompakte Deutung daneben, kein Ersatz; der Nutzer will beides
+  (22:53: „dann lass man das lieber so“).

@@ -45,6 +45,8 @@ Use direct workers for independent implementation. Add a guardian only when seve
 
 Select models by task shape and verified availability, not folklore. Separate published API specification, effective client or host limits, and measurements from the current session. Current platform notes and their verification dates live in [model routing](references/model-routing.md) and [evidence scope](references/evidence-scope.md). See [wave execution](references/wave-execution.md) for the full packet and integration contract.
 
+While a wave runs, the user stays creative in the interjections file. Extract his new questions first and answer what you can at once, in the chat and as a copy in that file; put interjections for an assignment not yet started into its brief as an addendum, for a running one into a follow-up assignment; keep one of N agent slots as a small-task lane while long topics start first (WV-13). The first reply to every new user message starts with `Name, DD.MM.YYYY-HH:MM` from `date` (HF-09). RTF handoffs stay in the archive for good and the agent never deletes them (HF-10).
+
 <!-- rule:WH-04 -->
 ## 4. Preserve document safety
 

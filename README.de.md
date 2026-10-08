@@ -6,6 +6,20 @@ Warm Handoff erhält Nutzereingaben und belegten Projektstand über Pausen hinwe
 
 Jede Änderung einer aktiven Regel wird auch in `AGENTS.md` nachgezogen. `AGENTS.md` ist die eine gemeinsame Anweisungsdatei für Codex, Claude Code und andere Agenten; aktuelle Claude-Code-Versionen lesen sie ebenfalls. Eine `CLAUDE.md` ist optional — höchstens ein einzeiliger Verweis oder ein Symlink auf `AGENTS.md`.
 
+## Warum Zwischenrufe-Datei und Handoff
+
+Agenten arbeiten stundenlang; der Mensch soll nicht danebensitzen und warten. Warm Handoff gibt ihm zwei schlichte Dokumente statt eines Chats, den er beobachten muss:
+
+- **Das Handoff** ist die Brücke zwischen Sessions. Es trägt, was belegt ist, was noch läuft oder offen ist, und die Fragen, die die nächste Session beantworten muss. Der Nutzer antwortet darin in seinem Tempo; Speichern (Cmd-S) ist die Freigabe. RTF-Handoffs bleiben dauerhaft im Archiv, als Dokumentation des Projekts.
+- **Die Zwischenrufe-Datei** ist der Eingang, solange eine Welle läuft. Jede Idee, Korrektur oder Frage, die einem einfällt, kommt dort hinein und wird gespeichert; der Chef holt sie beim nächsten Aufwachen ab, ohne unterbrochen zu werden.
+
+Der Vorteil: **Der Mensch bleibt kreativ, während die Agenten arbeiten.** Er kann stundenlang weiterdenken, diktieren und ergänzen, und nichts geht verloren, denn:
+
+1. **Fragen zuerst.** Der Chef filtert die neuen Fragen des Nutzers aus dem beantworteten Handoff heraus und beantwortet, was er kann, sofort — im Chat und als Kopie in der Zwischenrufe-Datei, parallel zum Wellenstart. Tiefere Antworten liefern danach die Fachagenten. Fragen, die erst Stunden später beantwortet werden, sind schon wieder vergessen.
+2. **Späte Ideen kommen noch an.** Ein Zwischenruf zu einem noch nicht gestarteten Auftrag kommt als Nachtrag in dessen Auftragsdatei; einer zu einem laufenden Auftrag wird ein Folgeauftrag.
+3. **Kleines wartet nicht.** Einer der parallelen Agentenplätze arbeitet nur kleine Aufgaben nacheinander ab, während die langen, schwierigen Themen zuerst auf den anderen starten.
+4. **Jede neue Anfrage trägt einen Stempel.** Jede erste Antwort beginnt mit `Name, TT.MM.JJJJ-HH:MM` aus der Systemuhr; so sieht der Nutzer, wann die Arbeit begann, und kann seine Anfragen zählen.
+
 <!-- section:SURFACES -->
 ## Oberfläche wählen
 

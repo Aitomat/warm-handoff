@@ -139,4 +139,18 @@ Document path and as-of lines follow RT-05 in [RTF on macOS](rtf-macos.md).
 chain — only at the start. The timestamp is the user's signal that work has begun.
 
 The time comes **only** from `date "+%d.%m.%Y-%H:%M"`, never from an estimate
-(the user measured a 15-minute drift on 2026-09-12). He has asked for this twice.
+(the user measured a 15-minute drift on 2026-09-12). He has asked for this three times.
+
+It applies to **every** new user message, including an interjection the lead answers as a new
+request, and in long sessions as much as in the first reply: the user counts his requests by
+these stamps (2026-10-08 22:35: "Der signalisiert mir halt, wie viel Anfragen das insgesamt waren").
+
+<!-- rule:HF-10 -->
+## The archive keeps the RTF; the collection stays (user, 2026-10-08)
+
+- **RTF handoffs stay in the archive folder for good** as the project's documentation. New
+  handoffs are created there (WH-04), so nothing ever has to move.
+- **The user may delete Markdown sources himself; the agent never deletes** a handoff, MD or RTF.
+- **The verbatim collection stays in every handoff** (new input only, HF-08). "What I made of it"
+  is the compact interpretation next to it, not its replacement; the user wants both
+  (22:53: "dann lass man das lieber so").

@@ -278,4 +278,13 @@ The inbox follows the same clock as the wave: between handoff and wave start the
 handoff is the only inbox; the interjections file is created and opened as `.md` at wave start and is
 the only inbox until the next handoff.
 
+<!-- rule:WV-13 -->
+## Interjections during a wave: questions first, addenda, small-task lane (user, 2026-10-08)
+
+The point of the interjections file is that the user stays creative for hours while agents work. Three rules keep that from stalling:
+
+- **Questions first.** When the lead reads an answered handoff or new interjections, it first extracts every NEW user question. Whatever it can answer itself it answers immediately, in parallel with the wave start: in the chat and as a copy in the interjections file under `Antworten zu deinen Fragen A, B, C …`. Topic workers may add deeper answers later. In his words (22:50): "sobald dann so eine Zeit vergeht dazwischen vergisst man schon wieder was man gefragt hat".
+- **Addendum or follow-up.** An interjection that belongs to an assignment not yet started goes into that assignment's brief file as a dated `Nachtrag` with the verbatim source line. One that belongs to a running assignment becomes a follow-up assignment; never edit the brief of a running worker.
+- **Small-task lane.** Of N concurrent agent slots, one takes only small items, one after another (questions, small fixes), so small things never wait for the end of the wave. Long and hard assignments start first on the remaining slots (WV-10).
+
 See [Codex](codex.md), [Claude Code](claude-code.md), [model routing](model-routing.md), and [evidence scope](evidence-scope.md).

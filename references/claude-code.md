@@ -32,3 +32,5 @@ Sources: [Claude Code prompt caching](https://code.claude.com/docs/en/prompt-cac
 ## Handoff boundary
 
 Before compacting, switching models, or ending a long run, write the new handoff and verify it on disk. Preserve the complete user collection, record any version-specific assumptions, and separate published platform facts from live session measurements.
+
+Claude sessions run long and drop the request stamp easily: the first reply to every new user message starts with `Name, DD.MM.YYYY-HH:MM` from `date` (HF-09), even deep into a wave.

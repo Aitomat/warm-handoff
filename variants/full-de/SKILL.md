@@ -45,6 +45,8 @@ Nutze direkte Arbeiter für unabhängige Umsetzung. Setze einen Wächter nur ein
 
 Wähle Modelle nach Aufgabenform und belegter Verfügbarkeit, nicht nach Hörensagen. Trenne veröffentlichte API-Spezifikation, wirksame Client- oder Hostgrenzen und Messwerte der aktuellen Sitzung. Aktuelle Plattformhinweise und Prüfdaten stehen in [Modellrouting](references/model-routing.de.md) und [Beleggrenzen](references/evidence-scope.de.md). Den vollständigen Paket- und Integrationsvertrag beschreibt [Wellen-Ausführung](references/wave-execution.de.md).
 
+Während eine Welle läuft, bleibt der Nutzer in der Zwischenrufe-Datei kreativ. Seine neuen Fragen zuerst herausfiltern und beantworten, was du selbst kannst, sofort — im Chat und als Kopie in dieser Datei; Zwischenrufe zu einem noch nicht gestarteten Auftrag als Nachtrag in dessen Auftragsdatei, zu einem laufenden als Folgeauftrag; von N Agentenplätzen einen als Kleine-Aufgaben-Spur führen, während die langen Themen zuerst starten (WV-13). Die erste Antwort auf jede neue Nutzernachricht beginnt mit `Name, TT.MM.JJJJ-HH:MM` aus `date` (HF-09). RTF-Handoffs bleiben dauerhaft im Archiv, der Agent löscht sie nie (HF-10).
+
 <!-- rule:WH-04 -->
 ## 4. Dokumentsicherheit erhalten
 
