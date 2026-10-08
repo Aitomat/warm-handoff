@@ -112,6 +112,6 @@ document whose path you name in a reply.
 <!-- rule:RT-07 -->
 ## Interjections use the Markdown inbox
 
-At wave start, create and open the interjections file as `.md` in the project root, never as an RTF inbox; it is the only inbox until the next handoff. Read only saved additions; append replies in that same Markdown file with `Neue Zwischenrufe gelesen: ja/nein`, `ZWISCHENRUFE BIS HIER BEARBEITET — <time>`, and `AB HIER NEUE ZWISCHENRUFE` plus an empty `>>>` line. If the editor has unsaved input or its state is unknown, defer the append; never save or close it. Follow HF-07.
+At wave start, create the interjections file as `.md` in the project root and open it in an editor the user can type into (on macOS: `open -a TextEdit "<full path>"`, never a read-only viewer such as a cmux markdown tab), never as an RTF inbox; it is the only inbox until the next handoff. Read only saved additions; append replies in that same Markdown file with `Neue Zwischenrufe gelesen: ja/nein`, `ZWISCHENRUFE BIS HIER BEARBEITET — <time>`, and `AB HIER NEUE ZWISCHENRUFE` plus an empty `>>>` line. If the editor has unsaved input or its state is unknown, defer the append; never save or close it. Follow HF-07.
 
 Use `scripts/zwischenrufe-antwort.sh` for safe appending. It checks the exact document path, refuses RTF and unknown editor state, and never saves user input. Only with a confirmed saved state, close that document without saving, append, and reopen it.

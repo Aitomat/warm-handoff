@@ -50,7 +50,7 @@ While a wave runs, the user stays creative in the interjections file. Extract hi
 <!-- rule:WH-04 -->
 ## 4. Preserve document safety
 
-At wave start, create and open the interjections file as `.md` in the project root, never as an RTF inbox; it is the only inbox until the next handoff. Read only saved additions; append replies in that same Markdown file with `Neue Zwischenrufe gelesen: ja/nein`, `ZWISCHENRUFE BIS HIER BEARBEITET — <time>`, and `AB HIER NEUE ZWISCHENRUFE` plus an empty `>>>` line. If the editor has unsaved input or its state is unknown, defer the append; never save or close it. Follow HF-07.
+At wave start, create the interjections file as `.md` in the project root and open it in an editor the user can type into (on macOS: `open -a TextEdit "<full path>"`, never a read-only viewer such as a cmux markdown tab), never as an RTF inbox; it is the only inbox until the next handoff. Read only saved additions; append replies in that same Markdown file with `Neue Zwischenrufe gelesen: ja/nein`, `ZWISCHENRUFE BIS HIER BEARBEITET — <time>`, and `AB HIER NEUE ZWISCHENRUFE` plus an empty `>>>` line. If the editor has unsaved input or its state is unknown, defer the append; never save or close it. Follow HF-07.
 
 Markdown is the agent-authored source. An RTF twin can be the user's editable response document on macOS. Never overwrite an existing answer file or follow an output symlink. Render to a temporary file, verify the text roundtrip and hyperlink fields, then publish exclusively.
 

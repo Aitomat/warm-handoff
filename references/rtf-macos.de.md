@@ -114,6 +114,6 @@ genannt wird.
 <!-- rule:RT-07 -->
 ## Zwischenrufe sind der Markdown-Eingang
 
-Beim Wellenstart die Zwischenrufe-Datei als `.md` im Projektstamm anlegen und öffnen, nie als RTF-Eingang; sie ist bis zum nächsten Handoff der einzige Eingang. Nur gespeicherte Ergänzungen lesen; Antworten in dieselbe Markdown-Datei anhängen, mit `Neue Zwischenrufe gelesen: ja/nein`, `ZWISCHENRUFE BIS HIER BEARBEITET — <Uhrzeit>` und `AB HIER NEUE ZWISCHENRUFE` plus leerer `>>>`-Zeile. Bei ungespeichertem oder unbekanntem Editorstand das Anhängen zurückstellen; nie selbst speichern oder schließen. Nach HF-07.
+Beim Wellenstart die Zwischenrufe-Datei als `.md` im Projektstamm anlegen und in einem Editor öffnen, in den der Nutzer schreiben kann (macOS: `open -a TextEdit "<voller Pfad>"`, nie in einem reinen Lese-Viewer wie dem cmux-Markdown-Tab), nie als RTF-Eingang; sie ist bis zum nächsten Handoff der einzige Eingang. Nur gespeicherte Ergänzungen lesen; Antworten in dieselbe Markdown-Datei anhängen, mit `Neue Zwischenrufe gelesen: ja/nein`, `ZWISCHENRUFE BIS HIER BEARBEITET — <Uhrzeit>` und `AB HIER NEUE ZWISCHENRUFE` plus leerer `>>>`-Zeile. Bei ungespeichertem oder unbekanntem Editorstand das Anhängen zurückstellen; nie selbst speichern oder schließen. Nach HF-07.
 
 Zum sicheren Anhängen `scripts/zwischenrufe-antwort.sh` nutzen. Der Helfer prüft den exakten Dokumentpfad, verweigert RTF und unbekannten Editorstand und speichert niemals Nutzereingaben. Bei sicher gespeichertem Stand das eigene Dokument ohne Speichern schließen, nur anhängen und neu öffnen.
