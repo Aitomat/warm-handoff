@@ -154,3 +154,16 @@ these stamps (2026-10-08 22:35: "Der signalisiert mir halt, wie viel Anfragen da
 - **The verbatim collection stays in every handoff** (new input only, HF-08). "What I made of it"
   is the compact interpretation next to it, not its replacement; the user wants both
   (22:53: "dann lass man das lieber so").
+
+<!-- rule:HF-11 -->
+## Test list as pre-acceptance A/B/C (user, 2026-10-10)
+
+Before a test list reaches the user, a checking agent pre-sorts it. The questions stay in the handoff unchanged; only the tests are grouped like this:
+
+- **A — Only you:** needs real hardware or real experience (microphone, headphones, calendar, purchase, other apps, phone, taste). Required tests first, a `>>>User answer:` line under each test.
+- **B — A picture is enough:** appearance and text can be proven with the renderer. The pictures sit in a local gallery, one sentence "what to look for" per picture, plus **one** shared answer field "deviations only".
+- **C — Proven:** a named automated test or a checked picture is the evidence. No action, no answer line.
+
+When in doubt, A. No test goes to C without concrete evidence. The top states the count per group and the estimated time. Checking tools must never supply missing parts to the item under test; missing parts are a finding. No computer control inside the user's real app (it writes into their data). The pre-acceptance is a companion document with its own RTF twin via `scripts/handoff-rtf.sh`; the handoff links to it.
+
+Reason in the user's words (2026-10-10, 00:32): "könntest du das bitte im Hand off Warm Handoff Skill auch so machen in Zukunft, dass du das so strukturierst so wie hier und sonst die Fragen von und Antworten, die brauchst ja immer noch".

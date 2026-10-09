@@ -157,3 +157,16 @@ das insgesamt waren“).
 - **Die wörtliche Sammlung bleibt in jedem Handoff** (nur neue Eingaben, HF-08). „Was ich daraus
   gemacht habe“ ist die kompakte Deutung daneben, kein Ersatz; der Nutzer will beides
   (22:53: „dann lass man das lieber so“).
+
+<!-- rule:HF-11 -->
+## Testliste als Vorab-Abnahme A/B/C (Nutzer, 10.10.2026)
+
+Bevor eine Testliste an den Nutzer geht, sortiert ein Prüf-Agent sie vor. Die Fragen bleiben unverändert im Handoff; nur die Tests werden so gegliedert:
+
+- **A — Nur du:** braucht echte Hardware oder echtes Erleben (Mikrofon, Kopfhörer, Kalender, Kauf, andere Apps, Telefon, Geschmack). Pflicht-Tests zuerst, unter jedem Test `>>>Userantwort:`.
+- **B — Bild genügt:** Aussehen und Text lassen sich per Renderer belegen. Die Bilder liegen in einer lokalen Galerie, je Bild ein Satz „worauf achten“; dazu **ein** gemeinsames Antwortfeld „nur Abweichungen“.
+- **C — Belegt:** ein benannter automatischer Test oder ein geprüftes Bild ist der Beleg. Keine Aktion, keine Antwortzeile.
+
+Im Zweifel A. Kein Test landet in C ohne konkreten Beleg. Oben stehen die Zahl je Gruppe und die geschätzte Zeit. Prüfwerkzeuge dürfen dem Prüfling nichts ergänzen; fehlende Teile sind ein Befund. Keine Computersteuerung in der echten App des Nutzers (sie schreibt in seine Daten). Die Vorab-Abnahme ist ein Begleitdokument mit eigenem RTF-Zwilling über `scripts/handoff-rtf.sh`; das Handoff verweist darauf.
+
+Begründung in den Worten des Nutzers (10.10.2026, 00:32): „könntest du das bitte im Hand off Warm Handoff Skill auch so machen in Zukunft, dass du das so strukturierst so wie hier und sonst die Fragen von und Antworten, die brauchst ja immer noch“.
