@@ -19,7 +19,8 @@ if [ "${3:-}" = '--keine-neuen' ]; then NEUE='nein'; fi
 
 # Kein Live-Text, kein Speichern. Den eigenen Pfad als Argument übergeben,
 # nicht als AppleScript-Code oder über den mehrdeutigen Dateinamen.
-LAEUFT="$(osascript -e 'application "TextEdit" is running' 2>/dev/null)" || {
+# stdin schließen: die Abfrage braucht keine Eingabe und darf nie auf ein offenes stdin warten.
+LAEUFT="$(osascript -e 'application "TextEdit" is running' 2>/dev/null </dev/null)" || {
   echo 'Editorzustand unbekannt — nichts angehängt.' >&2; exit 3;
 }
 MODIFIED='nicht offen'

@@ -102,7 +102,8 @@ class W96ZwischenrufeTests(unittest.TestCase):
                                str(self.inbox), 'Geplant als Thema X.', *extra],
                               env={**os.environ, 'PATH': str(self.root)+':'+os.environ['PATH'],
                                    'CALLS': str(self.calls), 'EDITOR_STATE': state},
-                              capture_output=True, text=True)
+                              stdin=subprocess.DEVNULL, capture_output=True, text=True,
+                              timeout=60)
 
     def test_ungespeichertes_wird_weder_gesichert_noch_angefasst(self):
         original = self.inbox.read_bytes()
