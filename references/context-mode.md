@@ -20,3 +20,14 @@ One state does not prove another. Use the plugin's diagnostic tool when availabl
 ## Permission boundary
 
 Do not install, upgrade, enable hooks, or change global settings without explicit permission. A project may recommend Context Mode, but the warm-handoff skill must still work without it. Never expose secrets or bypass host filesystem rules through a processing tool.
+
+<!-- rule:CM-04 -->
+## Where it pays off in long waves
+
+Long waves produce the outputs that flood a context: test suites, build logs, agent reports, Git history, web pages. With Context Mode the raw output stays in a sandbox and is indexed; the session receives only the focused answer or search hits, and follow-up questions search the index instead of rereading the file. That keeps a long session compactable for longer.
+
+- Use it for analysis, not for the file you are about to edit; edits still need the host's ordinary read.
+- Parallel agent starts can each trigger the plugin's first-run setup at the same time; prepare it once before a wave, with permission, instead of letting every worker install it.
+- Savings in your own runs are unmeasured until you measure them; do not quote a percentage from someone else's run.
+
+Source: [context-mode](https://github.com/mksglu/context-mode).

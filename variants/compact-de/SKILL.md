@@ -42,6 +42,8 @@ Ein Bau gleichzeitig, mit Sperre im Projekt-Testskript, im Vordergrund; vor dem 
 
 Vorflug-Listen, Slot-Sperre, Arbeiteraufträge, Choreografie: [Wellen-Ausführung](references/wave-execution.de.md). Modellwahl und veränderliche Plattformfakten: [Modellrouting](references/model-routing.de.md), [Beleggrenzen](references/evidence-scope.de.md).
 
+Arbeiter einzeln nachlegen, nach frischen Speicher-, Swap- und Lastwerten (WV-14); blinde Prüfung vor jeder Fertigmeldung (WV-15).
+
 <!-- rule:WH-04 -->
 ## 4. Dokumentsicherheit erhalten
 
@@ -54,7 +56,7 @@ Bis zum Wellenstart ist der Handoff-Fuß der einzige Eingang. Beim Wellenstart d
 <!-- rule:WH-05 -->
 ## 5. Optionale Hilfen bewusst einsetzen
 
-[Context Mode](references/context-mode.de.md) kann große Befehls- und Dateiausgaben verkleinern. Installiere es nie ohne Erlaubnis.
+[Context Mode](references/context-mode.de.md) kann große Befehls- und Dateiausgaben verkleinern. Installiere es nie ohne Erlaubnis. Kompaktieren, Cron-Wecker, Statuszeile: [Claude Code](references/claude-code.de.md).
 
 <!-- rule:WH-06 -->
 ## 6. Mit Belegen abschließen
@@ -63,4 +65,4 @@ Lies vor dem Abschluss die benannte Feedbackquelle erneut, prüfe den Status, f�
 
 Bei jedem Aufwachen der Hauptsession — Meldung eines Arbeiters, Zeitgeber, fortgesetzter Zug — vergleiche die Änderungszeit der Zwischenrufe-Datei mit dem letzten Lesen. Geändert: die gespeicherten Ergänzungen lesen, bevor gehandelt oder gemeldet wird. Unverändert: geschlossen lassen. Nie die Datei überwachen: kein Monitor, kein Dateiwächter, kein Speicher-Hook — Speichern ist keine Anfrage und darf nichts wecken (Nutzerregel vom 23.09.2026).
 
-Eine saubere Welle schließt du ohne Rückfrage ab: Alle Arbeiter fertig und Vollsuite grün heißt bauen, tauschen, veröffentlichen und das Handoff schreiben. Gefragt wird nur beim unsauberen Abschluss — rote Tests, ungeklärter Befund, blockiert gemeldeter Arbeiter —; dann nennst du, was fehlt, und schlägst den nächsten Schritt vor.
+Eine saubere Welle schließt du ohne Rückfrage ab: Alle Arbeiter fertig, blinde Prüfung bestanden und Vollsuite grün heißt bauen, tauschen, veröffentlichen und das Handoff schreiben. Gefragt wird nur beim unsauberen Abschluss — rote Tests, ungeklärter Befund, blockiert gemeldeter Arbeiter —; dann nennst du, was fehlt, und schlägst den nächsten Schritt vor.

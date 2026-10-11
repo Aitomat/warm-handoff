@@ -62,8 +62,8 @@ Earlier editions of this skill allowed two slots; one slot replaces them.
 - **One build per topic owner, at the very end** — not one per worker. The owner
   collects the worker results and builds once over the integrated state. Workers
   and subagents do not build beyond a syntax or parse check.
-- **Cap concurrent workers** (four is a sound ceiling on a single laptop). More
-  is not faster when they queue behind one slot anyway.
+- **Cap concurrent workers** by actual host slots, ownership and fresh machine
+  telemetry (WV-14). A fixed laptop heuristic is not a host capacity limit.
 - A paused build keeps its memory; pausing helps the CPU, not RAM. The answer is
   not to start the second build at all.
 
@@ -265,7 +265,7 @@ green. The levers:
 <!-- rule:WV-12 -->
 ## Closing a wave
 
-All workers done **and** the full suite green means finish without asking: build,
+All workers done, **required independent reviews accepted**, and the full suite green means finish without asking: build,
 self-test, install, publish, and write the handoff. Ask only on an unclean finish
 — red tests, an unresolved finding, a worker reporting blocked — and then deliver
 no artifact but the question, with what is missing and a proposal.
@@ -288,3 +288,50 @@ The point of the interjections file is that the user stays creative for hours wh
 - **Small-task lane.** Of N concurrent agent slots, one takes only small items, one after another (questions, small fixes), so small things never wait for the end of the wave. Long and hard assignments start first on the remaining slots (WV-10).
 
 See [Codex](codex.md), [Claude Code](claude-code.md), [model routing](model-routing.md), and [evidence scope](evidence-scope.md).
+
+<!-- rule:WV-14 -->
+## Adaptive starts within hard host limits
+
+Agent slots, writable lanes and build slots are separate limits. Record the host's actual total slots (including coordinators and reviewers), its current agent inventory, authorized writable paths, ready dependencies and the single build lock. Process-name counts are observations, not an agent inventory. A night-time preference for eight or nine workers never expands host capacity or grants extra access.
+
+Before EVERY start, and after a completion when another task is ready, take timestamped machine readings and check ownership again. Record the original measurements, their units, age, read failures and decision. On macOS an authorized adapter can read memory_pressure, vm_stat, vm.swapusage and load; a free-percentage reading alone does not establish pressure status or exact physical RAM occupancy. Compare swap usage AND swap-out counters: decreasing allocated swap can hide ongoing swap-out activity. Missing or stale readings mean hold, not zero.
+
+Choose project-specific thresholds explicitly. A conservative trial policy is: normal pressure, reported free percentage at least 25, one-minute load below logical CPU count, and no growth in swap usage or swap-outs across two consecutive intervals. Three real readings are needed for two intervals. A proposed freshness limit of 120 seconds and minimum interval of 30 seconds prevent old or near-simultaneous probes from being treated as sustained recovery; these are trial choices, not OS standards. Warning/critical pressure, insufficient reserve, growing swap, missing telemetry or no free host slot means no new start. Existing workers are not killed. A timeout must leave the decision on hold, never force a start.
+
+If all gates allow, start ONE ready worker and then measure again before another. Prefer the longest ready task; use the small-task lane only within the same gates. Change day/night budgets only with recorded authorization and comparable measured results. Do not interpret a wish to use more memory as permission to bypass pressure, swap, CPU, host or file gates. Retain one build at a time regardless of worker count.
+
+Sample on natural control points. A minute-by-minute promise needs an actually supported, authorized scheduler; otherwise record measurement gaps. Never install monitoring or create polling loops, wake-ups or cache keepalive jobs merely by loading this skill. No token, quota, cache or cost savings may be claimed without attributable measurements and a comparable baseline.
+
+**Example from one measured wave** (a laptop with 18 GB RAM and 12 cores, 57 packets, 60 agents in 5.5 hours, readings taken before each start, not every minute):
+
+| Reading | Value |
+| --- | --- |
+| Concurrent agents | peak 11–12, mostly 4–6 |
+| Reported free memory | 32–72 % |
+| Swap | 3.5 GB at start, peak 7.9 GB while several builds overlapped |
+| One-minute load | mostly 4–7, peak 12.95 |
+| Start gate on hold | 7 readings in 5 phases, about 3.5 minutes in total, never longer than 90 s |
+
+What it taught: memory hardly slowed that wave; long dependent chains did — late in the run only 1–3 agents were busy because the rest waited in chains of nine. Plan chains of at most four to five packets, more chains in parallel, the longest first. Swap-out counters grew three times while allocated swap fell, so check both. A night budget may be higher than a day budget because the user is not working on the machine, but it still passes the same gates. One build at a time stays.
+
+<!-- rule:WV-15 -->
+## Independent acceptance before a completion claim
+
+Write acceptance cases from the user's expected behavior before implementation. Pin the delivered artifact by immutable commit or file hashes; synthetic screenshots include mode, accent, dimensions and capture time. A fresh reviewer gets the user expectation, safe synthetic cases, exact candidate and permitted read-only tools. It receives no writer conversation, proposed cause, fix description, implementation report or earlier reviewer findings before submitting its first findings. Use a clean context, not an inherited full-history fork. Behavioral inspection comes first; code inspection, if needed, follows the independently recorded observations.
+
+**A finding counts only with a red test.** Before anyone fixes it, the finding is reproduced as a failing (red) test or a recorded reproducer; then the fix turns it green. A finding that cannot be made red is a false alarm or a measurement gap, never a silent fix.
+
+Record each finding as confirmed defect, disproved claim (false alarm) or unresolved measurement gap with reproducer and evidence. Absence of a report is unknown, not zero defects. Keep unique defects separate from duplicate findings and test-environment failures. Measure confirmed defects and false alarms against all adjudicated findings; disclose open findings and coverage. A static picture cannot establish animation, focus or multi-display behavior.
+
+The project plan decides which reviews are required. Example from one project: every packet gets a fresh reviewer from a second model family at high effort; difficult or uncertain packets and explicitly marked rows additionally get an independent third reviewer. Availability must be verified; no cross-provider bridge is assumed. Both inspect the same candidate and submit separately before comparing. An unavailable required reviewer or unresolved disagreement blocks acceptance; majority agreement does not replace a test.
+
+After a fix, pin the new candidate, rerun the relevant checks and review affected behavior again. Integration, the final suite and native or web acceptance bind to the final candidate. Required reviews and critical evidence must be reconciled before a finished handoff. The instruction to close with outstanding reports recorded as pending permits a truthful checkpoint, not skipping required gates or marking an unfinished wave complete. Build, installation, publication and push still require their existing authorization.
+
+<!-- rule:WV-16 -->
+## Launcher scripts: probe before the wave
+
+A launcher that starts many agents fails for all of them at once. In one wave a typo cost every second-model start in the first 51 minutes: a closing typographic quote sat directly after a variable name, and under `set -u` Bash reported `unbound variable`. The default Bash 3.2 on macOS reads the first byte of a non-ASCII character after `$NAME` as part of the name (reproducible: `bash -uc 'RUN=x; echo "$RUN“"'` fails, `${RUN}“` works).
+
+- Write `${NAME}` whenever any character other than a space or plain ASCII punctuation follows a variable; always before quotes, umlauts or other non-ASCII text.
+- Keep `set -u` in launchers: it turns the mistake into an immediate error instead of an empty value.
+- Before the wave, run the launcher once with a trivial probe packet and check that the agent really computed (a log line with its answer), not only that the waiting process ended. "Finished" from a waiter is not proof that the worker ran.

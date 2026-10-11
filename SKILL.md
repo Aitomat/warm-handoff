@@ -42,6 +42,8 @@ One build at a time, locked by the project test script, in the foreground; smoke
 
 Checklists, lock snippet, briefs: [wave execution](references/wave-execution.md). Models and platform facts: [model routing](references/model-routing.md), [evidence scope](references/evidence-scope.md).
 
+Add workers singly on fresh memory, swap and load readings (WV-14); blind review precedes completion claims (WV-15).
+
 <!-- rule:WH-04 -->
 ## 4. Preserve document safety
 
@@ -54,7 +56,7 @@ Until wave start the handoff footer is the only inbox. At wave start, create the
 <!-- rule:WH-05 -->
 ## 5. Use optional helpers deliberately
 
-[Context Mode](references/context-mode.md) can reduce large command and file output. Never install it without permission.
+[Context Mode](references/context-mode.md) can reduce large command and file output. Never install it without permission. Compaction, cron wake-up, status line: [Claude Code](references/claude-code.md).
 
 <!-- rule:WH-06 -->
 ## 6. Close with evidence
@@ -63,4 +65,4 @@ Before completion, reread the feedback source, inspect status, run the required 
 
 On every main-session wake-up (worker notification, timer, resumed turn) compare the interjections file's mtime with the last read: changed — read the saved additions before acting; unchanged — leave it closed. Never watch the file: a save is not a request and must wake nothing.
 
-Clean wave (workers done, full suite green): build, install, publish, write the handoff — no question. Red tests, unresolved findings, or blocked workers: name the gap and propose the next step.
+Clean wave (workers done, blind review passed, full suite green): build, install, publish, write the handoff — no question. Red tests, unresolved findings, or blocked workers: name the gap and propose the next step.

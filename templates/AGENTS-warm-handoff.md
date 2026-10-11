@@ -24,6 +24,8 @@ At wave start, create the interjections file as `.md` in the project root and op
 
 Worker briefs keep applicable user rules binding; a lead must not silently disable them. Record any conflict with host permissions. Wave numbers share one project-wide sequence across hosts; reserve the next unused number in the saved plan (WV-01).
 
+Before each new worker, reassess actual host slots, exclusive ownership, dependencies and fresh machine telemetry; increase concurrency one worker at a time only when every gate permits it (WV-14). Keep one build slot. Required independent reviewers receive only user expectations, synthetic cases and the immutable candidate, never the fixer report before their first findings (WV-15). Missing telemetry or required review evidence remains pending; a timeout never grants permission to start or close as complete.
+
 <!-- rule:AG-03 -->
 ## Optional guardian mode
 

@@ -47,6 +47,8 @@ Wähle Modelle nach Aufgabenform und belegter Verfügbarkeit, nicht nach Hörens
 
 Während eine Welle läuft, bleibt der Nutzer in der Zwischenrufe-Datei kreativ. Seine neuen Fragen zuerst herausfiltern und beantworten, was du selbst kannst, sofort — im Chat und als Kopie in dieser Datei; Zwischenrufe zu einem noch nicht gestarteten Auftrag als Nachtrag in dessen Auftragsdatei, zu einem laufenden als Folgeauftrag; von N Agentenplätzen einen als Kleine-Aufgaben-Spur führen, während die langen Themen zuerst starten (WV-13). Die erste Antwort auf jede neue Nutzernachricht beginnt mit `Name, TT.MM.JJJJ-HH:MM` aus `date` (HF-09). RTF-Handoffs bleiben dauerhaft im Archiv, der Agent löscht sie nie (HF-10).
 
+Vor jedem neuen Arbeiter tatsächliche Hostplätze, exklusiven Besitz, Abhängigkeiten und frische Rechnerwerte prüfen; nur bei vollständig freiem Gate einen Arbeiter zusätzlich starten (WV-14). Ein Bau-Slot bleibt. Erforderliche unabhängige Prüfer erhalten nur Nutzersoll, synthetische Fälle und den unveränderlichen Kandidaten, nie den Fixbericht vor ihrem ersten Befund (WV-15). Fehlende Messwerte oder Pflichtprüfungen bleiben offen; ein Zeitlimit gibt weder Start noch Fertigabschluss frei.
+
 <!-- rule:WH-04 -->
 ## 4. Dokumentsicherheit erhalten
 
@@ -67,7 +69,7 @@ TextEdit zu öffnen oder Tabgruppen zu verändern ist eine UI-Aktion und braucht
 <!-- rule:WH-05 -->
 ## 5. Optionale Hilfen bewusst einsetzen
 
-[Context Mode](references/context-mode.de.md) ist optional. Er kann große Dateien oder Befehlsausgaben verarbeiten und ein gezieltes Ergebnis zurückgeben. Prüfe drei Zustände unabhängig: ob das Paket installiert ist, ob seine MCP-Werkzeuge in dieser Sitzung aufrufbar sind und ob seine Hooks wirken. Ein erfolgreicher MCP-Aufruf belegt keine Hooks; ein vorhandenes Paket belegt keines von beidem. Installiere oder aktualisiere es nie ohne Erlaubnis.
+[Context Mode](references/context-mode.de.md) ist optional. Er kann große Dateien oder Befehlsausgaben verarbeiten und ein gezieltes Ergebnis zurückgeben. Prüfe drei Zustände unabhängig: ob das Paket installiert ist, ob seine MCP-Werkzeuge in dieser Sitzung aufrufbar sind und ob seine Hooks wirken. Ein erfolgreicher MCP-Aufruf belegt keine Hooks; ein vorhandenes Paket belegt keines von beidem. Installiere oder aktualisiere es nie ohne Erlaubnis. Für lange Claude-Code-Sitzungen beschreibt [Claude Code](references/claude-code.de.md) (CLA-05 bis CLA-07) das Kompaktieren in einer Sitzung, den einmaligen Cron-Wecker, der den Cache warm hält, und die Statuszeile als Cockpit.
 
 <!-- rule:WH-06 -->
 ## 6. Mit Belegen abschließen

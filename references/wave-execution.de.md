@@ -67,9 +67,8 @@ dieses Skills erlaubten zwei Slots; ein Slot ersetzt sie.
   Verantwortliche sammelt die Arbeiterergebnisse ein und baut einmal über den
   integrierten Stand. Arbeiter und Subagenten bauen nicht, höchstens eine
   Syntax- oder Parse-Prüfung.
-- **Zahl gleichzeitiger Arbeiter begrenzen** (vier ist auf einem einzelnen Laptop
-  eine sinnvolle Obergrenze). Mehr ist nicht schneller, wenn ohnehin alle hinter
-  einem Slot warten.
+- **Zahl gleichzeitiger Arbeiter begrenzen** nach echten Hostplätzen, Besitz und
+  frischen Rechnerwerten (WV-14). Eine Laptop-Faustregel ist keine Hostgrenze.
 - Ein pausierter Build behält seinen Speicher; Pausieren hilft der CPU, nicht dem
   RAM. Die Antwort ist, den zweiten Build gar nicht erst zu starten.
 
@@ -282,6 +281,8 @@ vier Vollsuiten bis Grün. Die Hebel:
 <!-- rule:WV-12 -->
 ## Eine Welle abschließen
 
+Das Fertiggate umfasst die erforderlichen unabhängigen Prüfungen nach WV-15. Fehlt deren Abnahme, bleibt die Welle offen.
+
 Alle Arbeiter fertig **und** Vollsuite grün heißt: ohne Rückfrage abschließen —
 bauen, selbst testen, tauschen, veröffentlichen und das Handoff schreiben.
 Gefragt wird nur beim unsauberen Abschluss — rote Tests, ungeklärter Befund, ein
@@ -306,3 +307,50 @@ Der Sinn der Zwischenrufe-Datei: Der Nutzer bleibt stundenlang kreativ, während
 - **Kleine-Aufgaben-Spur.** Von N gleichzeitigen Agentenplätzen bekommt einer nur kleine Aufgaben, eine nach der anderen (Fragen, kleine Fixes), damit Kleines nicht bis zum Wellenende wartet. Lange und schwierige Aufträge starten zuerst auf den übrigen Plätzen (WV-10).
 
 Siehe [Codex](codex.de.md), [Claude Code](claude-code.de.md), [Modellrouting](model-routing.de.md) und [Beleggrenzen](evidence-scope.de.md).
+
+<!-- rule:WV-14 -->
+## Dynamische Starts innerhalb harter Hostgrenzen
+
+Agentenplätze, Schreibspuren und Bau-Slots sind getrennte Grenzen. Tatsächliche Gesamtplätze des Hosts (einschließlich Chef und Prüfern), aktuelle Agentenübersicht, freigegebene Schreibpfade, bereite Abhängigkeiten und den einzigen Build-Lock festhalten. Prozessnamenzähler sind Beobachtungen, keine Agentenübersicht. Der Nachtwunsch nach acht oder neun Arbeitern erweitert weder Hostkapazität noch Rechte.
+
+Vor JEDEM Start und nach einer Fertigmeldung mit bereitem Folgeauftrag zeitgestempelte Rechnerwerte erfassen und den Besitz erneut prüfen. Originalwerte, Einheiten, Messalter, Lesefehler und Entscheidung aufzeichnen. Ein autorisierter macOS-Adapter kann memory_pressure, vm_stat, vm.swapusage und Last lesen; ein freier Prozentwert allein belegt weder Druckzustand noch genaue physische RAM-Belegung. Swapbelegung UND Swap-out-Zähler vergleichen: Sinkende Swapbelegung kann weitere Swap-outs verdecken. Fehlende oder veraltete Messung heißt zurückstellen, nicht null.
+
+Projektschwellen ausdrücklich festlegen. Konservativer Erprobungsvorschlag: normaler Druck, gemeldeter freier Prozentwert mindestens 25, Ein-Minuten-Last unter logischer CPU-Zahl, kein Wachstum von Swapbelegung oder Swap-outs in zwei aufeinanderfolgenden Intervallen. Zwei Intervalle benötigen drei echte Proben. Vorgeschlagene Frischegrenze 120 Sekunden und Mindestintervall 30 Sekunden verhindern, dass alte oder beinahe gleichzeitige Proben als nachhaltige Erholung gelten; das sind Erprobungswerte, keine Betriebssystemstandards. Warnung/kritischer Druck, zu wenig Reserve, wachsender Swap, fehlende Messung oder kein freier Hostplatz heißt kein neuer Start. Laufende Arbeiter werden nicht beendet. Ein Zeitlimit lässt die Entscheidung offen und erzwingt nie den Start.
+
+Sind alle Gates frei, EINEN bereiten Arbeiter starten und vor einem weiteren erneut messen. Längste bereite Aufgabe bevorzugen; Kleine-Aufgaben-Spur nur innerhalb derselben Gates. Tag-/Nachtbudgets nur mit dokumentierter Freigabe und vergleichbaren Messbelegen ändern. Mehr Speicherauslastung als Wunsch erlaubt kein Umgehen von Druck-, Swap-, CPU-, Host- oder Dateigates. Ein Bau gleichzeitig bleibt unabhängig von der Arbeiterzahl.
+
+An natürlichen Kontrollpunkten messen. Ein Minutentakt braucht einen tatsächlich unterstützten, autorisierten Scheduler; sonst Messlücken dokumentieren. Laden des Skills installiert keine Überwachung und erzeugt keine Pollschleifen, Weckaufträge oder Cache-Warmhaltejobs. Token-, Quoten-, Cache- oder Kostenersparnis nur mit zuordenbaren Messungen und vergleichbarer Baseline behaupten.
+
+**Beispiel aus einer gemessenen Welle** (Laptop mit 18 GB RAM und 12 Kernen, 57 Aufträge, 60 Agenten in 5,5 Stunden, gemessen vor jedem Start, nicht minütlich):
+
+| Messgröße | Wert |
+| --- | --- |
+| Gleichzeitige Agenten | Spitze 11–12, meist 4–6 |
+| Gemeldeter freier Speicher | 32–72 % |
+| Swap | 3,5 GB am Start, Spitze 7,9 GB, als mehrere Bauten zusammenfielen |
+| Ein-Minuten-Last | meist 4–7, Spitze 12,95 |
+| Startbremse auf Halt | 7 Messungen in 5 Phasen, zusammen etwa 3,5 Minuten, nie länger als 90 s |
+
+Die Lehre: Der Speicher hat diese Welle kaum gebremst, die langen Ketten schon — am Ende arbeiteten nur noch 1–3 Agenten, weil der Rest in Neuner-Ketten wartete. Ketten mit höchstens vier bis fünf Aufträgen planen, mehr Ketten parallel, die längsten zuerst. Dreimal wuchsen die Swap-out-Zähler, während die Swap-Belegung sank; also beide prüfen. Nachts darf das Budget höher liegen als tagsüber, weil der Nutzer dann nicht am Rechner arbeitet, es durchläuft aber dieselben Gates. Ein Bau gleichzeitig bleibt.
+
+<!-- rule:WV-15 -->
+## Unabhängige Abnahme vor einer Fertigmeldung
+
+Abnahmefälle aus dem erwarteten Nutzerverhalten vor der Umsetzung schreiben. Lieferung durch unveränderlichen Commit oder Dateihashes festlegen; synthetische Bildschirmbelege enthalten Modus, Akzent, Maße und Aufnahmezeit. Ein frischer Prüfer erhält Nutzersoll, sichere synthetische Fälle, exakten Kandidaten und erlaubte Lesewerkzeuge. Vor seinem ersten Befund bekommt er weder Arbeitergespräch, vermutete Ursache, Fixbeschreibung, Umsetzungsbericht noch frühere Prüferbefunde. Leeren Kontext nutzen, keinen Fork mit der vollständigen Vorgeschichte. Zuerst Verhalten prüfen; nötige Codeeinsicht folgt nach den unabhängig dokumentierten Beobachtungen.
+
+**Ein Befund zählt erst mit rotem Test.** Bevor jemand ihn behebt, wird er als fehlschlagender (roter) Test oder dokumentierte Nachstellung bewiesen; erst dann macht der Fix ihn grün. Was sich nicht rot machen lässt, ist Fehlalarm oder Messlücke, nie ein stiller Fix.
+
+Jeden Befund als bestätigten Fehler, widerlegte Behauptung (Fehlalarm) oder offene Messlücke mit Nachstellung und Beleg führen. Fehlender Bericht heißt unbekannt, nicht null Fehler. Eindeutige Fehler von Doppelmeldungen und Testumgebungsfehlern trennen. Bestätigte Fehler und Fehlalarme auf alle entschiedenen Befunde beziehen; offene Befunde und Abdeckung ausweisen. Ein Standbild belegt weder Animation noch Fokus- oder Mehrbildschirmverhalten.
+
+Der Projektplan bestimmt die Pflichtprüfer. Beispiel aus einem Projekt: jedes Paket bekommt einen frischen Prüfer aus einer zweiten Modellfamilie mit hohem Effort; schwierige oder unsichere Pakete und ausdrücklich markierte Zeilen zusätzlich einen unabhängigen dritten Prüfer. Verfügbarkeit prüfen; keine Providerbrücke voraussetzen. Beide prüfen denselben Kandidaten und liefern getrennt vor dem Vergleich. Fehlender Pflichtprüfer oder ungeklärter Widerspruch sperrt die Abnahme; Mehrheit ersetzt keinen Test.
+
+Nach einem Fix den neuen Kandidaten festlegen, passende Prüfungen wiederholen und betroffenes Verhalten erneut abnehmen. Integration, Vollsuite sowie native oder Web-Abnahme binden an den finalen Kandidaten. Vor einem fertigen Handoff Pflichtprüfungen und kritische Belege abgleichen. Offene Meldungen beim Abschluss dokumentieren erlaubt einen ehrlichen Zwischenstand, kein Überspringen von Pflichtgates oder Fertigmarkieren einer offenen Welle. Bau, Tausch, Veröffentlichung und Push brauchen weiterhin ihre bestehende Freigabe.
+
+<!-- rule:WV-16 -->
+## Startskripte: vor der Welle mit einem Probeauftrag prüfen
+
+Ein Startskript, das viele Agenten startet, scheitert für alle gleichzeitig. In einer Welle kostete ein Tippfehler alle Starts des Zweitmodells in den ersten 51 Minuten: Ein typografisches Anführungszeichen stand direkt hinter einem Variablennamen, und unter `set -u` meldete Bash `unbound variable`. Das Standard-Bash 3.2 unter macOS liest das erste Byte eines Nicht-ASCII-Zeichens hinter `$NAME` als Teil des Namens (nachstellbar: `bash -uc 'RUN=x; echo "$RUN“"'` scheitert, `${RUN}“` funktioniert).
+
+- `${NAME}` schreiben, sobald hinter einer Variable etwas anderes als ein Leerzeichen oder einfache ASCII-Satzzeichen folgt; immer vor Anführungszeichen, Umlauten oder anderem Nicht-ASCII-Text.
+- `set -u` in Startskripten behalten: Es macht den Fehler sofort sichtbar statt zu einem leeren Wert.
+- Vor der Welle das Startskript einmal mit einem trivialen Probeauftrag laufen lassen und prüfen, dass der Agent wirklich gerechnet hat (eine Logzeile mit seiner Antwort), nicht nur, dass der Warteprozess endete. „Beendet“ von einem Warter belegt nicht, dass der Arbeiter lief.

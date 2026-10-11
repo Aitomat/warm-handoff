@@ -47,6 +47,8 @@ Select models by task shape and verified availability, not folklore. Separate pu
 
 While a wave runs, the user stays creative in the interjections file. Extract his new questions first and answer what you can at once, in the chat and as a copy in that file; put interjections for an assignment not yet started into its brief as an addendum, for a running one into a follow-up assignment; keep one of N agent slots as a small-task lane while long topics start first (WV-13). The first reply to every new user message starts with `Name, DD.MM.YYYY-HH:MM` from `date` (HF-09). RTF handoffs stay in the archive for good and the agent never deletes them (HF-10).
 
+Before each new worker, reassess actual host slots, exclusive ownership, dependencies and fresh machine telemetry; increase concurrency one worker at a time only when every gate permits it (WV-14). Keep one build slot. Required independent reviewers receive only user expectations, synthetic cases and the immutable candidate, never the fixer report before their first findings (WV-15). Missing telemetry or required review evidence remains pending; a timeout never grants permission to start or close as complete.
+
 <!-- rule:WH-04 -->
 ## 4. Preserve document safety
 
@@ -67,7 +69,7 @@ Opening TextEdit or changing tab groups is a UI action and needs the task's auth
 <!-- rule:WH-05 -->
 ## 5. Use optional helpers deliberately
 
-[Context Mode](references/context-mode.md) is optional. It can process large files or command output while returning a focused result. Check three states independently: whether the package is installed, whether its MCP tools are callable in this session, and whether its hooks are active. A working MCP call does not prove hooks; package presence does not prove either. Never install or upgrade it without permission.
+[Context Mode](references/context-mode.md) is optional. It can process large files or command output while returning a focused result. Check three states independently: whether the package is installed, whether its MCP tools are callable in this session, and whether its hooks are active. A working MCP call does not prove hooks; package presence does not prove either. Never install or upgrade it without permission. For long Claude Code sessions, compaction inside one session, a one-shot cron wake-up that keeps the cache warm, and the status line as cockpit are described in [Claude Code](references/claude-code.md) (CLA-05 to CLA-07).
 
 <!-- rule:WH-06 -->
 ## 6. Close with evidence

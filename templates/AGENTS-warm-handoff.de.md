@@ -24,6 +24,8 @@ Beim Wellenstart die Zwischenrufe-Datei als `.md` im Projektstamm anlegen und in
 
 Arbeiteraufträge erhalten die geltenden Nutzerregeln; ein Chef darf sie nicht still außer Kraft setzen. Konflikte mit Hostrechten benennen. Wellennummern folgen einer gemeinsamen Folge je Projekt über alle Hosts; die nächste freie Nummer im gespeicherten Plan reservieren (WV-01).
 
+Vor jedem neuen Arbeiter tatsächliche Hostplätze, exklusiven Besitz, Abhängigkeiten und frische Rechnerwerte prüfen; nur bei vollständig freiem Gate einen Arbeiter zusätzlich starten (WV-14). Ein Bau-Slot bleibt. Erforderliche unabhängige Prüfer erhalten nur Nutzersoll, synthetische Fälle und den unveränderlichen Kandidaten, nie den Fixbericht vor ihrem ersten Befund (WV-15). Fehlende Messwerte oder Pflichtprüfungen bleiben offen; ein Zeitlimit gibt weder Start noch Fertigabschluss frei.
+
 <!-- rule:AG-03 -->
 ## Optionaler Wächtermodus
 

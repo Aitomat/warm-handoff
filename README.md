@@ -20,6 +20,26 @@ The advantage: **the human stays creative while the agents work.** He can keep t
 3. **Small things do not wait.** One of the parallel agent slots works only through small tasks, one after another, while the long, hard topics start first on the others.
 4. **Every new request is stamped.** Each first reply starts with `Name, DD.MM.YYYY-HH:MM` from the system clock, so the user can see when work started and count his requests.
 
+## Adaptive waves and blind acceptance
+
+More workers are a measurable trial goal. Before every start, the lead or integrator checks actual host slots, exclusive ownership and fresh load, memory and swap readings. Only fully clear gates allow one more worker; one build at a time remains. Day/night budgets are not host slots, and a timeout never grants a start.
+
+Required reviewers begin with user expectations and a pinned candidate in a fresh context. They receive fixer reports only after their own first findings. Defects, false alarms and measurement gaps are tracked separately; a missing required review blocks a completion claim. See [WV-14 and WV-15](references/wave-execution.md). This is a testable workflow, not a promise of token, quota or cost savings.
+
+## Long sessions: compact, wake up, watch the footer
+
+- **Compact instead of restarting.** One session can carry many waves. Before `/compact`, ask the agent what to type afterwards; it writes a continuation block into a file and hands you one sentence to paste.
+- **One-shot cron wake-up about every 50 minutes** with a short status report keeps the one-hour cache warm while it runs on time, and tells you when the agent reads your saved interjections next.
+- **Blind cross-check:** a fresh reviewer, ideally another model, gets only the user's expectation and the pinned commit, never the fix explanation; every finding is proven with a red test before it is fixed.
+- **Status line as cockpit:** context, five-hour and weekly usage, the second provider's limit and session cost stay visible in the terminal footer (for example in cmux).
+- **Optional [Context Mode](references/context-mode.md)** keeps large logs and test output out of the conversation.
+
+Details: [Claude Code adapter](references/claude-code.md) (CLA-05 to CLA-07), [wave execution](references/wave-execution.md) (WV-14 to WV-16).
+
+## Milestones
+
+- **October 2026:** one Claude Code main session ran for more than 50 hours (57 h measured from the session log) with five compactions instead of restarts. Within it, the largest wave so far: 57 packets with 60 agents in 5.5 hours, followed by a blind second-model review whose 24 findings were each proven with a red test and fixed before the full suite ran green.
+
 <!-- section:SURFACES -->
 ## Choose a surface
 
@@ -138,6 +158,7 @@ Read the applicable AGENTS.md files and the complete saved handoff at <ABSOLUTE_
 - [Authorized work waves](references/wave-execution.md)
 - [RTF on macOS](references/rtf-macos.md)
 - [Optional Context Mode](references/context-mode.md)
+- [Claude Code adapter](references/claude-code.md)
 - [Model routing](references/model-routing.md)
 - [Evidence scope](references/evidence-scope.md)
 

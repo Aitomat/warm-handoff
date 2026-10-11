@@ -20,6 +20,26 @@ Der Vorteil: **Der Mensch bleibt kreativ, während die Agenten arbeiten.** Er ka
 3. **Kleines wartet nicht.** Einer der parallelen Agentenplätze arbeitet nur kleine Aufgaben nacheinander ab, während die langen, schwierigen Themen zuerst auf den anderen starten.
 4. **Jede neue Anfrage trägt einen Stempel.** Jede erste Antwort beginnt mit `Name, TT.MM.JJJJ-HH:MM` aus der Systemuhr; so sieht der Nutzer, wann die Arbeit begann, und kann seine Anfragen zählen.
 
+## Dynamische Wellen und blinde Abnahme
+
+Mehr Agenten sind ein messbarer Erprobungswunsch. Vor jedem Start prüfen Chef oder Integrator echte Hostplätze, freien Dateibesitz und aktuelle Last-/Speicher-/Swapwerte. Nur vollständig freie Gates erlauben einen weiteren Arbeiter; ein Bau gleichzeitig bleibt. Tag-/Nachtbudgets sind keine Hostplätze, ein Zeitlimit gibt keinen Start frei.
+
+Pflichtprüfer beginnen mit Nutzersoll und festgelegtem Kandidaten in frischem Kontext. Sie erhalten Fixberichte erst nach ihrem eigenen Erstbefund. Fehler, Fehlalarme und Messlücken werden getrennt geführt; fehlende Pflichtprüfung sperrt den Fertigabschluss. Siehe [WV-14 und WV-15](references/wave-execution.de.md). Das ist ein prüfbarer Ablauf, keine Zusage von Token-, Quoten- oder Kostenersparnis.
+
+## Lange Sitzungen: kompaktieren, wecken, Fußzeile im Blick
+
+- **Kompaktieren statt neu starten.** Eine Sitzung kann viele Wellen tragen. Vor `/compact` den Agenten fragen, was man danach eingibt; er schreibt einen Fortsetzungsblock in eine Datei und gibt dir einen Satz zum Einfügen.
+- **Einmaliger Cron-Wecker etwa alle 50 Minuten** mit kurzem Lagebericht hält den Stunden-Cache warm, solange er rechtzeitig läuft, und sagt dir, wann der Agent deine gespeicherten Zwischenrufe als Nächstes liest.
+- **Blinde Gegenprüfung:** Ein frischer Prüfer, am besten ein anderes Modell, bekommt nur das Nutzersoll und den festgelegten Commit, nie die Fix-Erklärung; jeder Befund wird mit einem roten Test bewiesen, bevor er behoben wird.
+- **Statuszeile als Cockpit:** Kontext, Fünf-Stunden- und Wochenverbrauch, das Limit des zweiten Anbieters und die Sitzungskosten bleiben in der Fußzeile des Terminals sichtbar (zum Beispiel in cmux).
+- **Optionaler [Context Mode](references/context-mode.de.md)** hält große Protokolle und Testausgaben aus dem Gespräch heraus.
+
+Details: [Claude-Code-Adapter](references/claude-code.de.md) (CLA-05 bis CLA-07), [Wellenausführung](references/wave-execution.de.md) (WV-14 bis WV-16).
+
+## Meilensteine
+
+- **Oktober 2026:** Eine Claude-Code-Hauptsitzung lief über 50 Stunden (57 h laut Sitzungsprotokoll gemessen) mit fünf Kompaktierungen statt Neustarts. Darin die bisher größte Welle: 57 Aufträge mit 60 Agenten in 5,5 Stunden, danach eine blinde Prüfung durch ein Zweitmodell, deren 24 Befunde jeweils mit rotem Test bewiesen und behoben wurden, bevor die Vollsuite grün lief.
+
 <!-- section:SURFACES -->
 ## Oberfläche wählen
 
@@ -138,6 +158,7 @@ Lies die geltenden AGENTS.md-Dateien und das vollständige gespeicherte Handoff 
 - [Autorisierte Arbeitswellen](references/wave-execution.de.md)
 - [RTF unter macOS](references/rtf-macos.de.md)
 - [Optionaler Context Mode](references/context-mode.de.md)
+- [Claude-Code-Adapter](references/claude-code.de.md)
 - [Modellrouting](references/model-routing.de.md)
 - [Beleggrenzen](references/evidence-scope.de.md)
 
